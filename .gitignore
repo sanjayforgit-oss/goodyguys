@@ -1,2 +1,10 @@
 node_modules/
 .playwright-mcp/
+.env
+*.env
+.env.*
+*serviceAccount*.json
+*service-account*.json
+firebase-key*.json
+firebase-admin*.json
+serviceAccountKey.json
