@@ -1,60 +1,597 @@
 <%- include('partials/header') %>
 
-<section class="page-header">
+<section class="admin-dashboard-page">
   <div class="container">
-    <span class="section-label">Admin</span>
-    <h1>Order Management</h1>
-    <p>View and manage customer orders</p>
+    <div class="admin-header-bar">
+      <div>
+        <span class="section-label">⚡ GOODYGUYS Workshop Admin</span>
+        <h1>Studio Management Dashboard</h1>
+        <p>Manage orders, customize product catalog, configure variant options, and review customer ideas.</p>
+      </div>
+      <div class="admin-top-actions">
+        <a href="/" class="btn-admin-nav" target="_blank">View Live Store ↗</a>
+        <a href="/admin/logout" class="btn-admin-logout">Sign Out 🚪</a>
+      </div>
+    </div>
+
+    <!-- Admin KPI Stat Cards -->
+    <div class="admin-stats-grid">
+      <div class="admin-stat-card">
+        <span class="stat-icon">📦</span>
+        <div>
+          <h3><%= orders.length %></h3>
+          <p>Total Orders Placed</p>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <span class="stat-icon">💰</span>
+        <div>
+          <h3>₹<%= orders.reduce((sum, o) => sum + (o.total || 0), 0).toLocaleString() %></h3>
+          <p>Gross Studio Revenue</p>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <span class="stat-icon">🏷️</span>
+        <div>
+          <h3><%= products.length %></h3>
+          <p>Catalog Products</p>
+        </div>
+      </div>
+      <div class="admin-stat-card">
+        <span class="stat-icon">💡</span>
+        <div>
+          <h3><%= typeof suggestionsCount !== 'undefined' ? suggestionsCount : suggestions.length %></h3>
+          <p>Customer Ideas</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Tab Navigation -->
+    <div class="admin-tab-nav">
+      <a href="/admin?tab=orders" class="admin-tab-btn <%= (typeof activeTab === 'undefined' || activeTab === 'orders') ? 'active' : '' %>">
+        📦 Orders &amp; Print Queue (<%= orders.length %>)
+      </a>
+      <a href="/admin?tab=products" class="admin-tab-btn <%= activeTab === 'products' ? 'active' : '' %>">
+        🏷️ Product Catalog &amp; Inventory (<%= products.length %>)
+      </a>
+      <a href="/admin?tab=options" class="admin-tab-btn <%= activeTab === 'options' ? 'active' : '' %>">
+        ⚙️ Variant &amp; Option Controls
+      </a>
+      <a href="/admin?tab=suggestions" class="admin-tab-btn <%= activeTab === 'suggestions' ? 'active' : '' %>">
+        💡 Customer Suggestions (<%= suggestions.length %>)
+      </a>
+    </div>
+
+    <!-- TAB 1: ORDERS & PRINT QUEUE -->
+    <% if (typeof activeTab === 'undefined' || activeTab === 'orders') { %>
+      <div class="admin-tab-content active" id="tab-orders">
+        <div class="admin-section-header">
+          <h2>Workshop Production Queue</h2>
+          <span class="header-count"><%= orders.length %> order(s) total</span>
+        </div>
+
+        <% if (orders.length === 0) { %>
+          <div class="empty-state">
+            <span class="icon">📦</span>
+            <h2>No orders placed yet</h2>
+            <p>When customers customize and order t-shirts, mugs, laser acrylics or lamps, they will appear here in real time.</p>
+            <a href="/" class="btn-streetwear-volt" style="margin-top: 15px;">Go to Storefront</a>
+          </div>
+        <% } else { %>
+          <div class="orders-feed">
+            <% orders.slice().reverse().forEach(order => { %>
+              <div class="admin-order-card">
+                <div class="admin-order-top">
+                  <div class="order-ref-group">
+                    <span class="admin-order-id">#<%= order.id %></span>
+                    <span class="admin-order-date">📅 <%= order.date %></span>
+                    <span class="admin-order-payment">💳 <%= order.paymentMethod %></span>
+                  </div>
+                  <div class="order-status-badge status-<%= order.status.toLowerCase().replace(/[^a-z]/g, '') %>">
+                    <%= order.status %>
+                  </div>
+                </div>
+
+                <div class="admin-order-grid">
+                  <!-- Customer Information -->
+                  <div class="admin-info-col">
+                    <h4>👤 Customer Details</h4>
+                    <p class="customer-name"><strong><%= order.customer.name %></strong></p>
+                    <p class="customer-contact">
+                      📞 <a href="tel:<%= order.customer.phone %>"><%= order.customer.phone %></a>
+                      <% if (order.customer.phone) { %>
+                        <a href="https://wa.me/<%= order.customer.phone.replace(/[^0-9]/g, '') %>" target="_blank" class="whatsapp-badge">WhatsApp Chat ↗</a>
+                      <% } %>
+                    </p>
+                    <p class="customer-email">✉️ <%= order.customer.email %></p>
+                    <p class="customer-addr">📍 <%= order.customer.address %>, <%= order.customer.city %> - <%= order.customer.pincode %></p>
+                    <% if (order.customer.specialNotes) { %>
+                      <p class="customer-note"><strong>Note:</strong> <%= order.customer.specialNotes %></p>
+                    <% } %>
+                  </div>
+
+                  <!-- Custom Production Specs & Items -->
+                  <div class="admin-info-col">
+                    <h4>🎨 Workshop Items &amp; Custom Specs</h4>
+                    <div class="admin-order-items">
+                      <% order.items.forEach(item => { %>
+                        <div class="admin-item-box">
+                          <div class="admin-item-header">
+                            <strong><%= item.productName %></strong>
+                            <span>Qty: <%= item.quantity %> × ₹<%= item.unitPrice %></span>
+                          </div>
+                          <div class="admin-specs-pills">
+                            <% if (item.customText) { %>
+                              <span class="admin-spec-pill highlight">✍️ Text/Name: "<strong><%= item.customText %></strong>"</span>
+                            <% } %>
+                            <% if (item.placement) { %>
+                              <span class="admin-spec-pill">Print Placement: <%= item.placement %></span>
+                            <% } %>
+                            <% if (item.mugSides) { %>
+                              <span class="admin-spec-pill">Sides: <%= item.mugSides %></span>
+                            <% } %>
+                            <% if (item.material) { %>
+                              <span class="admin-spec-pill">Acrylic: <%= item.material %></span>
+                            <% } %>
+                            <% if (item.fontStyle) { %>
+                              <span class="admin-spec-pill">Font: <%= item.fontStyle %></span>
+                            <% } %>
+                            <% if (item.lampBase) { %>
+                              <span class="admin-spec-pill">Base: <%= item.lampBase %></span>
+                            <% } %>
+                            <% if (item.color) { %>
+                              <span class="admin-spec-pill">Color: <%= item.color %></span>
+                            <% } %>
+                            <% if (item.size) { %>
+                              <span class="admin-spec-pill">Size: <%= item.size %></span>
+                            <% } %>
+                            <% if (item.shape) { %>
+                              <span class="admin-spec-pill">Shape: <%= item.shape %></span>
+                            <% } %>
+                            <% if (item.customImageName) { %>
+                              <span class="admin-spec-pill upload">📸 Upload: <%= item.customImageName %></span>
+                            <% } %>
+                          </div>
+                        </div>
+                      <% }) %>
+                    </div>
+                  </div>
+
+                  <!-- Status & Verification Action -->
+                  <div class="admin-info-col admin-action-col">
+                    <h4>⚙️ Workshop Action</h4>
+                    <div class="order-total-summary">
+                      <span>Order Total:</span>
+                      <strong class="total-val">₹<%= order.total.toLocaleString() %></strong>
+                    </div>
+
+                    <!-- UPI Verification Box -->
+                    <% if (order.upiTransactionId) { %>
+                      <div class="admin-upi-verify-box">
+                        <span class="upi-box-label">📱 UPI Transaction ID (UTR)</span>
+                        <strong class="upi-box-utr"><%= order.upiTransactionId %></strong>
+                        <span class="upi-box-status">Status: <strong><%= order.paymentStatus || 'Pending Verification' %></strong></span>
+                        <% if (order.paymentProofFile) { %>
+                          <a href="<%= order.paymentProofFile %>" target="_blank" class="upi-proof-link">🔍 View Payment Screenshot</a>
+                        <% } %>
+                        
+                        <% if (!order.paymentStatus || order.paymentStatus.includes('Pending')) { %>
+                          <form method="POST" action="/admin/orders/verify-payment" style="margin-top: 10px;">
+                            <input type="hidden" name="orderId" value="<%= order.id %>">
+                            <button type="submit" class="btn-approve-payment">✅ Approve &amp; Mark as Paid</button>
+                          </form>
+                        <% } else { %>
+                          <span class="payment-approved-tag">✓ Payment Approved</span>
+                        <% } %>
+                      </div>
+                    <% } %>
+
+                    <form method="POST" action="/admin/orders/status" class="status-update-form">
+                      <input type="hidden" name="orderId" value="<%= order.id %>">
+                      <label>Update Production Status:</label>
+                      <select name="status" class="form-input form-input-sm" onchange="this.form.submit()">
+                        <option value="Payment Verification Needed" <%= order.status === 'Payment Verification Needed' ? 'selected' : '' %>>⏳ Payment Verification Needed</option>
+                        <option value="Confirmed" <%= order.status === 'Confirmed' ? 'selected' : '' %>>🟡 Confirmed (In Queue)</option>
+                        <option value="Printing / Laser Cutting" <%= order.status === 'Printing / Laser Cutting' ? 'selected' : '' %>>⚡ In Workshop (Cutting / Printing)</option>
+                        <option value="Quality Inspected" <%= order.status === 'Quality Inspected' ? 'selected' : '' %>>🔍 Quality Inspected</option>
+                        <option value="Dispatched" <%= order.status === 'Dispatched' ? 'selected' : '' %>>🚚 Dispatched / In Transit</option>
+                        <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>✅ Delivered</option>
+                      </select>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+
+    <!-- TAB 2: PRODUCT CATALOG MANAGEMENT (ADD / EDIT / DELETE / TOGGLE) -->
+    <% if (activeTab === 'products') { %>
+      <div class="admin-tab-content active" id="tab-products">
+        <div class="admin-section-header">
+          <div>
+            <h2>Product Catalog &amp; Inventory</h2>
+            <p>Add new custom products, edit prices, update details, or toggle items on/off from the store.</p>
+          </div>
+          <button type="button" class="btn-streetwear-volt" onclick="toggleAddProductForm()">+ Add New Product</button>
+        </div>
+
+        <!-- Add New Product Form (Collapsible) -->
+        <div class="admin-add-product-box" id="addProductFormContainer" style="display: none;">
+          <h3>➕ Add New Customizable Product</h3>
+          <form method="POST" action="/admin/products/add" class="admin-add-form">
+            <div class="admin-form-row">
+              <div class="form-group">
+                <label>Product Name *</label>
+                <input type="text" name="name" required placeholder="e.g. Laser Cut Wooden Clock" class="form-input">
+              </div>
+              <div class="form-group">
+                <label>Category *</label>
+                <select name="category" class="form-input" required>
+                  <option value="t-shirts">👕 T-Shirts</option>
+                  <option value="laser-acrylic">⚡ Laser Cut Acrylic</option>
+                  <option value="mugs">☕ Mugs</option>
+                  <option value="mousepads">🖱️ Mouse Pads</option>
+                  <option value="keychains">🔑 Keychains</option>
+                  <option value="lamps">💡 3D Lamps</option>
+                  <option value="decor">✨ Room Decor</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Customizer Type *</label>
+                <select name="customizerType" class="form-input" required>
+                  <option value="acrylic-cut">✂️ Acrylic Cut-Out (Contour Name)</option>
+                  <option value="acrylic-engrave">⚡ Acrylic Surface Engrave</option>
+                  <option value="tshirt">👕 T-Shirt (Front/Back/Both)</option>
+                  <option value="mug">☕ Mug (1-3 Sides)</option>
+                  <option value="mousepad">🖱️ Mousepad (Photo Print)</option>
+                  <option value="image-keychain">🔑 Image Keychain</option>
+                  <option value="engraved-lamp">💡 Engraved LED Lamp</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-form-row">
+              <div class="form-group">
+                <label>Selling Price (₹) *</label>
+                <input type="number" name="price" required placeholder="e.g. 250" class="form-input">
+              </div>
+              <div class="form-group">
+                <label>Original MRP (₹)</label>
+                <input type="number" name="originalPrice" placeholder="e.g. 399" class="form-input">
+              </div>
+              <div class="form-group">
+                <label>Badge Label (Optional)</label>
+                <input type="text" name="badge" placeholder="e.g. New Drop, Hot" class="form-input">
+              </div>
+              <div class="form-group">
+                <label>Image URL</label>
+                <input type="text" name="image" placeholder="/images/real-acrylic-cut.jpg" class="form-input">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Description *</label>
+              <textarea name="description" rows="2" required placeholder="Detailed product specifications..." class="form-input"></textarea>
+            </div>
+
+            <div class="admin-form-actions">
+              <button type="submit" class="btn-streetwear-volt">Save &amp; Publish Product</button>
+              <button type="button" class="btn-streetwear-ghost" onclick="toggleAddProductForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Products Table / Cards -->
+        <div class="admin-products-list">
+          <% products.forEach(prod => { %>
+            <div class="admin-product-card <%= prod.active === false ? 'product-inactive' : '' %>">
+              <div class="admin-prod-thumb">
+                <img src="<%= prod.image %>" alt="<%= prod.name %>">
+                <span class="admin-prod-id">#<%= prod.id %></span>
+              </div>
+
+              <div class="admin-prod-main">
+                <div class="admin-prod-title-row">
+                  <h3><%= prod.name %></h3>
+                  <div class="admin-badges-wrap">
+                    <span class="admin-cat-tag"><%= prod.category %></span>
+                    <% if (prod.badge) { %>
+                      <span class="badge-mini"><%= prod.badge %></span>
+                    <% } %>
+                    <span class="status-pill <%= prod.active !== false ? 'active-pill' : 'inactive-pill' %>">
+                      <%= prod.active !== false ? '● Live on Store' : '○ Hidden / Disabled' %>
+                    </span>
+                  </div>
+                </div>
+
+                <p class="admin-prod-desc"><%= prod.description %></p>
+
+                <!-- Quick Inline Edit Form -->
+                <form method="POST" action="/admin/products/edit" class="admin-prod-edit-form">
+                  <input type="hidden" name="productId" value="<%= prod.id %>">
+                  <div class="inline-edit-fields">
+                    <div>
+                      <label>Price (₹):</label>
+                      <input type="number" name="price" value="<%= prod.price %>" class="form-input form-input-compact">
+                    </div>
+                    <div>
+                      <label>MRP (₹):</label>
+                      <input type="number" name="originalPrice" value="<%= prod.originalPrice %>" class="form-input form-input-compact">
+                    </div>
+                    <div>
+                      <label>Badge:</label>
+                      <input type="text" name="badge" value="<%= prod.badge || '' %>" class="form-input form-input-compact" placeholder="e.g. Hot">
+                    </div>
+                    <div>
+                      <button type="submit" class="btn-quick-save">💾 Update</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Product Actions -->
+              <div class="admin-prod-actions">
+                <!-- Toggle Live / Hide -->
+                <form method="POST" action="/admin/products/toggle">
+                  <input type="hidden" name="productId" value="<%= prod.id %>">
+                  <button type="submit" class="btn-toggle-prod <%= prod.active !== false ? 'btn-disable' : 'btn-enable' %>">
+                    <%= prod.active !== false ? '👁️ Hide Item' : '✨ Enable Item' %>
+                  </button>
+                </form>
+
+                <!-- Delete Product -->
+                <form method="POST" action="/admin/products/delete" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                  <input type="hidden" name="productId" value="<%= prod.id %>">
+                  <button type="submit" class="btn-delete-prod">🗑️ Delete</button>
+                </form>
+
+                <a href="/products/<%= prod.id %>" target="_blank" class="btn-view-prod">View Page ↗</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- TAB 3: VARIANT & OPTION CONTROLS (ENABLE / DISABLE SIZES, SHAPES, PLACEMENTS) -->
+    <% if (activeTab === 'options') { %>
+      <div class="admin-tab-content active" id="tab-options">
+        <div class="admin-section-header">
+          <div>
+            <h2>Variant &amp; Option Controls</h2>
+            <p>Select whether specific product options (sizes, shapes, print placements, colors) are enabled or disabled on the store.</p>
+          </div>
+        </div>
+
+        <div class="admin-options-grid">
+          <% products.forEach(prod => { %>
+            <div class="admin-option-card">
+              <div class="option-card-header">
+                <img src="<%= prod.image %>" alt="<%= prod.name %>" class="option-prod-icon">
+                <div>
+                  <h4><%= prod.name %></h4>
+                  <span class="option-type-label"><%= prod.customizerType %></span>
+                </div>
+              </div>
+
+              <!-- 1. Sizes Options (if available) -->
+              <% if (prod.sizes && prod.sizes.length > 0) { %>
+                <div class="option-group">
+                  <label class="opt-group-label">Apparel Sizes:</label>
+                  <div class="option-items-list">
+                    <% prod.sizes.forEach(sz => { %>
+                      <% 
+                        const isDis = prod.disabledOptions && prod.disabledOptions.includes('size:' + sz); 
+                      %>
+                      <form method="POST" action="/admin/products/toggle-option" class="opt-toggle-form">
+                        <input type="hidden" name="productId" value="<%= prod.id %>">
+                        <input type="hidden" name="optionType" value="size">
+                        <input type="hidden" name="optionValue" value="<%= sz %>">
+                        <input type="hidden" name="enabled" value="<%= isDis ? 'true' : 'false' %>">
+                        <button type="submit" class="opt-chip <%= isDis ? 'chip-disabled' : 'chip-enabled' %>" title="Click to toggle availability">
+                          <span class="chip-status-dot"></span>
+                          <span>Size <%= sz %></span>
+                          <span class="chip-action-txt"><%= isDis ? '(Off)' : '(On)' %></span>
+                        </button>
+                      </form>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- 2. Placement Options (T-Shirt) -->
+              <% if (prod.placementOptions && prod.placementOptions.length > 0) { %>
+                <div class="option-group">
+                  <label class="opt-group-label">Print Placements:</label>
+                  <div class="option-items-list">
+                    <% prod.placementOptions.forEach(opt => { %>
+                      <% 
+                        const isDis = prod.disabledOptions && prod.disabledOptions.includes('placement:' + opt.id); 
+                      %>
+                      <form method="POST" action="/admin/products/toggle-option" class="opt-toggle-form">
+                        <input type="hidden" name="productId" value="<%= prod.id %>">
+                        <input type="hidden" name="optionType" value="placement">
+                        <input type="hidden" name="optionValue" value="<%= opt.id %>">
+                        <input type="hidden" name="enabled" value="<%= isDis ? 'true' : 'false' %>">
+                        <button type="submit" class="opt-chip <%= isDis ? 'chip-disabled' : 'chip-enabled' %>">
+                          <span class="chip-status-dot"></span>
+                          <span><%= opt.name %> (₹<%= opt.price %>)</span>
+                          <span class="chip-action-txt"><%= isDis ? '(Disabled)' : '(Active)' %></span>
+                        </button>
+                      </form>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- 3. Shapes Options (Mousepads / Acrylic / Keychain) -->
+              <% if (prod.shapes && prod.shapes.length > 0) { %>
+                <div class="option-group">
+                  <label class="opt-group-label">Available Shapes:</label>
+                  <div class="option-items-list">
+                    <% prod.shapes.forEach(sh => { %>
+                      <% 
+                        const isDis = prod.disabledOptions && prod.disabledOptions.includes('shape:' + sh); 
+                      %>
+                      <form method="POST" action="/admin/products/toggle-option" class="opt-toggle-form">
+                        <input type="hidden" name="productId" value="<%= prod.id %>">
+                        <input type="hidden" name="optionType" value="shape">
+                        <input type="hidden" name="optionValue" value="<%= sh %>">
+                        <input type="hidden" name="enabled" value="<%= isDis ? 'true' : 'false' %>">
+                        <button type="submit" class="opt-chip <%= isDis ? 'chip-disabled' : 'chip-enabled' %>">
+                          <span class="chip-status-dot"></span>
+                          <span><%= sh %></span>
+                          <span class="chip-action-txt"><%= isDis ? '(Disabled)' : '(Active)' %></span>
+                        </button>
+                      </form>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- 4. Mug Print Sides -->
+              <% if (prod.sideOptions && prod.sideOptions.length > 0) { %>
+                <div class="option-group">
+                  <label class="opt-group-label">Mug Print Sides:</label>
+                  <div class="option-items-list">
+                    <% prod.sideOptions.forEach(opt => { %>
+                      <% 
+                        const isDis = prod.disabledOptions && prod.disabledOptions.includes('sides:' + opt.sides); 
+                      %>
+                      <form method="POST" action="/admin/products/toggle-option" class="opt-toggle-form">
+                        <input type="hidden" name="productId" value="<%= prod.id %>">
+                        <input type="hidden" name="optionType" value="sides">
+                        <input type="hidden" name="optionValue" value="<%= opt.sides %>">
+                        <input type="hidden" name="enabled" value="<%= isDis ? 'true' : 'false' %>">
+                        <button type="submit" class="opt-chip <%= isDis ? 'chip-disabled' : 'chip-enabled' %>">
+                          <span class="chip-status-dot"></span>
+                          <span><%= opt.name %> (₹<%= opt.price %>)</span>
+                          <span class="chip-action-txt"><%= isDis ? '(Off)' : '(On)' %></span>
+                        </button>
+                      </form>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- 5. Lamp Bases -->
+              <% if (prod.lampBases && prod.lampBases.length > 0) { %>
+                <div class="option-group">
+                  <label class="opt-group-label">LED Bases:</label>
+                  <div class="option-items-list">
+                    <% prod.lampBases.forEach(base => { %>
+                      <% 
+                        const isDis = prod.disabledOptions && prod.disabledOptions.includes('lampBase:' + base.id); 
+                      %>
+                      <form method="POST" action="/admin/products/toggle-option" class="opt-toggle-form">
+                        <input type="hidden" name="productId" value="<%= prod.id %>">
+                        <input type="hidden" name="optionType" value="lampBase">
+                        <input type="hidden" name="optionValue" value="<%= base.id %>">
+                        <input type="hidden" name="enabled" value="<%= isDis ? 'true' : 'false' %>">
+                        <button type="submit" class="opt-chip <%= isDis ? 'chip-disabled' : 'chip-enabled' %>">
+                          <span class="chip-status-dot"></span>
+                          <span><%= base.name %> (₹<%= base.price %>)</span>
+                          <span class="chip-action-txt"><%= isDis ? '(Off)' : '(On)' %></span>
+                        </button>
+                      </form>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- 6. Acrylic Finishes -->
+              <% if (prod.acrylicFinishes && prod.acrylicFinishes.length > 0) { %>
+                <div class="option-group">
+                  <label class="opt-group-label">Acrylic Material Finish:</label>
+                  <div class="option-items-list">
+                    <% prod.acrylicFinishes.forEach(fin => { %>
+                      <div class="opt-chip chip-enabled">
+                        <span class="chip-status-dot"></span>
+                        <span><%= fin %></span>
+                        <span class="chip-action-txt">(Default Material)</span>
+                      </div>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- TAB 4: CUSTOMER SUGGESTIONS -->
+    <% if (activeTab === 'suggestions') { %>
+      <div class="admin-tab-content active" id="tab-suggestions">
+        <div class="admin-section-header">
+          <div>
+            <h2>Community Product Ideas</h2>
+            <p>Review customer submissions from the Suggestion Box and update roadmap status.</p>
+          </div>
+        </div>
+
+        <% if (suggestions.length === 0) { %>
+          <div class="empty-state">
+            <span class="icon">💡</span>
+            <h2>No customer suggestions yet</h2>
+            <p>Ideas submitted through /suggest will appear here.</p>
+          </div>
+        <% } else { %>
+          <div class="admin-suggestions-grid">
+            <% suggestions.slice().reverse().forEach(sugg => { %>
+              <div class="admin-sugg-card">
+                <div class="sugg-top-bar">
+                  <span class="sugg-category-badge"><%= sugg.category %></span>
+                  <span class="sugg-date">📅 <%= sugg.date %></span>
+                  <span class="sugg-upvotes">❤️ <%= sugg.upvotes || 0 %> Upvotes</span>
+                </div>
+
+                <h3><%= sugg.title %></h3>
+                <p class="sugg-description"><%= sugg.description %></p>
+
+                <div class="sugg-submitter-box">
+                  <span>👤 <strong><%= sugg.name %></strong></span>
+                  <% if (sugg.contact) { %>
+                    <span>📱 <a href="https://wa.me/<%= sugg.contact.replace(/[^0-9]/g, '') %>" target="_blank"><%= sugg.contact %></a></span>
+                  <% } %>
+                </div>
+
+                <div class="sugg-status-row">
+                  <span class="sugg-current-status">Status: <strong><%= sugg.status || 'Under Review' %></strong></span>
+                  <form method="POST" action="/admin/suggestions/status" class="sugg-status-form">
+                    <input type="hidden" name="suggestionId" value="<%= sugg.id %>">
+                    <select name="status" class="form-input form-input-sm" onchange="this.form.submit()">
+                      <option value="Under Review" <%= sugg.status === 'Under Review' ? 'selected' : '' %>>⏳ Under Review</option>
+                      <option value="Approved for Workshop" <%= sugg.status === 'Approved for Workshop' ? 'selected' : '' %>>✅ Approved for Workshop</option>
+                      <option value="In Prototyping" <%= sugg.status === 'In Prototyping' ? 'selected' : '' %>>⚡ In Prototyping</option>
+                      <option value="Launched in Drop" <%= sugg.status === 'Launched in Drop' ? 'selected' : '' %>>🚀 Launched in Drop</option>
+                      <option value="Archived" <%= sugg.status === 'Archived' ? 'selected' : '' %>>📦 Archived</option>
+                    </select>
+                  </form>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+
   </div>
 </section>
 
-<section class="admin-page" style="padding-top: 40px;">
-  <div class="container">
-    <% if (orders.length === 0) { %>
-      <div class="empty-state">
-        <span class="icon">📦</span>
-        <h2>No orders yet</h2>
-        <p>Customer orders will appear here once they start placing orders.</p>
-        <a href="/" class="btn btn-primary">Back to Home</a>
-      </div>
-    <% } else { %>
-      <% orders.slice().reverse().forEach(order => { %>
-        <div class="order-card">
-          <div class="order-header">
-            <div>
-              <h3>#<%= order.id %></h3>
-              <span class="order-date"><%= order.date %></span>
-            </div>
-            <span class="order-status confirmed"><%= order.status %></span>
-          </div>
-          <div class="order-body">
-            <div class="order-info-group">
-              <h4>Customer</h4>
-              <p><%= order.customer.name %></p>
-              <p><%= order.customer.email %></p>
-              <p><%= order.customer.phone %></p>
-              <p><%= order.customer.address %>, <%= order.customer.city %> - <%= order.customer.pincode %></p>
-            </div>
-            <div class="order-info-group">
-              <h4>Items</h4>
-              <% order.items.forEach(item => { %>
-                <div class="order-item-row">
-                  <span><%= item.productName %></span>
-                  <span>× <%= item.quantity %></span>
-                  <span>₹<%= (item.productPrice * item.quantity).toLocaleString() %></span>
-                </div>
-              <% }) %>
-            </div>
-            <div class="order-info-group">
-              <h4>Payment</h4>
-              <p><%= order.paymentMethod %></p>
-              <p style="font-size: 1.1rem; font-weight: 700; color: var(--primary-light); margin-top: 8px;">Total: ₹<%= order.total.toLocaleString() %></p>
-            </div>
-          </div>
-        </div>
-      <% }) %>
-    <% } %>
-  </div>
-</section>
+<script>
+  function toggleAddProductForm() {
+    const el = document.getElementById('addProductFormContainer');
+    if (el) {
+      el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+      if (el.style.display === 'block') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
+</script>
 
 <%- include('partials/footer') %>

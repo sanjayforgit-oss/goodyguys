@@ -1,159 +1,506 @@
 <%- include('partials/header') %>
 
-<section class="hero">
-  <div id="hero-3d-container"></div>
-  <div class="container">
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="hero-badge-dot"></span>
-        New — AI Design Tools Available
-      </div>
-      <h1>Make Every Product<br><span class="gradient-text">Uniquely Yours</span></h1>
-      <p>Custom printed t-shirts, mugs, keychains, photo prints & more — all personalized with your vision. Create something unforgettable.</p>
-      <div class="hero-actions">
-        <a href="/products" class="btn btn-primary btn-lg">Start Creating →</a>
-        <a href="/products?category=t-shirts" class="btn btn-outline btn-lg">Explore T-Shirts</a>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <h3>10K+</h3>
-          <p>Happy Customers</p>
+<!-- HERO SECTION: GOODYGUYS URBAN STREETWEAR STYLE -->
+<section class="hero-streetwear-section">
+  <div class="container hero-container">
+    <div class="hero-grid">
+      <!-- Left Column: Typography & CTAs -->
+      <div class="hero-text-col">
+        <!-- Chalk Crown Doodle & Curved Arrow -->
+        <div class="chalk-crown-wrap">
+          <svg class="chalk-crown-svg" viewBox="0 0 70 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 38L12 12L28 26L35 6L42 26L58 12L65 38H5Z" stroke="#d4ff00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 1"/>
+            <circle cx="12" cy="12" r="3" fill="#d4ff00"/>
+            <circle cx="35" cy="6" r="3" fill="#d4ff00"/>
+            <circle cx="58" cy="12" r="3" fill="#d4ff00"/>
+          </svg>
+          <svg class="chalk-arrow-svg" viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M48 6C40 22 28 32 10 38" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+            <path d="M12 28L8 38L20 40" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <div class="hero-stat">
-          <h3>500+</h3>
-          <p>Daily Orders</p>
-        </div>
-        <div class="hero-stat">
-          <h3>4.9★</h3>
-          <p>Avg. Rating</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="section categories">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-label">Categories</span>
-      <h2 class="section-title">What Would You Like to Create?</h2>
-      <p class="section-subtitle">Browse our collection and customize every detail. From apparel to accessories, make it yours.</p>
-    </div>
-    <div class="categories-grid">
-      <a href="/products?category=t-shirts" class="category-card" style="--cat-color: #8b5cf6; --cat-glow: rgba(139,92,246,0.15)">
-        <div class="cat-icon-wrap">👕</div>
-        <h3>T-Shirts & Hoodies</h3>
-        <p>Custom printed apparel with your designs</p>
-        <span class="cat-arrow">Browse Collection →</span>
-      </a>
-      <a href="/products?category=goodies" class="category-card" style="--cat-color: #ec4899; --cat-glow: rgba(236,72,153,0.15)">
-        <div class="cat-icon-wrap">🎁</div>
-        <h3>Printer Goodies</h3>
-        <p>Mugs, cases, bags & accessories</p>
-        <span class="cat-arrow">Browse Collection →</span>
-      </a>
-      <a href="/products?category=keychains" class="category-card" style="--cat-color: #f59e0b; --cat-glow: rgba(245,158,11,0.15)">
-        <div class="cat-icon-wrap">🔑</div>
-        <h3>Name Keychains</h3>
-        <p>Personalized keychains & name plates</p>
-        <span class="cat-arrow">Browse Collection →</span>
-      </a>
-      <a href="/products?category=photos" class="category-card" style="--cat-color: #06b6d4; --cat-glow: rgba(6,182,212,0.15)">
-        <div class="cat-icon-wrap">🖼️</div>
-        <h3>Photo Prints</h3>
-        <p>Prints, frames & photo calendars</p>
-        <span class="cat-arrow">Browse Collection →</span>
-      </a>
-    </div>
-  </div>
-</section>
+        <!-- The Catchy Headline -->
+        <h1 class="hero-streetwear-title">
+          CRAFTED<br>
+          <span class="hero-brush-highlight">FOR THE</span><br>
+          CREATORS.
+        </h1>
 
-<section class="section showcase">
-  <div class="section-header">
-    <span class="section-label">Trending Now</span>
-    <h2 class="section-title">Most Loved Products</h2>
-  </div>
-  <div class="showcase-track">
-    <% for(let i=0; i<2; i++) { %>
-      <% allProducts.forEach(p => { %>
-        <div class="showcase-item">
-          <span class="emoji"><%= p.category === 't-shirts' ? '👕' : p.category === 'goodies' ? '🎁' : p.category === 'keychains' ? '🔑' : '🖼️' %></span>
-          <h4><%= p.name %></h4>
-          <p style="color: var(--primary-light); font-weight: 700; margin-top: 8px;">₹<%= p.price.toLocaleString() %></p>
+        <p class="hero-streetwear-subtitle">
+          Premium Streetwear Apparel &bull; Laser Cut Acrylics &bull; Custom Prints<br>
+          Handcrafted on demand for you by <strong>GOODYGUYS</strong>.
+        </p>
+
+        <!-- CTA Buttons with Urban Threads & Creator styling -->
+        <div class="hero-cta-group">
+          <a href="#the-drop" class="btn-streetwear-volt">SHOP THE DROP &rarr;</a>
+          <a href="/products/1" class="btn-streetwear-ghost">CUSTOMIZE T-SHIRT</a>
+          <a href="/products/5" class="btn-streetwear-orange">⚡ LASER CUT ACRYLIC</a>
         </div>
-      <% }) %>
-    <% } %>
-  </div>
-</section>
 
-<section class="section featured-section">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-label">Featured</span>
-      <h2 class="section-title">Bestsellers</h2>
-      <p class="section-subtitle">Our most popular customizable products, loved by thousands</p>
-    </div>
-    <div class="products-grid">
-      <% products.forEach(product => { %>
-        <a href="/products/<%= product.id %>" class="product-card tilt-card">
-          <div class="product-image">
-            <img src="<%= product.image %>" alt="<%= product.name %>" loading="lazy">
-            <% if (product.badge) { %>
-              <span class="badge <%= product.badge === 'Popular' || product.badge === 'Trending' ? 'badge-hot' : '' %>"><%= product.badge %></span>
-            <% } %>
-            <div class="product-card-overlay">
-              <span class="quick-view-btn">Quick View</span>
+        <!-- 4 Key Icon Features -->
+        <div class="hero-features-row">
+          <div class="hero-feat-item">
+            <span class="feat-icon">👕</span>
+            <span class="feat-label">PREMIUM<br>COTTON</span>
+          </div>
+          <div class="hero-feat-item">
+            <span class="feat-icon">🖨️</span>
+            <span class="feat-label">PRINTED<br>ON DEMAND</span>
+          </div>
+          <div class="hero-feat-item">
+            <span class="feat-icon">⚡</span>
+            <span class="feat-label">0.05MM LASER<br>CUTTING</span>
+          </div>
+          <div class="hero-feat-item">
+            <span class="feat-icon">📦</span>
+            <span class="feat-label">NO MINIMUM<br>ORDERS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Realistic Streetwear Model & Sticker Badges -->
+      <div class="hero-visual-col">
+        <div class="hero-model-poster-wrap">
+          <img src="/images/hero-streetwear-model.jpg" alt="GOODYGUYS Streetwear Model" class="hero-model-img">
+          
+          <!-- Streetwear Sticker Badges Stack -->
+          <div class="streetwear-sticker-stack">
+            <!-- White Tape Sticker -->
+            <div class="sticker-tag sticker-white" style="transform: rotate(2deg);">
+              <span class="barcode-mini">|||||||||||||</span>
+              <span class="sticker-bold">PRINTED ON DEMAND</span>
+              <span class="sticker-sub">BY GOODYGUYS</span>
+            </div>
+
+            <!-- Black Tape Sticker -->
+            <div class="sticker-tag sticker-black" style="transform: rotate(-3deg);">
+              <span class="sticker-bold">NO MINIMUM</span>
+              <span class="sticker-sub">ORDERS</span>
+            </div>
+
+            <!-- Electric Volt Yellow Sticker -->
+            <div class="sticker-tag sticker-volt" style="transform: rotate(3.5deg);">
+              <span class="sticker-bold">DESIGN IT.</span>
+              <span class="sticker-bold">WEAR IT.</span>
+              <span class="sticker-bold">OWN IT.</span>
+            </div>
+            
+            <!-- Safety Orange Accent Sticker (Urban Threads Inspired) -->
+            <div class="sticker-tag sticker-orange" style="transform: rotate(-2deg);">
+              <span class="sticker-bold">100% IN-HOUSE</span>
+              <span class="sticker-sub">STUDIO PRODUCTION</span>
             </div>
           </div>
-          <div class="product-info">
-            <span class="product-category"><%= product.category %></span>
-            <h3><%= product.name %></h3>
-            <div class="product-price">
-              <span class="current">₹<%= product.price.toLocaleString() %></span>
+
+          <!-- Circular Globe Badge -->
+          <div class="circular-stamp-badge">
+            <svg class="stamp-svg" viewBox="0 0 100 100">
+              <path id="stampPath" d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" fill="transparent"/>
+              <text class="stamp-text">
+                <textPath href="#stampPath">GOODYGUYS &bull; 100% QUALITY &bull;</textPath>
+              </text>
+            </svg>
+            <div class="stamp-inner-icon">⚡</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HORIZONTAL MOVING PRODUCT MARQUEE STRIP (Inspired by Reference Image 3: Urban Threads) -->
+<section class="products-marquee-strip-section">
+  <div class="container">
+    <div class="marquee-strip-header">
+      <div class="strip-header-left">
+        <span class="strip-hot-badge">⚡ INSTANT SHOWCASE</span>
+        <h3 class="strip-title">EXPLORE OUR CUSTOM PRODUCT LINEUP</h3>
+      </div>
+      <span class="strip-marquee-hint">← AUTO-SCROLLING &bull; HOVER TO PAUSE &bull; CLICK TO CUSTOMIZE →</span>
+    </div>
+  </div>
+  
+  <div class="product-marquee-viewport">
+    <div class="product-marquee-track">
+      <% [1, 2].forEach(() => { %>
+        <% products.forEach(prod => { %>
+          <a href="/products/<%= prod.id %>" class="marquee-product-card" title="Customize <%= prod.name %>">
+            <div class="marquee-card-img-wrap">
+              <img src="<%= prod.image %>" alt="<%= prod.name %>" loading="lazy">
+              <span class="marquee-card-badge <%= prod.id === 5 ? 'badge-cut' : '' %>">
+                <%= prod.id === 5 ? '✂️ LASER CUT' : prod.badge ? prod.badge.toUpperCase() : 'CUSTOM' %>
+              </span>
+            </div>
+            <div class="marquee-card-info">
+              <span class="marquee-card-cat"><%= prod.category.replace('-', ' ').toUpperCase() %></span>
+              <strong class="marquee-prod-name"><%= prod.name.toUpperCase() %></strong>
+              <div class="marquee-card-footer">
+                <span class="marquee-price">₹<%= prod.price %></span>
+                <span class="marquee-cta-pill">CUSTOMIZE &rarr;</span>
+              </div>
+            </div>
+          </a>
+        <% }) %>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Dropdown Countdown Bar (Urban Threads Inspired) -->
+<section class="drop-countdown-bar">
+  <div class="container">
+    <div class="countdown-bar-inner">
+      <div class="countdown-label-group">
+        <span class="pulse-indicator"></span>
+        <span class="countdown-title">NEXT CUSTOM PRODUCTION BATCH IN:</span>
+      </div>
+      <div class="countdown-digits-wrap" id="dropCountdown">
+        <div class="digit-box"><span class="num" id="days">02</span><span class="lbl">DAYS</span></div>
+        <span class="sep">:</span>
+        <div class="digit-box"><span class="num" id="hours">14</span><span class="lbl">HOURS</span></div>
+        <span class="sep">:</span>
+        <div class="digit-box"><span class="num" id="mins">37</span><span class="lbl">MINS</span></div>
+        <span class="sep">:</span>
+        <div class="digit-box"><span class="num" id="secs">26</span><span class="lbl">SECS</span></div>
+      </div>
+      <div class="countdown-badge">
+        <span>⚡ ORDERS DISPATCHED IN 24H ACROSS INDIA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RIPPED TORN PAPER DIVIDER (Dark to Light Paper) -->
+<div class="ripped-edge-divider dark-to-light">
+  <img src="/images/torn-edge-top.svg" alt="" class="ripped-svg-asset" aria-hidden="true">
+</div>
+
+<!-- "THE DROP" CATALOG SECTION (Clean Cream Paper Background) -->
+<section class="the-drop-section" id="the-drop">
+  <div class="container">
+    <!-- Header of The Drop -->
+    <div class="the-drop-header">
+      <div class="title-with-highlighter">
+        <h2 class="the-drop-title">THE DROP</h2>
+        <div class="brush-stroke-underline"></div>
+      </div>
+      <p class="the-drop-subtitle">Bestselling custom apparel, laser cut acrylics &amp; precision prints. No minimums.</p>
+      <a href="/products" class="btn-view-all">VIEW ALL PRODUCTS &rarr;</a>
+    </div>
+
+    <!-- Category Filter Bar (Inspired by Streetwear Navs) -->
+    <div class="streetwear-filter-bar">
+      <button class="filter-pill active" data-category="all">ALL ITEMS (7)</button>
+      <button class="filter-pill" data-category="t-shirts">👕 T-SHIRTS</button>
+      <button class="filter-pill" data-category="mugs">☕ MUGS</button>
+      <button class="filter-pill" data-category="mousepads">🖱️ MOUSE PADS</button>
+      <button class="filter-pill" data-category="laser-acrylic">⚡ LASER ACRYLIC</button>
+      <button class="filter-pill" data-category="lamps">💡 3D LAMPS</button>
+      <button class="filter-pill" data-category="keychains">🔑 KEYCHAINS</button>
+    </div>
+
+    <!-- Product Grid with Realistic Commercial Photography -->
+    <div class="streetwear-products-grid">
+      <% products.forEach(product => { %>
+        <div class="streetwear-card" data-category="<%= product.category %>">
+          <!-- Top Tag Badge -->
+          <div class="card-badge-corner <%= product.id === 5 ? 'badge-cut' : product.badge === 'Bestseller' ? 'badge-best' : product.badge === 'Laser Tech' ? 'badge-tech' : 'badge-new' %>">
+            <%= product.id === 5 ? '✂️ LASER CUT-THROUGH' : product.badge ? product.badge.toUpperCase() : 'NEW' %>
+          </div>
+
+          <!-- Product Realistic Image -->
+          <div class="card-image-wrap">
+            <a href="/products/<%= product.id %>">
+              <img src="<%= product.image %>" alt="<%= product.name %>" class="card-prod-img" loading="lazy">
+            </a>
+            <div class="card-custom-overlay-tag">
+              <%= product.id === 5 ? '✂️ FREESTANDING CUT-OUT LETTERS (NO ENGRAVING)' : product.customizerType === 'tshirt' ? '👕 CUSTOM FRONT / BACK' : product.requiresText && product.requiresImage ? '📸 PHOTO + ✍️ TEXT' : product.requiresImage ? '📸 CUSTOM IMAGE' : '⚡ CUSTOM NAME' %>
+            </div>
+          </div>
+
+          <!-- Card Details -->
+          <div class="card-body">
+            <span class="card-category-tag"><%= product.category.replace('-', ' ').toUpperCase() %></span>
+            <h3 class="card-product-title">
+              <a href="/products/<%= product.id %>"><%= product.name.toUpperCase() %></a>
+            </h3>
+
+            <div class="card-price-row">
+              <span class="price-current">₹<%= product.price %></span>
               <% if (product.originalPrice > product.price) { %>
-                <span class="original">₹<%= product.originalPrice.toLocaleString() %></span>
+                <span class="price-original">₹<%= product.originalPrice %></span>
+              <% } %>
+              <% if (product.placementOptions) { %>
+                <span class="card-option-note">(Front / Back / Both)</span>
+              <% } else if (product.sideOptions) { %>
+                <span class="card-option-note">(1 side ₹150 / 3 sides ₹200)</span>
               <% } %>
             </div>
-            <div class="product-rating">
-              <span class="stars">★★★★★</span>
-              <span>(128)</span>
-            </div>
+
+            <p class="card-spec-desc">
+              <%= product.description.substring(0, 85) %>...
+            </p>
+
+            <!-- Full-width Streetwear Black Button -->
+            <a href="/products/<%= product.id %>" class="btn-card-action">
+              <span><%= product.customizerType === 'tshirt' ? 'CUSTOMIZE T-SHIRT' : product.id === 5 ? 'CUT MY NAME' : 'CUSTOMIZE NOW' %></span>
+              <span class="cart-btn-icon">🛒</span>
+            </a>
           </div>
-        </a>
+        </div>
       <% }) %>
     </div>
   </div>
 </section>
 
-<section class="section features-section">
+<!-- RIPPED TORN PAPER DIVIDER (Light Paper to Dark Section) -->
+<div class="ripped-edge-divider light-to-dark">
+  <img src="/images/torn-edge-bottom.svg" alt="" class="ripped-svg-asset" aria-hidden="true">
+</div>
+
+<!-- EDITORIAL STATEMENT: DESIGNED TO DISRUPT (Inspired by Reference Image 2: NEVERMIND) -->
+<section class="disrupt-editorial-section">
   <div class="container">
-    <div class="section-header">
-      <span class="section-label">Why Us</span>
-      <h2 class="section-title">Designed for Creators</h2>
+    <div class="disrupt-header">
+      <span class="disrupt-tag">GOODYGUYS CREATOR PHILOSOPHY</span>
+      <h2 class="disrupt-title">DESIGNED TO DISRUPT</h2>
+      <p class="disrupt-p">
+        HIGH-PRECISION STREETWEAR &amp; LASER ATELIER. BUILT FOR INDIVIDUALS WHO REFUSE OFF-THE-SHELF GENERIC MERCHANDISE. THIS ISN'T JUST PRINTING — IT'S YOUR IDENTITY CUT AND FUSED TO PERFECTION.
+      </p>
     </div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🎨</div>
-        <h3>Custom Designs</h3>
-        <p>Upload your own artwork or choose from our library of premium templates</p>
+
+    <!-- Dual Mission & Vision Cards (NEVERMIND style) -->
+    <div class="mission-vision-grid">
+      <div class="editorial-card card-craft">
+        <div class="card-accent-strip orange-strip"></div>
+        <div class="editorial-card-body">
+          <span class="editorial-num">01 / CRAFT</span>
+          <h3>OUR IN-HOUSE STANDARD</h3>
+          <p>
+            We don't drop-ship or outsource to third parties. Every 280gsm heavyweight bio-washed cotton t-shirt is screen/DTF printed directly on our press. Every acrylic sheet is laser cut-through to 0.05mm precision with diamond-polished edges.
+          </p>
+          <div class="editorial-pills">
+            <span>BIO-WASHED COTTON</span>
+            <span>0.05MM CUTTING</span>
+            <span>HEAT-FUSED CERAMIC</span>
+          </div>
+        </div>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">🚚</div>
-        <h3>Free Delivery</h3>
-        <p>Free shipping on all orders above ₹499 with 3-5 day delivery</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">💎</div>
-        <h3>Premium Quality</h3>
-        <p>High-quality materials with vibrant, fade-resistant printing technology</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">↩️</div>
-        <h3>Easy Returns</h3>
-        <p>Not happy? Return within 7 days for a full refund, no questions asked</p>
+
+      <div class="editorial-card card-freedom">
+        <div class="card-accent-strip volt-strip"></div>
+        <div class="editorial-card-body">
+          <span class="editorial-num">02 / VISION</span>
+          <h3>ZERO MINIMUM RESTRICTIONS</h3>
+          <p>
+            Most printshops force minimum orders of 50 or 100 units. At GOODYGUYS, you can order exactly <strong>ONE</strong> single custom t-shirt, <strong>ONE</strong> personalized gold acrylic keychain, or 1,000 pieces with identical handcrafted care.
+          </p>
+          <div class="editorial-pills">
+            <span>NO MINIMUM ORDERS</span>
+            <span>DIRECT UPI PAYMENTS</span>
+            <span>24H DISPATCH</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- MANIFESTO & QUALITY SECTION (GOODYGUYS Studio) -->
+<section class="manifesto-section">
+  <div class="container manifesto-container">
+    <div class="manifesto-grid">
+      <!-- Left: Taped Streetwear Polaroid -->
+      <div class="manifesto-polaroid polaroid-left">
+        <div class="neon-tape tape-top-left"></div>
+        <div class="polaroid-inner">
+          <img src="/images/real-tshirt.jpg" alt="Premium Streetwear Cotton">
+          <span class="polaroid-caption">Heavyweight 280gsm Cotton</span>
+        </div>
+      </div>
+
+      <!-- Center: Big Typography & Copy -->
+      <div class="manifesto-content">
+        <h2 class="manifesto-headline">
+          MADE FOR YOU.<br>
+          <span class="marker-volt">PRINTED</span><br>
+          ON DEMAND.
+        </h2>
+        <p class="manifesto-copy">
+          Your idea. Your style. Your way.<br>
+          No limits. Just your imagination.
+        </p>
+        <p class="manifesto-subcopy">
+          From oversized bio-washed cotton streetwear to diamond-edge laser cut acrylics and 3D glowing lamps, every single product is manufactured fresh upon your order in the GOODYGUYS studio.
+        </p>
+        <div class="manifesto-btn-wrap">
+          <a href="/products" class="btn-streetwear-volt">EXPLORE THE COLLECTION &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Right: Macro Detail Polaroid with Chalk Doodle Arrow -->
+      <div class="manifesto-polaroid polaroid-right">
+        <div class="neon-tape tape-top-right"></div>
+        <div class="polaroid-inner">
+          <img src="/images/real-acrylic-cut.jpg" alt="Laser Cut Acrylic Quality">
+          <span class="polaroid-caption">Laser Cut-Through 3mm</span>
+        </div>
+        <div class="chalk-annotation-arrow">
+          <svg viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M70 10C55 12 30 25 15 42" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+            <path d="M12 30L12 44L26 44" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="chalk-note">QUALITY<br>YOU CAN<br>FEEL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE CUSTOMER SUGGESTIONS SECTION (Requested by User) -->
+<section class="creator-suggestions-section" id="suggestions">
+  <div class="container">
+    <div class="suggestions-card-box">
+      <div class="suggestions-grid">
+        <div class="sugg-left-text">
+          <span class="sugg-badge">💡 CREATOR CO-LAB</span>
+          <h2 class="sugg-title">HAVE AN ITEM YOU WANT US TO MAKE?</h2>
+          <p class="sugg-description">
+            We have an in-house precision Laser Cutter &amp; High-Definition Multi-Surface Printing setup! If you have a dream product (acrylic Spotify scannable plaque, LED anime lamp, custom phone skins, wooden name boards), tell us below!
+          </p>
+
+          <div class="sugg-stats-row">
+            <div class="stat-pill">
+              <strong>15+</strong>
+              <span>IDEAS PRODUCED</span>
+            </div>
+            <div class="stat-pill">
+              <strong>24H</strong>
+              <span>QUICK REVIEW</span>
+            </div>
+            <div class="stat-pill">
+              <strong>100%</strong>
+              <span>COMMUNITY DRIVEN</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sugg-right-form">
+          <div class="sugg-form-panel">
+            <h3 class="form-title">⚡ DROP YOUR PRODUCT IDEA</h3>
+            <form action="/suggest" method="POST" class="streetwear-suggest-form">
+              <div class="form-group-compact">
+                <input type="text" name="title" required placeholder="What should we make? (e.g. Acrylic Spotify Code Plaque)" class="sugg-input">
+              </div>
+
+              <div class="form-group-compact">
+                <select name="category" class="sugg-select">
+                  <option value="laser-acrylic">⚡ Laser Cut Acrylic Creation</option>
+                  <option value="t-shirts">👕 Streetwear / Apparel Idea</option>
+                  <option value="mugs">☕ Custom Drinkware / Mug Idea</option>
+                  <option value="accessories">🔑 Keychain / Desk Accessory</option>
+                  <option value="other">💡 Other Unique Custom Item</option>
+                </select>
+              </div>
+
+              <div class="form-group-compact">
+                <textarea name="description" rows="2" required placeholder="Tell us details: shape, dimensions, colors, or materials..." class="sugg-textarea"></textarea>
+              </div>
+
+              <div class="form-row-dual">
+                <input type="text" name="name" required placeholder="Your Name" class="sugg-input">
+                <input type="text" name="contact" placeholder="Phone or WhatsApp (Optional)" class="sugg-input">
+              </div>
+
+              <button type="submit" class="btn-sugg-submit">
+                <span>SUBMIT YOUR IDEA &rarr;</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4-STEP HOW IT WORKS (Streetwear Style) -->
+<section class="how-it-works-streetwear">
+  <div class="container">
+    <div class="how-header">
+      <span class="how-badge">THE PROCESS</span>
+      <h2 class="how-title">HOW YOUR CUSTOM ORDER GETS MADE</h2>
+    </div>
+
+    <div class="how-steps-grid">
+      <div class="how-step-card">
+        <span class="step-giant-num">01</span>
+        <h4>PICK YOUR CANVAS</h4>
+        <p>Select T-Shirt, Mug, Mouse Pad, or Laser Acrylic with your preferred sizing &amp; sides.</p>
+      </div>
+
+      <div class="how-step-card">
+        <span class="step-num-highlight">02</span>
+        <h4>UPLOAD OR TYPE</h4>
+        <p>Upload your artwork/photo or type the custom name for laser cut-out with live previews.</p>
+      </div>
+
+      <div class="how-step-card">
+        <span class="step-num-highlight">03</span>
+        <h4>WE LASER &amp; PRINT</h4>
+        <p>Our workshop cuts the acrylic or heat-fuses your print using industrial machinery.</p>
+      </div>
+
+      <div class="how-step-card">
+        <span class="step-giant-num">04</span>
+        <h4>UNBOX YOUR DRIP</h4>
+        <p>Safely bubble-wrapped and delivered straight to your doorstep anywhere in India.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dropdown Countdown & Filter Script -->
+<script>
+  // Countdown Timer Logic
+  (function initCountdown() {
+    let secondsLeft = 2 * 86400 + 14 * 3600 + 37 * 60 + 26;
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minsEl = document.getElementById('mins');
+    const secsEl = document.getElementById('secs');
+
+    setInterval(() => {
+      if (secondsLeft > 0) {
+        secondsLeft--;
+        const d = Math.floor(secondsLeft / 86400);
+        const h = Math.floor((secondsLeft % 86400) / 3600);
+        const m = Math.floor((secondsLeft % 3600) / 60);
+        const s = secondsLeft % 60;
+        if (daysEl) daysEl.textContent = String(d).padStart(2, '0');
+        if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
+        if (minsEl) minsEl.textContent = String(m).padStart(2, '0');
+        if (secsEl) secsEl.textContent = String(s).padStart(2, '0');
+      }
+    }, 1000);
+  })();
+
+  // Quick Category Filter on The Drop Section
+  document.querySelectorAll('.filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const cat = pill.dataset.category;
+      document.querySelectorAll('.streetwear-card').forEach(card => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
 
 <%- include('partials/footer') %>

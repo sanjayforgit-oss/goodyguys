@@ -3,98 +3,240 @@
 <section class="page-header">
   <div class="container">
     <span class="section-label">Checkout</span>
-    <h1>Complete Your Order</h1>
-    <p>Fill in your details to place your custom order</p>
+    <h1>Shipping &amp; Order Details</h1>
+    <p>Provide your delivery address and contact information to confirm your custom order</p>
   </div>
 </section>
 
 <section class="checkout-page" style="padding-top: 40px;">
   <div class="container">
     <div class="checkout-layout">
-      <form class="checkout-form" method="POST" action="/checkout">
+      <!-- Checkout Form -->
+      <form class="checkout-form" id="checkoutOrderForm" method="POST" action="/checkout" enctype="multipart/form-data">
+        <!-- 1. Customer Information -->
         <div class="checkout-section">
-          <h2>Contact Information</h2>
+          <h2>1. Contact Information</h2>
           <div class="form-group">
-            <label for="name">Full Name *</label>
-            <input type="text" id="name" name="name" class="form-input" required placeholder="John Doe">
+            <label for="name">Full Name <span class="req-star">*</span></label>
+            <input type="text" id="name" name="name" class="form-input" required placeholder="e.g. Rahul Sharma">
           </div>
           <div class="form-row-2">
             <div class="form-group">
-              <label for="email">Email *</label>
-              <input type="email" id="email" name="email" class="form-input" required placeholder="john@example.com">
+              <label for="email">Email Address <span class="req-star">*</span></label>
+              <input type="email" id="email" name="email" class="form-input" required placeholder="rahul@example.com">
             </div>
             <div class="form-group">
-              <label for="phone">Phone *</label>
+              <label for="phone">WhatsApp / Phone Number <span class="req-star">*</span></label>
               <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 98765 43210">
+              <span class="field-hint">We will send design preview &amp; tracking updates on WhatsApp</span>
             </div>
           </div>
         </div>
+
+        <!-- 2. Shipping Address -->
         <div class="checkout-section">
-          <h2>Shipping Address</h2>
+          <h2>2. Delivery Address</h2>
           <div class="form-group">
-            <label for="address">Address *</label>
-            <textarea id="address" name="address" class="form-input" rows="2" required placeholder="Street, Area, Landmark"></textarea>
+            <label for="address">Street Address, Flat / House No, Area <span class="req-star">*</span></label>
+            <textarea id="address" name="address" class="form-input" rows="2" required placeholder="e.g. Flat 402, Sunshine Heights, MG Road, Landmark near Metro Station"></textarea>
           </div>
           <div class="form-row-2">
             <div class="form-group">
-              <label for="city">City *</label>
-              <input type="text" id="city" name="city" class="form-input" required placeholder="Mumbai">
+              <label for="city">City / Town <span class="req-star">*</span></label>
+              <input type="text" id="city" name="city" class="form-input" required placeholder="e.g. Chennai / Bengaluru / Mumbai">
             </div>
             <div class="form-group">
-              <label for="pincode">Pincode *</label>
-              <input type="text" id="pincode" name="pincode" class="form-input" required placeholder="400001">
+              <label for="pincode">Pincode <span class="req-star">*</span></label>
+              <input type="text" id="pincode" name="pincode" class="form-input" required placeholder="e.g. 600001" pattern="[0-9]{6}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="specialNotes">Special Workshop Instructions (Optional)</label>
+            <input type="text" id="specialNotes" name="specialNotes" class="form-input" placeholder="e.g. Please engrave names in all caps, or call before delivery">
+          </div>
+        </div>
+
+        <!-- 3. Payment Method -->
+        <div class="checkout-section">
+          <h2>3. Select Payment Method</h2>
+          <div class="payment-options">
+            <label class="payment-option active" id="payOptionUpi">
+              <input type="radio" name="paymentMethod" value="UPI (GPay / PhonePe)" checked onchange="togglePaymentMode('UPI')">
+              <div class="payment-option-content">
+                <strong>📱 Google Pay / PhonePe / Paytm / UPI QR (0% Fee)</strong>
+                <p>Scan QR code or pay to UPI ID, then enter your 12-digit Transaction ID</p>
+              </div>
+            </label>
+            <label class="payment-option" id="payOptionCod">
+              <input type="radio" name="paymentMethod" value="COD" onchange="togglePaymentMode('COD')">
+              <div class="payment-option-content">
+                <strong>💵 Cash on Delivery (COD)</strong>
+                <p>Pay cash upon doorstep delivery</p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Dynamic UPI & GPay Payment Box -->
+          <% 
+            let calcSub = 0;
+            cartItems.forEach(item => { calcSub += item.unitPrice * item.quantity; });
+            let shipFee = calcSub >= 499 ? 0 : 49;
+            let finalPayAmount = calcSub + shipFee;
+            let storeUpiId = "goodyguys@upi"; // Store UPI ID
+          %>
+          <div class="upi-payment-container" id="upiPaymentBox">
+            <div class="upi-header">
+              <span class="upi-step-tag">Step-by-Step Payment</span>
+              <h3>Scan &amp; Pay via GPay / PhonePe / Paytm</h3>
+              <p>Pay <strong>₹<%= finalPayAmount.toLocaleString() %></strong> directly to our workshop bank account with 0% gateway charges.</p>
+            </div>
+
+            <div class="upi-grid-details">
+              <!-- QR Code Card -->
+              <div class="upi-qr-card">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=<%= encodeURIComponent('upi://pay?pa=' + storeUpiId + '&pn=GOODYGUYS+Studio&am=' + finalPayAmount + '&cu=INR&tn=GOODYGUYSOrder') %>" alt="UPI Payment QR Code" class="upi-qr-img">
+                <span class="qr-label">Scan with any UPI App</span>
+                <div class="upi-apps-icons">
+                  <span>GPay</span> • <span>PhonePe</span> • <span>Paytm</span> • <span>BHIM</span>
+                </div>
+              </div>
+
+              <!-- UPI Info & Steps -->
+              <div class="upi-instructions-card">
+                <div class="upi-id-row">
+                  <span class="id-label">Store UPI ID:</span>
+                  <div class="upi-id-copy-box">
+                    <code id="merchantUpiId"><%= storeUpiId %></code>
+                    <button type="button" class="btn btn-sm btn-outline" onclick="copyUpiId()">📋 Copy</button>
+                  </div>
+                  <span id="copySuccessMsg" style="display:none; color: #22c55e; font-size: 0.75rem;">✓ Copied!</span>
+                </div>
+
+                <div class="upi-steps-list">
+                  <div class="upi-step-item">
+                    <span class="num">1</span>
+                    <p>Open <strong>Google Pay</strong>, <strong>PhonePe</strong>, or <strong>Paytm</strong> on your phone.</p>
+                  </div>
+                  <div class="upi-step-item">
+                    <span class="num">2</span>
+                    <p>Scan the QR code or transfer <strong>₹<%= finalPayAmount.toLocaleString() %></strong> to <code><%= storeUpiId %></code>.</p>
+                  </div>
+                  <div class="upi-step-item">
+                    <span class="num">3</span>
+                    <p>After paying, copy the <strong>12-digit UPI Reference / UTR Number</strong> from your payment receipt and paste below.</p>
+                  </div>
+                </div>
+
+                <!-- 12-digit UTR Input Field -->
+                <div class="form-group utr-group">
+                  <label for="upiTransactionId">Enter 12-Digit UPI Transaction / UTR ID <span class="req-star">*</span></label>
+                  <input type="text" id="upiTransactionId" name="upiTransactionId" class="form-input form-input-lg" placeholder="e.g. 4289xxxxxxxx (12 digits)" maxlength="16">
+                  <span class="field-hint">💡 Found in your payment details as "UPI Ref No" or "UTR"</span>
+                </div>
+
+                <!-- Optional Payment Screenshot -->
+                <div class="form-group" style="margin-top: 10px;">
+                  <label for="paymentScreenshot" style="font-size: 0.82rem; color: var(--text-muted);">Optional: Attach Payment Screenshot</label>
+                  <input type="file" id="paymentScreenshot" name="paymentProof" accept="image/*" class="form-input form-input-sm">
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="checkout-section">
-          <h2>Payment Method</h2>
-          <div class="payment-options">
-            <label class="payment-option">
-              <input type="radio" name="paymentMethod" value="COD" checked>
-              <span>💵 Cash on Delivery</span>
-            </label>
-            <label class="payment-option">
-              <input type="radio" name="paymentMethod" value="UPI">
-              <span>📱 UPI Payment</span>
-            </label>
-            <label class="payment-option">
-              <input type="radio" name="paymentMethod" value="Card">
-              <span>💳 Credit / Debit Card</span>
-            </label>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-lg btn-block">Place Order — Secure Checkout</button>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="btnPlaceOrder">🔒 Confirm &amp; Submit Order</button>
       </form>
+
+      <!-- Order Summary Card -->
       <div class="checkout-summary">
-        <h3>Order Summary</h3>
-        <% let subtotal = 0 %>
+        <h3>Order Items Summary</h3>
+        <% let runningSubtotal = 0 %>
         <% cartItems.forEach(item => { %>
-          <% subtotal += item.product.price * item.quantity %>
+          <% const itemLinePrice = item.unitPrice * item.quantity %>
+          <% runningSubtotal += itemLinePrice %>
           <div class="checkout-item">
             <img src="<%= item.product.image %>" alt="<%= item.product.name %>">
-            <div>
+            <div class="checkout-item-details">
               <p class="checkout-item-name"><%= item.product.name %></p>
-              <p class="checkout-item-qty">Qty: <%= item.quantity %></p>
+              <% if (item.customText) { %><p class="checkout-item-sub">✍️ <%= item.customText %></p><% } %>
+              <% if (item.placement) { %><p class="checkout-item-sub">Placement: <%= item.placement %></p><% } %>
+              <% if (item.mugSides) { %><p class="checkout-item-sub">Sides: <%= item.mugSides %></p><% } %>
+              <p class="checkout-item-qty">Qty: <%= item.quantity %> × ₹<%= item.unitPrice %></p>
             </div>
-            <span>₹<%= (item.product.price * item.quantity).toLocaleString() %></span>
+            <span class="checkout-item-price">₹<%= itemLinePrice.toLocaleString() %></span>
           </div>
         <% }) %>
+
         <div class="summary-divider"></div>
         <div class="summary-row">
           <span>Subtotal</span>
-          <span>₹<%= subtotal.toLocaleString() %></span>
+          <span>₹<%= runningSubtotal.toLocaleString() %></span>
         </div>
         <div class="summary-row">
-          <span>Shipping</span>
-          <span><%= subtotal >= 499 ? 'FREE' : '₹99' %></span>
+          <span>Standard Delivery</span>
+          <span><%= runningSubtotal >= 499 ? 'FREE' : '₹49' %></span>
         </div>
         <div class="summary-row summary-total">
-          <span>Total</span>
-          <span>₹<%= (subtotal + (subtotal >= 499 ? 0 : 99)).toLocaleString() %></span>
+          <span>Total Amount</span>
+          <span class="total-amount">₹<%= (runningSubtotal + (runningSubtotal >= 499 ? 0 : 49)).toLocaleString() %></span>
+        </div>
+
+        <div class="checkout-trust-badges">
+          <span>🔒 256-bit Secure Checkout</span>
+          <span>⚡ Direct Bank Verification</span>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<script>
+  function togglePaymentMode(mode) {
+    const upiBox = document.getElementById('upiPaymentBox');
+    const upiOption = document.getElementById('payOptionUpi');
+    const codOption = document.getElementById('payOptionCod');
+    const utrInput = document.getElementById('upiTransactionId');
+
+    if (mode === 'UPI') {
+      if (upiBox) upiBox.style.display = 'block';
+      if (upiOption) upiOption.classList.add('active');
+      if (codOption) codOption.classList.remove('active');
+      if (utrInput) utrInput.required = true;
+    } else {
+      if (upiBox) upiBox.style.display = 'none';
+      if (upiOption) upiOption.classList.remove('active');
+      if (codOption) codOption.classList.add('active');
+      if (utrInput) utrInput.required = false;
+    }
+  }
+
+  function copyUpiId() {
+    const upiText = document.getElementById('merchantUpiId').textContent;
+    navigator.clipboard.writeText(upiText).then(() => {
+      const msg = document.getElementById('copySuccessMsg');
+      if (msg) {
+        msg.style.display = 'inline';
+        setTimeout(() => { msg.style.display = 'none'; }, 2500);
+      }
+    });
+  }
+
+  // Validate UPI Transaction ID before submission
+  const checkoutForm = document.getElementById('checkoutOrderForm');
+  if (checkoutForm) {
+    checkoutForm.addEventListener('submit', function(e) {
+      const isUpi = document.querySelector('input[name="paymentMethod"]:checked')?.value.includes('UPI');
+      if (isUpi) {
+        const utr = document.getElementById('upiTransactionId').value.trim();
+        if (!utr || utr.length < 6) {
+          e.preventDefault();
+          alert('⚠️ Please enter your 12-digit UPI Transaction / UTR Number from your GPay/PhonePe payment receipt so we can verify and approve your order!');
+          document.getElementById('upiTransactionId').focus();
+          return false;
+        }
+      }
+    });
+  }
+</script>
 
 <%- include('partials/footer') %>

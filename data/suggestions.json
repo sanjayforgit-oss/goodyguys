@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Acrylic Spotify Music Plaque with Scannable Song Code",
+    "category": "laser-acrylic",
+    "name": "Arun Kumar",
+    "description": "Clear acrylic plaque with album cover, song name, artist, and scannable Spotify code that plays when scanned!",
+    "upvotes": 42,
+    "date": "12 Oct 2026",
+    "status": "In Development 🚀"
+  },
+  {
+    "id": 2,
+    "title": "Laser Cut Wooden Mobile & Tablet Desk Stand",
+    "category": "laser-acrylic",
+    "name": "Sneha R.",
+    "description": "Ergonomic laser cut mobile phone dock with cable slot and custom name/logo engraved on front.",
+    "upvotes": 29,
+    "date": "14 Oct 2026",
+    "status": "Under Review 🧐"
+  },
+  {
+    "id": 3,
+    "title": "Anime & Gaming Metallic Holographic Stickers",
+    "category": "stickers",
+    "name": "Karthik V.",
+    "description": "Waterproof holographic cut stickers for laptops, helmets, and water bottles.",
+    "upvotes": 21,
+    "date": "15 Oct 2026",
+    "status": "Planned ✨"
+  }
+]

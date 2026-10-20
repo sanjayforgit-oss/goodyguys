@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="kcBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18182e"/>
+      <stop offset="100%" stop-color="#0b0b14"/>
+    </linearGradient>
+    <linearGradient id="photoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="40%" stop-color="#ec4899"/>
+      <stop offset="80%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="kcShadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <rect width="500" height="500" rx="24" fill="url(#kcBg)"/>
+
+  <!-- Ring and Chain -->
+  <g transform="translate(180, 40)">
+    <circle cx="70" cy="40" r="30" fill="none" stroke="#e2e8f0" stroke-width="7"/>
+    <ellipse cx="70" cy="85" rx="7" ry="12" fill="none" stroke="#cbd5e1" stroke-width="4.5"/>
+    <ellipse cx="70" cy="110" rx="7" ry="12" fill="none" stroke="#94a3b8" stroke-width="4.5"/>
+  </g>
+
+  <!-- Keychain Body (Acrylic Tag with Printed Photo) -->
+  <g transform="translate(140, 160)" filter="url(#kcShadow)">
+    <!-- Clear Acrylic Border Ring -->
+    <rect x="0" y="0" width="220" height="230" rx="28" fill="#ffffff" fill-opacity="0.12" stroke="#ffffff" stroke-width="3" stroke-opacity="0.3"/>
+    <circle cx="110" cy="20" r="8" fill="#18182e" stroke="#cbd5e1" stroke-width="2"/>
+
+    <!-- High Gloss Printed Artwork -->
+    <rect x="18" y="38" width="184" height="174" rx="18" fill="url(#photoGrad)"/>
+    
+    <!-- Photo Artwork Inside -->
+    <circle cx="110" cy="100" r="42" fill="#ffffff" opacity="0.3"/>
+    <path d="M 50 180 C 70 125 150 125 170 180 Z" fill="#ffffff" opacity="0.4"/>
+    <circle cx="110" cy="90" r="24" fill="#ffffff" opacity="0.9"/>
+    
+    <!-- Custom text banner -->
+    <rect x="30" y="150" width="160" height="40" rx="8" fill="#000000" fill-opacity="0.6"/>
+    <text x="110" y="172" text-anchor="middle" fill="#ffffff" font-family="'Inter', sans-serif" font-size="12" font-weight="800">ANY PHOTO / ART</text>
+    <text x="110" y="184" text-anchor="middle" fill="#fbcfe8" font-family="'Inter', sans-serif" font-size="9">HIGH GLOSS ACRYLIC</text>
+  </g>
+
+  <!-- Tag -->
+  <rect x="35" y="420" width="180" height="34" rx="17" fill="#ec4899" fill-opacity="0.2" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="125" y="442" text-anchor="middle" fill="#f472b6" font-family="'Inter', sans-serif" font-size="13" font-weight="600">Scratch-Proof Acrylic</text>
+</svg>

@@ -1,158 +1,265 @@
 [
   {
     "id": 1,
-    "name": "Custom Printed T-Shirt",
+    "name": "Custom T-Shirt Print",
     "category": "t-shirts",
-    "description": "Premium quality cotton t-shirt with your custom design. Available in multiple colors and sizes. Perfect for personal use, gifting, or promotional events.",
-    "price": 499,
-    "originalPrice": 799,
-    "image": "/api/placeholder/400/400?text=T-Shirt",
+    "customizerType": "tshirt",
+    "description": "Premium 100% combed cotton t-shirt with high-definition digital print. Specifically printed on crisp white and bright pastel t-shirts for optimum color vibrancy. Choose front print, back print, or both front & back with your custom graphics or text.",
+    "price": 300,
+    "originalPrice": 499,
+    "image": "/images/real-tshirt.jpg",
     "badge": "Bestseller",
-    "colors": ["White", "Black", "Navy Blue", "Red", "Royal Blue"],
-    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "active": true,
+    "requiresImage": false,
+    "requiresText": false,
+    "placementOptions": [
+      {
+        "id": "front",
+        "name": "Front Only",
+        "price": 300,
+        "enabled": true
+      },
+      {
+        "id": "back",
+        "name": "Back Only",
+        "price": 300,
+        "enabled": true
+      },
+      {
+        "id": "both",
+        "name": "Both Front & Back (+₹100)",
+        "price": 400,
+        "enabled": true
+      }
+    ],
+    "colors": [
+      "Pure White",
+      "Off-White / Cream",
+      "Sky Blue",
+      "Pastel Yellow",
+      "Light Lavender",
+      "Baby Pink"
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
     "customizable": true,
-    "features": ["100% Cotton", "Machine Washable", "High Resolution Print", "Fade Resistant"]
+    "features": [
+      "100% Combed Bio-Washed Cotton",
+      "Bright & White T-Shirt Color Range",
+      "Front, Back, or Both-Sides Print (₹400 for Both)",
+      "Breathable HD Sublimation / DTF",
+      "Machine Wash Safe (30+ washes)"
+    ],
+    "disabledOptions": []
   },
   {
     "id": 2,
-    "name": "Custom Photo Mug",
-    "category": "goodies",
-    "description": "Ceramic mug with your favorite photo or design. Microwave and dishwasher safe. Perfect for coffee, tea, or hot chocolate.",
-    "price": 299,
-    "originalPrice": 499,
-    "image": "/api/placeholder/400/400?text=Mug",
+    "name": "Custom Print Mouse Pad",
+    "category": "mousepads",
+    "customizerType": "mousepad",
+    "description": "High-precision gaming & workstation mouse pad featuring your custom photo, artwork, or corporate logo. Non-slip natural rubber base with micro-weave smooth cloth surface.",
+    "price": 150,
+    "originalPrice": 299,
+    "image": "/images/real-mousepad.jpg",
     "badge": "Popular",
-    "colors": ["White", "Black"],
+    "active": true,
+    "requiresImage": true,
+    "requiresText": false,
+    "shapes": [
+      "Classic Rectangle (24x20cm)",
+      "Ergonomic Round (21cm Dia)"
+    ],
     "customizable": true,
-    "features": ["11oz Capacity", "Premium Ceramic", "Dishwasher Safe", "Microwave Safe"]
+    "features": [
+      "Micro-Weave Smooth Tracking Surface",
+      "Non-Slip Natural Rubber Base",
+      "Anti-Fray Stitched Precision Edges",
+      "Vivid Edge-to-Edge Sublimation"
+    ]
   },
   {
     "id": 3,
-    "name": "Name Printed Keychain",
-    "category": "keychains",
-    "description": "Elegant acrylic keychain with your custom name or text. Double-sided printing with vibrant colors. Great as a personalized gift.",
-    "price": 149,
+    "name": "Custom Print Ceramic Mug",
+    "category": "mugs",
+    "customizerType": "mug",
+    "description": "Glossy 11oz ceramic coffee mug customized with your photos and graphics. Choose to print on 1 side, 2 sides, or a full 3-side panoramic wrap. Microwave & dishwasher safe.",
+    "price": 150,
     "originalPrice": 249,
-    "image": "/api/placeholder/400/400?text=Keychain",
-    "badge": "Budget Friendly",
-    "colors": ["Clear", "Glow in Dark", "Gold", "Silver"],
+    "image": "/images/real-mug.jpg",
+    "badge": "Top Gift",
+    "active": true,
+    "requiresImage": true,
+    "requiresText": true,
+    "sideOptions": [
+      {
+        "sides": 1,
+        "name": "1 Side Print",
+        "price": 150,
+        "enabled": true
+      },
+      {
+        "sides": 2,
+        "name": "2 Sides Print",
+        "price": 175,
+        "enabled": true
+      },
+      {
+        "sides": 3,
+        "name": "3 Sides (Full Wrap)",
+        "price": 200,
+        "enabled": true
+      }
+    ],
+    "colors": [
+      "Pure White",
+      "Inner Light Pink",
+      "Inner Sky Blue",
+      "Inner Yellow"
+    ],
     "customizable": true,
-    "features": ["Acrylic Material", "Double Sided", "Durable Ring", "Vibrant Colors"]
+    "features": [
+      "11oz (325ml) Food-Grade Ceramic",
+      "1, 2, or 3 Sides Wrap Option",
+      "Microwave & Dishwasher Safe",
+      "Scratch-Resistant Gloss Glaze"
+    ]
   },
   {
     "id": 4,
-    "name": "Custom Mouse Pad",
-    "category": "goodies",
-    "description": "High-quality mouse pad with your custom design. Smooth surface for precise mouse control with non-slip rubber base.",
-    "price": 249,
-    "originalPrice": 399,
-    "image": "/api/placeholder/400/400?text=Mouse+Pad",
-    "badge": null,
-    "colors": ["White", "Black"],
+    "name": "Name Engraving in Acrylic",
+    "category": "laser-acrylic",
+    "customizerType": "acrylic-engrave",
+    "description": "Laser engraved personalized transparent acrylic desk plate or plaque. Permanent precision frosted etching of any name, motivational quote, or custom message with complimentary wooden stand.",
+    "price": 100,
+    "originalPrice": 199,
+    "image": "/images/real-acrylic-engrave.jpg",
+    "badge": "Laser Tech",
+    "active": true,
+    "requiresImage": false,
+    "requiresText": true,
+    "shapes": [
+      "Rectangular Desk Plate",
+      "Modern Hexagon",
+      "Classic Shield",
+      "Circle Badge"
+    ],
+    "fonts": [
+      "Dancing Script",
+      "Bebas Neue",
+      "Space Grotesk",
+      "Playfair Display",
+      "Permanent Marker",
+      "Courier Prime",
+      "Pacifico"
+    ],
     "customizable": true,
-    "features": ["Non-slip Base", "Smooth Surface", "Stitched Edges", "24x20cm"]
+    "features": [
+      "Precision Laser Surface Frosted Etching",
+      "Durable 4mm Crystal Clear Optical Acrylic",
+      "Natural Hardwood Desk Stand Included",
+      "Zero Fading / Never Wears Off"
+    ]
   },
   {
     "id": 5,
-    "name": "Photo Print (Glossy)",
-    "category": "photos",
-    "description": "High-quality glossy photo prints on premium paper. Vivid colors and sharp details. Available in multiple sizes.",
-    "price": 99,
+    "name": "Name Cut in Acrylic",
+    "category": "laser-acrylic",
+    "customizerType": "acrylic-cut",
+    "description": "Precision laser-cut transparent rectangular acrylic keychain. The keychain is crafted in a clean rectangular acrylic plate where your custom name is precision cut through the crystal-clear slab, creating sleek hollow stencil lettering inside the rectangle.",
+    "price": 100,
     "originalPrice": 199,
-    "image": "/api/placeholder/400/400?text=Photo+Print",
-    "badge": "Best Price",
+    "image": "/images/real-acrylic-cut.jpg",
+    "badge": "Laser Cut",
+    "active": true,
+    "requiresImage": false,
+    "requiresText": true,
+    "acrylicFinishes": [
+      "Transparent Clear (Optical Acrylic)"
+    ],
+    "fonts": [
+      "Dancing Script",
+      "Bebas Neue",
+      "Space Grotesk",
+      "Playfair Display",
+      "Permanent Marker",
+      "Courier Prime",
+      "Pacifico"
+    ],
     "customizable": true,
-    "features": ["Glossy Finish", "Premium Paper", "Vivid Colors", "Fade Resistant"]
+    "features": [
+      "Precision Laser Cut-Through Inside Transparent Rectangle",
+      "Solid 4mm Crystal Clear Optical Acrylic Slab",
+      "Ultra-Smooth Diamond-Polished Finished Edges",
+      "Heavy-Duty Stainless Steel Keyring Included",
+      "100% In-House Precision Laser Atelier Production"
+    ]
   },
   {
     "id": 6,
-    "name": "Custom Printed Hoodie",
-    "category": "t-shirts",
-    "description": "Warm and comfortable hoodie with your custom design. Fleece lined for extra warmth. Available in trendy colors and sizes.",
-    "price": 899,
-    "originalPrice": 1299,
-    "image": "/api/placeholder/400/400?text=Hoodie",
-    "badge": null,
-    "colors": ["Black", "Gray", "Navy Blue", "Maroon"],
-    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "name": "Custom Image Printed Keychain",
+    "category": "keychains",
+    "customizerType": "image-keychain",
+    "description": "Pocket-sized personalized acrylic keychain featuring your favorite photograph, character artwork, or couple memory. Protected by a crystal clear scratch-resistant resin coat.",
+    "price": 100,
+    "originalPrice": 180,
+    "image": "/images/real-keychain.jpg",
+    "badge": "Budget Pick",
+    "active": true,
+    "requiresImage": true,
+    "requiresText": false,
+    "shapes": [
+      "Square (5x5cm)",
+      "Circle (5cm Dia)",
+      "Heart Shape",
+      "Rounded Rectangle"
+    ],
     "customizable": true,
-    "features": ["Fleece Lined", "Drawstring Hood", "Kangaroo Pocket", "300 GSM"]
+    "features": [
+      "High-Res Double-Sided Photo Print",
+      "Crystal Clear Optical Acrylic",
+      "Scratch & Water Resistant",
+      "Reinforced Heavy Duty Ring"
+    ]
   },
   {
     "id": 7,
-    "name": "Custom Photo Frame",
-    "category": "photos",
-    "description": "Beautiful photo frame with your printed photo inside. Elegant design suitable for home or office decor.",
-    "price": 399,
+    "name": "Personalised Engraved Lamp",
+    "category": "lamps",
+    "customizerType": "engraved-lamp",
+    "description": "Illuminated 3D illusion acrylic night lamp. Laser engraved with your names, special date, or couple portrait, placed on a natural wooden LED base creating a warm romantic glow.",
+    "price": 300,
     "originalPrice": 599,
-    "image": "/api/placeholder/400/400?text=Photo+Frame",
-    "badge": null,
-    "colors": ["Black", "Brown", "White", "Gold"],
+    "image": "/images/real-lamp.jpg",
+    "badge": "Romantic Gift",
+    "active": true,
+    "requiresImage": false,
+    "requiresText": true,
+    "lampBases": [
+      {
+        "id": "wooden-warm",
+        "name": "Warm Yellow Wooden LED Base",
+        "price": 300,
+        "enabled": true
+      },
+      {
+        "id": "rgb-touch",
+        "name": "RGB 7-Color Touch Base",
+        "price": 350,
+        "enabled": true
+      }
+    ],
     "customizable": true,
-    "features": ["Premium Frame", "Glass Cover", "Wall Mount", "Desk Stand"]
-  },
-  {
-    "id": 8,
-    "name": "Custom Phone Case",
-    "category": "goodies",
-    "description": "Slim and protective phone case with your custom design. Precision cutouts for all ports and buttons.",
-    "price": 349,
-    "originalPrice": 549,
-    "image": "/api/placeholder/400/400?text=Phone+Case",
-    "badge": "Trending",
-    "colors": ["Transparent", "White", "Black"],
-    "customizable": true,
-    "features": ["Shock Absorption", "Precision Cutouts", "Slim Fit", "Scratch Resistant"]
-  },
-  {
-    "id": 9,
-    "name": "Custom Engraved Pen",
-    "category": "goodies",
-    "description": "Professional metal pen with custom name engraving. Smooth writing experience. Perfect corporate gift.",
-    "price": 199,
-    "originalPrice": 349,
-    "image": "/api/placeholder/400/400?text=Pen",
-    "badge": null,
-    "colors": ["Silver", "Gold", "Black", "Blue"],
-    "customizable": true,
-    "features": ["Metal Body", "Fine Tip", "Refillable", "Gift Box Included"]
-  },
-  {
-    "id": 10,
-    "name": "Custom Tote Bag",
-    "category": "goodies",
-    "description": "Eco-friendly canvas tote bag with your custom print. Sturdy and spacious. Perfect for shopping or daily use.",
-    "price": 349,
-    "originalPrice": 499,
-    "image": "/api/placeholder/400/400?text=Tote+Bag",
-    "badge": "Eco Friendly",
-    "colors": ["Natural", "Black", "White"],
-    "customizable": true,
-    "features": ["100% Cotton Canvas", "Reinforced Stitching", "36x42cm", "Eco Friendly"]
-  },
-  {
-    "id": 11,
-    "name": "Custom Photo Calendar",
-    "category": "photos",
-    "description": "Personalized wall calendar with your photos for each month. Spiral bound with premium paper. Makes a thoughtful gift.",
-    "price": 299,
-    "originalPrice": 499,
-    "image": "/api/placeholder/400/400?text=Calendar",
-    "badge": null,
-    "customizable": true,
-    "features": ["12 Photos", "Spiral Bound", "Premium Paper", "Large Date Boxes"]
-  },
-  {
-    "id": 12,
-    "name": "Custom Name Plate",
-    "category": "keychains",
-    "description": "Elegant wooden or acrylic name plate for desk or door. personalized with custom name and title.",
-    "price": 449,
-    "originalPrice": 699,
-    "image": "/api/placeholder/400/400?text=Name+Plate",
-    "badge": null,
-    "colors": ["Wood Finish", "Acrylic Clear", "Acrylic Black"],
-    "customizable": true,
-    "features": ["Premium Material", "Laser Engraved", "Stand Included", "Multiple Sizes"]
+    "features": [
+      "Precision Laser-Etched 4mm Acrylic Plate",
+      "Solid Beechwood Base with Warm LED Lights",
+      "USB Powered with On/Off Inline Switch",
+      "Long-Life 50,000 Hour Energy Efficient LEDs",
+      "Optional Photo-to-Line-Art Laser Engraving"
+    ]
   }
 ]

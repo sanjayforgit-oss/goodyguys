@@ -2,9 +2,9 @@
 
 <section class="page-header">
   <div class="container">
-    <span class="section-label">Cart</span>
+    <span class="section-label">Your Bag</span>
     <h1>Shopping Cart</h1>
-    <p><%= cartItems.length %> item(s) in your cart</p>
+    <p><%= cartItems.length %> customized product(s) in your cart</p>
   </div>
 </section>
 
@@ -14,8 +14,11 @@
       <div class="empty-state">
         <span class="icon">🛒</span>
         <h2>Your cart is empty</h2>
-        <p>Looks like you haven't added anything yet. Start exploring our products!</p>
-        <a href="/products" class="btn btn-primary">Browse Products</a>
+        <p>Looks like you haven't customized any products yet. Start exploring our studio collection!</p>
+        <div style="margin-top: 16px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <a href="/products" class="btn-streetwear-volt">Browse Customizable Products</a>
+          <a href="/suggest" class="btn-streetwear-ghost">Suggest a Product Idea</a>
+        </div>
       </div>
     <% } else { %>
       <div class="cart-layout">
@@ -24,14 +27,80 @@
             <div class="cart-item">
               <div class="cart-item-image">
                 <img src="<%= item.product.image %>" alt="<%= item.product.name %>">
+                <span class="cart-type-badge"><%= item.product.category.replace('-', ' ') %></span>
               </div>
               <div class="cart-item-info">
                 <h3><%= item.product.name %></h3>
-                <% if (item.customText) { %><p class="cart-custom">Custom: <strong><%= item.customText %></strong></p><% } %>
-                <% if (item.color) { %><p class="cart-custom">Color: <%= item.color %></p><% } %>
-                <% if (item.size) { %><p class="cart-custom">Size: <%= item.size %></p><% } %>
-                <p class="cart-price">₹<%= (item.product.price * item.quantity).toLocaleString() %></p>
+                
+                <div class="custom-specs-list">
+                  <% if (item.customText) { %>
+                    <div class="spec-tag highlight">
+                      <span class="spec-key">✍️ Custom Text:</span>
+                      <strong><%= item.customText %></strong>
+                    </div>
+                  <% } %>
+                  <% if (item.placement) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">Placement:</span>
+                      <span><%= item.placement %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.mugSides) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">Print Sides:</span>
+                      <span><%= item.mugSides %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.material) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">Acrylic Finish:</span>
+                      <span><%= item.material %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.fontStyle) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">Font Style:</span>
+                      <span><%= item.fontStyle %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.lampBase) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">LED Base:</span>
+                      <span><%= item.lampBase %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.color) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">Color:</span>
+                      <span><%= item.color %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.size) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">Size:</span>
+                      <span><%= item.size %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.shape) { %>
+                    <div class="spec-tag">
+                      <span class="spec-key">Shape:</span>
+                      <span><%= item.shape %></span>
+                    </div>
+                  <% } %>
+                  <% if (item.customImageName) { %>
+                    <div class="spec-tag image-attached">
+                      <span class="spec-key">📸 Uploaded Graphic:</span>
+                      <span><%= item.customImageName %></span>
+                    </div>
+                  <% } %>
+                </div>
+
+                <div class="cart-price-row">
+                  <span class="unit-price">₹<%= item.unitPrice.toLocaleString() %> each</span>
+                  <span class="item-total-price">₹<%= (item.unitPrice * item.quantity).toLocaleString() %></span>
+                </div>
               </div>
+
               <div class="cart-item-actions">
                 <form method="POST" action="/cart/update" class="cart-qty-form">
                   <input type="hidden" name="index" value="<%= index %>">
@@ -41,33 +110,34 @@
                 </form>
                 <form method="POST" action="/cart/remove">
                   <input type="hidden" name="index" value="<%= index %>">
-                  <button type="submit" class="btn-remove">Remove</button>
+                  <button type="submit" class="btn-remove" title="Remove item">Remove</button>
                 </form>
               </div>
             </div>
           <% }) %>
         </div>
+
         <div class="cart-summary">
           <h3>Order Summary</h3>
           <div class="summary-row">
-            <span>Subtotal</span>
+            <span>Subtotal (<%= cartItems.reduce((acc, it) => acc + it.quantity, 0) %> items)</span>
             <span>₹<%= subtotal.toLocaleString() %></span>
           </div>
           <div class="summary-row">
-            <span>Shipping</span>
-            <span><%= subtotal >= 499 ? 'FREE' : '₹99' %></span>
+            <span>Standard Shipping</span>
+            <span><%= subtotal >= 499 ? 'FREE' : '₹49' %></span>
           </div>
           <div class="summary-row summary-total">
-            <span>Total</span>
-            <span>₹<%= (subtotal + (subtotal >= 499 ? 0 : 99)).toLocaleString() %></span>
+            <span>Total Payable</span>
+            <span class="total-amount">₹<%= (subtotal + (subtotal >= 499 ? 0 : 49)).toLocaleString() %></span>
           </div>
           <% if (subtotal < 499) { %>
-            <p class="free-shipping-msg">Add ₹<%= (499 - subtotal).toLocaleString() %> more for free shipping!</p>
+            <p class="free-shipping-msg">Add ₹<%= (499 - subtotal).toLocaleString() %> more to unlock <strong>FREE Shipping</strong>!</p>
           <% } else { %>
-            <p class="free-shipping-msg success">🎉 You qualify for free shipping!</p>
+            <p class="free-shipping-msg success">🎉 You unlocked FREE Shipping across India!</p>
           <% } %>
-          <a href="/checkout" class="btn btn-primary btn-block">Proceed to Checkout</a>
-          <a href="/products" class="btn btn-ghost btn-block btn-sm" style="margin-top: 8px;">Continue Shopping</a>
+          <a href="/checkout" class="btn-cart-checkout">Proceed to Checkout &rarr;</a>
+          <a href="/products" class="btn-cart-continue">&larr; Continue Shopping</a>
         </div>
       </div>
     <% } %>

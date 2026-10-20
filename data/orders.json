@@ -1,0 +1,59 @@
+[
+  {
+    "id": "CPMV9VFOFF3T6",
+    "items": [
+      {
+        "productId": 1,
+        "unitPrice": 300,
+        "quantity": 1,
+        "customText": "",
+        "placement": "Front Only",
+        "mugSides": "",
+        "lampBase": "",
+        "material": "",
+        "fontStyle": "",
+        "color": "Black",
+        "size": "M",
+        "shape": "",
+        "customImageName": "",
+        "customImagePath": "",
+        "productName": "Custom T-Shirt Print"
+      },
+      {
+        "productId": 2,
+        "unitPrice": 150,
+        "quantity": 1,
+        "customText": "",
+        "placement": "",
+        "mugSides": "",
+        "lampBase": "",
+        "material": "",
+        "fontStyle": "",
+        "color": "",
+        "size": "",
+        "shape": "Ergonomic Round (21cm Dia)",
+        "customImageName": "",
+        "customImagePath": "",
+        "productName": "Custom Print Mouse Pad"
+      }
+    ],
+    "customer": {
+      "name": "sanjay babu",
+      "email": "sanjaybabu.bl29@gmail.com",
+      "phone": "+919036969700",
+      "address": "no-2, thirumalai nagar north extension,\r\nhasthinapuram",
+      "city": "chennai",
+      "pincode": "600064",
+      "specialNotes": ""
+    },
+    "paymentMethod": "UPI (GPay / PhonePe)",
+    "upiTransactionId": "462847598127",
+    "paymentStatus": "Paid (Verified by Admin)",
+    "paymentProofFile": "/uploads/custom-1792088857697-685690912.jpg",
+    "subtotal": 450,
+    "shipping": 49,
+    "total": 499,
+    "status": "Delivered",
+    "date": "15 Oct 2026, 11:57 pm"
+  }
+]

@@ -2,55 +2,202 @@
 
 <section class="product-detail-page">
   <div class="container">
-    <a href="/products" class="back-link">← Back to Products</a>
+    <div class="breadcrumb-nav">
+      <a href="/">Home</a> <span>/</span>
+      <a href="/products">Shop</a> <span>/</span>
+      <a href="/products?category=<%= product.category %>"><%= product.category.replace('-', ' ') %></a> <span>/</span>
+      <span class="active"><%= product.name %></span>
+    </div>
+
     <div class="product-detail-layout">
-      <div class="product-detail-image">
-        <img src="<%= product.image %>" alt="<%= product.name %>">
-        <% if (product.badge) { %><span class="badge badge-lg"><%= product.badge %></span><% } %>
-      </div>
-      <div class="product-detail-info">
-        <span class="product-category"><%= product.category %></span>
-        <h1><%= product.name %></h1>
-        <div class="product-price">
-          <span class="current current-lg">₹<%= product.price.toLocaleString() %></span>
-          <% if (product.originalPrice > product.price) { %>
-            <span class="original original-lg">₹<%= product.originalPrice.toLocaleString() %></span>
-            <span class="btn btn-sm" style="background: rgba(34,197,94,0.1); color: #22c55e; border: none; cursor: default; margin-left: 8px;">Save ₹<%= (product.originalPrice - product.price).toLocaleString() %></span>
-          <% } %>
-        </div>
-        <div class="product-rating" style="margin: 12px 0;">
-          <span class="stars">★★★★★</span>
-          <span>4.9 (128 reviews)</span>
-        </div>
-        <p class="product-description"><%= product.description %></p>
+      <!-- Left Column: Interactive Product Live Mockup & Preview -->
+      <div class="product-customizer-preview-box">
+        <div class="preview-stage-container" id="previewStage">
+          <!-- Main Product Illustration/Mockup -->
+          <img src="<%= product.image %>" alt="<%= product.name %>" class="preview-base-img" id="baseMockupImg">
+          
+          <!-- Clean Product Image Display (No awkward yellow overlay covering the photo) -->
 
-        <form class="customize-form" method="POST" action="/cart/add">
-          <input type="hidden" name="productId" value="<%= product.id %>">
-
-          <% if (product.customizable) { %>
-            <div class="form-group">
-              <label for="customText">Custom Text / Design Name</label>
-              <input type="text" id="customText" name="customText" placeholder="Enter your text here..." class="form-input">
+          <!-- Live Overlay: For T-Shirt Slogan Preview -->
+          <% if (product.customizerType === 'tshirt') { %>
+            <div class="live-tshirt-slogan-overlay" id="tshirtSloganOverlay" style="display: none;">
+              <span class="tshirt-live-text" id="liveTshirtSlogan">YOUR SLOGAN</span>
             </div>
           <% } %>
 
-          <% if (product.colors) { %>
-            <div class="form-group">
-              <label>Color</label>
+          <!-- Live Overlay: For Lamp with Toggleable Glow -->
+          <% if (product.customizerType === 'engraved-lamp') { %>
+            <div class="live-lamp-glow" id="lampGlowEffect"></div>
+            <div class="live-lamp-overlay" id="lampTextOverlay">
+              <span class="lamp-name" id="liveLampText">Custom Name</span>
+            </div>
+          <% } %>
+
+          <!-- Live Overlay: Uploaded Image Preview Thumbnail -->
+          <div class="uploaded-img-preview-badge" id="imagePreviewContainer" style="display: none;">
+            <img id="imagePreviewThumb" src="" alt="Uploaded Graphic">
+            <span class="preview-check" id="previewCheckText">✓ Graphic Loaded</span>
+          </div>
+
+          <% if (product.badge) { %>
+            <span class="badge badge-lg preview-badge"><%= product.badge %></span>
+          <% } %>
+        </div>
+
+        <!-- Interactive Preview Controls -->
+        <div class="preview-controls-bar">
+          <% if (product.customizerType === 'engraved-lamp') { %>
+            <button type="button" class="btn btn-sm btn-outline" id="toggleLampLightBtn">💡 Toggle Lamp Light (On/Off)</button>
+          <% } %>
+          <% if (product.customizerType === 'tshirt') { %>
+            <span class="preview-note">👕 Preview shows White/Bright Shirt canvas</span>
+          <% } %>
+          <% if (product.customizerType === 'acrylic-cut') { %>
+            <span class="preview-note">✂️ Simulation of 100% Cut-Through Acrylic Letters (Zero Engraving)</span>
+          <% } %>
+        </div>
+
+        <div class="studio-guarantee-box">
+          <div class="guarantee-item">
+            <span class="g-icon">⚡</span>
+            <div>
+              <strong>In-House Precision Studio</strong>
+              <p>Crafted &amp; inspected directly on our machines</p>
+            </div>
+          </div>
+          <div class="guarantee-item">
+            <span class="g-icon">🚚</span>
+            <div>
+              <strong>Fast Dispatch</strong>
+              <p>Dispatched in 24-48 hours with door delivery</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Customization Form -->
+      <div class="product-detail-info">
+        <span class="product-category"><%= product.category.replace('-', ' ') %></span>
+        <h1 class="product-title"><%= product.name %></h1>
+
+        <!-- Price Display that recalculates dynamically -->
+        <div class="product-price-box">
+          <span class="currency-symbol">₹</span>
+          <span class="current-price-dynamic" id="dynamicDisplayPrice"><%= product.price.toLocaleString() %></span>
+          <% if (product.originalPrice > product.price) { %>
+            <span class="original original-lg">₹<%= product.originalPrice.toLocaleString() %></span>
+            <span class="save-badge">Save ₹<%= (product.originalPrice - product.price).toLocaleString() %></span>
+          <% } %>
+        </div>
+
+        <p class="product-description"><%= product.description %></p>
+
+        <!-- Customizer Form -->
+        <form class="customize-form" id="customizerForm" method="POST" action="/cart/add" enctype="multipart/form-data">
+          <input type="hidden" name="productId" value="<%= product.id %>">
+          <input type="hidden" name="calculatedPrice" id="calculatedPriceInput" value="<%= product.price %>">
+
+          <!-- 1. T-SHIRT SPECIFIC OPTIONS -->
+          <% if (product.customizerType === 'tshirt') { %>
+            <!-- Placement: Front, Back, Both -->
+            <div class="customizer-card-section" id="tshirtPlacementSection">
+              <label class="section-label-bold">1. Select Print Placement <span class="req-star">*</span></label>
+              <div class="radio-card-grid">
+                <label class="radio-card active">
+                  <input type="radio" name="placement" value="Front Only" data-price="300" checked onchange="updateTshirtPlacement(this)">
+                  <div class="card-radio-content">
+                    <strong>Front Only</strong>
+                    <span class="card-price">₹300</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="placement" value="Back Only" data-price="300" onchange="updateTshirtPlacement(this)">
+                  <div class="card-radio-content">
+                    <strong>Back Only</strong>
+                    <span class="card-price">₹300</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="placement" value="Both Front &amp; Back" data-price="400" onchange="updateTshirtPlacement(this)">
+                  <div class="card-radio-content">
+                    <strong>Both Sides</strong>
+                    <span class="card-price">₹400 (+₹100)</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- T-Shirt Customization Mode Tabs: Upload Image or Type Text -->
+            <div class="customizer-card-section" id="tshirtCustomizerBox">
+              <label class="section-label-bold">2. How Would You Like to Customize Your T-Shirt? <span class="req-star">*</span></label>
+              <div class="mode-tab-buttons">
+                <button type="button" class="mode-tab-btn active" id="modeBtnUpload" onclick="setTshirtMode('upload')">📸 Upload Image / Logo</button>
+                <button type="button" class="mode-tab-btn" id="modeBtnText" onclick="setTshirtMode('text')">✍️ Type Text / Slogan</button>
+                <button type="button" class="mode-tab-btn" id="modeBtnBoth" onclick="setTshirtMode('both')">✨ Both (Image + Text)</button>
+              </div>
+
+              <!-- Upload Mode Container -->
+              <div class="mode-panel active" id="panelUpload">
+                <div class="form-sub-header">
+                  <span id="frontUploadHeading">Upload Front Artwork / Graphic:</span>
+                </div>
+                <div class="file-dropzone" id="dropzoneTshirtFront">
+                  <input type="file" id="tshirtFileFront" name="customImageFront" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Front')">
+                  <label for="tshirtFileFront" class="dropzone-label">
+                    <span class="upload-icon">📁</span>
+                    <span class="upload-title" id="tshirtFileFrontLabel">Click or Drag &amp; Drop Front Artwork</span>
+                    <span class="upload-hint">PNG, JPG, SVG or PDF (High Resolution recommended)</span>
+                  </label>
+                </div>
+
+                <!-- Back Artwork Upload (visible when Both Sides chosen) -->
+                <div id="backUploadWrapper" style="display: none; margin-top: 14px;">
+                  <div class="form-sub-header">
+                    <span>Upload Back Artwork / Graphic:</span>
+                  </div>
+                  <div class="file-dropzone" id="dropzoneTshirtBack">
+                    <input type="file" id="tshirtFileBack" name="customImageBack" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Back')">
+                    <label for="tshirtFileBack" class="dropzone-label">
+                      <span class="upload-icon">📁</span>
+                      <span class="upload-title" id="tshirtFileBackLabel">Click to Upload Back Artwork</span>
+                      <span class="upload-hint">High resolution design or logo</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Text / Slogan Mode Container -->
+              <div class="mode-panel" id="panelText" style="display: none; margin-top: 14px;">
+                <div class="form-group">
+                  <label for="tshirtTextInput">Front Text / Slogan / Name:</label>
+                  <input type="text" id="tshirtTextInput" name="customText" placeholder="e.g. Vintage 1998 / Hustle Never Stops / Coding Club" class="form-input" oninput="updateTshirtLiveSlogan(this.value)">
+                </div>
+
+                <!-- Back Text (visible when Both Sides chosen) -->
+                <div id="backTextWrapper" style="display: none;" class="form-group">
+                  <label for="tshirtBackTextInput">Back Text / Number / Name:</label>
+                  <input type="text" id="tshirtBackTextInput" name="customTextBack" placeholder="e.g. Player Name or Jersey Number (e.g. 07)" class="form-input">
+                </div>
+              </div>
+            </div>
+
+            <!-- Color Options (White and Bright T-Shirt Colors Only) -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold">3. Select T-Shirt Color</label>
+              <p class="section-helper">💡 We specialize in printing on crisp white and bright pastel shirts to guarantee maximum print resolution and vibrant colors.</p>
               <div class="color-options">
-                <% product.colors.forEach(color => { %>
+                <% product.colors.forEach((color, i) => { %>
                   <label class="color-option">
-                    <input type="radio" name="color" value="<%= color %>" <%= color === product.colors[0] ? 'checked' : '' %>>
-                    <span class="color-swatch" style="color: <%= color.toLowerCase().includes('white') ? '#f1f5f9' : color.toLowerCase().includes('black') ? '#1a1a1a' : color.toLowerCase().includes('navy') ? '#1e3a5f' : color.toLowerCase().includes('red') ? '#dc2626' : color.toLowerCase().includes('blue') ? '#2563eb' : color.toLowerCase().includes('gray') ? '#6b7280' : color.toLowerCase().includes('maroon') ? '#800000' : color.toLowerCase().includes('gold') ? '#d4a017' : color.toLowerCase().includes('silver') ? '#c0c0c0' : color.toLowerCase().includes('brown') ? '#8b4513' : color.toLowerCase().includes('natural') ? '#d4c9a8' : color.toLowerCase().includes('clear') || color.toLowerCase().includes('transparent') ? '#ffffff' : '#8b5cf6' %>"><%= color %></span>
+                    <input type="radio" name="color" value="<%= color %>" <%= i === 0 ? 'checked' : '' %>>
+                    <span class="color-swatch-pill bright-pill" data-color="<%= color %>"><%= color %></span>
                   </label>
                 <% }) %>
               </div>
             </div>
-          <% } %>
 
-          <% if (product.sizes) { %>
-            <div class="form-group">
-              <label>Size</label>
+            <!-- Size Options -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold">4. Select Size</label>
               <div class="size-options">
                 <% product.sizes.forEach(size => { %>
                   <label class="size-option">
@@ -62,23 +209,292 @@
             </div>
           <% } %>
 
-          <div class="form-group">
-            <label for="quantity">Quantity</label>
+          <!-- 2. MUG SPECIFIC OPTIONS -->
+          <% if (product.customizerType === 'mug') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold">1. How Many Sides to Print? <span class="req-star">*</span></label>
+              <p class="section-helper">We can print up to 3 sides (full panoramic wrap around the ceramic mug):</p>
+              <div class="radio-card-grid">
+                <label class="radio-card active">
+                  <input type="radio" name="mugSides" value="1 Side Print" data-price="150" checked onchange="updateMugSides(this)">
+                  <div class="card-radio-content">
+                    <strong>1 Side</strong>
+                    <span class="card-price">₹150</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="mugSides" value="2 Sides Print" data-price="175" onchange="updateMugSides(this)">
+                  <div class="card-radio-content">
+                    <strong>2 Sides</strong>
+                    <span class="card-price">₹175</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="mugSides" value="3 Sides (Full Wrap)" data-price="200" onchange="updateMugSides(this)">
+                  <div class="card-radio-content">
+                    <strong>3 Sides (Full Wrap)</strong>
+                    <span class="card-price">₹200</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Image Upload for Mug -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold">2. Upload Photo or Design <span class="req-star">*</span></label>
+              <div class="file-dropzone">
+                <input type="file" id="mugFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Mug')">
+                <label for="mugFile" class="dropzone-label">
+                  <span class="upload-icon">📸</span>
+                  <span class="upload-title" id="mugFileLabel">Upload Photo / Artwork for Mug</span>
+                  <span class="upload-hint">PNG, JPG, or SVG with high clarity</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Optional Custom Text on Mug -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="mugCustomText">3. Optional Text / Quote on Mug</label>
+              <input type="text" id="mugCustomText" name="customText" placeholder="e.g. Happy Birthday Dad! / World's Best Friend" class="form-input">
+            </div>
+
+            <!-- Ceramic Color -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold">4. Mug Style</label>
+              <div class="color-options">
+                <% product.colors.forEach((col, idx) => { %>
+                  <label class="color-option">
+                    <input type="radio" name="color" value="<%= col %>" <%= idx === 0 ? 'checked' : '' %>>
+                    <span class="color-swatch-pill"><%= col %></span>
+                  </label>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- 3. MOUSE PAD SPECIFIC OPTIONS -->
+          <% if (product.customizerType === 'mousepad') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold">1. Upload Image / Gaming Artwork <span class="req-star">*</span></label>
+              <div class="file-dropzone">
+                <input type="file" id="mousepadFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Mousepad')">
+                <label for="mousepadFile" class="dropzone-label">
+                  <span class="upload-icon">🖱️</span>
+                  <span class="upload-title" id="mousepadFileLabel">Upload Mousepad Design Graphic</span>
+                  <span class="upload-hint">Landscape aspect ratio recommended (16:9 / 4:3)</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold">2. Select Pad Shape</label>
+              <div class="radio-card-grid">
+                <% product.shapes.forEach((sh, idx) => { %>
+                  <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
+                    <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
+                    <div class="card-radio-content">
+                      <strong><%= sh %></strong>
+                      <span class="card-price">₹150</span>
+                    </div>
+                  </label>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- 4. ACRYLIC NAME CUT (Laser Cutter: Rectangular Transparent Plate with Cut-Through Letters) -->
+          <% if (product.customizerType === 'acrylic-cut') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="laserFontSelect">1. Select Font Style (Word / Typography)</label>
+              <div class="font-dropdown-wrapper">
+                <select id="laserFontSelect" name="fontStyle" class="form-input form-input-select font-toolbar-select" onchange="applyLaserFont(this.value)">
+                  <option value="Dancing Script" style="font-family: 'Dancing Script', cursive;">✍️ Dancing Script (Calligraphy Cursive)</option>
+                  <option value="Bebas Neue" style="font-family: 'Bebas Neue', sans-serif;">💥 Bebas Neue (Bold Streetwear Block)</option>
+                  <option value="Space Grotesk" style="font-family: 'Space Grotesk', sans-serif;" selected>⚡ Space Grotesk (Modern Tech Sans)</option>
+                  <option value="Playfair Display" style="font-family: 'Playfair Display', serif;">✨ Playfair Display (Luxury Serif)</option>
+                  <option value="Permanent Marker" style="font-family: 'Permanent Marker', cursive;">🎨 Permanent Marker (Urban Brush)</option>
+                  <option value="Courier Prime" style="font-family: 'Courier Prime', monospace;">📟 Courier Prime (Typewriter Monospace)</option>
+                  <option value="Pacifico" style="font-family: 'Pacifico', cursive;">🌊 Pacifico (Smooth Flow)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="laserNameInput">2. Enter Name to Cut Out Inside Rectangle <span class="req-star">*</span></label>
+              <input type="text" id="laserNameInput" name="customText" required placeholder="Type the name (e.g. ARJUN, PRIYA, NAVEEN)" class="form-input form-input-lg font-preview-input" oninput="updateLiveLaserCut(this.value)" style="font-family: 'Space Grotesk', sans-serif; letter-spacing: 2px;">
+              <span class="field-hint">💡 Your input text and the rectangular acrylic plate below update live in the selected font!</span>
+            </div>
+
+            <!-- Live Visual Preview of Transparent Rectangular Acrylic with Cut-Out Letters -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold">3. Live Precision Cut-Through Acrylic Preview</label>
+              <div class="acrylic-plate-simulator cut-mode" id="acrylicCutSimulator">
+                <div class="acrylic-keyring-hole" title="Laser Drilled Hole for Keyring"></div>
+                <div class="acrylic-plate-shine"></div>
+                <div class="acrylic-stencil-name" id="acrylicCutLiveName" style="font-family: 'Space Grotesk', sans-serif;">ARJUN</div>
+                <div class="acrylic-spec-badge">✂️ Transparent Rectangular Optical Acrylic &bull; Hollow Stencil Letters</div>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold">4. Acrylic Color &amp; Material</label>
+              <div class="single-finish-card">
+                <div class="finish-icon-wrap">💎</div>
+                <div class="finish-info">
+                  <strong>Transparent Clear (Optical Cast Acrylic)</strong>
+                  <p>100% crystal-clear 4mm acrylic sheet with diamond-smooth laser polished edges. Currently offering pure transparent optical clarity.</p>
+                </div>
+                <span class="finish-badge">In Stock</span>
+                <input type="hidden" name="material" value="Transparent Clear (Optical Acrylic)">
+              </div>
+            </div>
+          <% } %>
+
+          <!-- 5. ACRYLIC NAME ENGRAVING (Laser Surface Frosted Etching) -->
+          <% if (product.customizerType === 'acrylic-engrave') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="engraveFontSelect">1. Select Engraving Font Style</label>
+              <div class="font-dropdown-wrapper">
+                <select id="engraveFontSelect" name="fontStyle" class="form-input form-input-select font-toolbar-select" onchange="applyEngraveFont(this.value)">
+                  <option value="Dancing Script" style="font-family: 'Dancing Script', cursive;" selected>✍️ Dancing Script (Calligraphy Cursive)</option>
+                  <option value="Bebas Neue" style="font-family: 'Bebas Neue', sans-serif;">💥 Bebas Neue (Bold Streetwear Block)</option>
+                  <option value="Space Grotesk" style="font-family: 'Space Grotesk', sans-serif;">⚡ Space Grotesk (Modern Tech Sans)</option>
+                  <option value="Playfair Display" style="font-family: 'Playfair Display', serif;">✨ Playfair Display (Luxury Serif)</option>
+                  <option value="Permanent Marker" style="font-family: 'Permanent Marker', cursive;">🎨 Permanent Marker (Urban Brush)</option>
+                  <option value="Courier Prime" style="font-family: 'Courier Prime', monospace;">📟 Courier Prime (Typewriter Monospace)</option>
+                  <option value="Pacifico" style="font-family: 'Pacifico', cursive;">🌊 Pacifico (Smooth Flow)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="engraveInput">2. Name or Quote to Engrave <span class="req-star">*</span></label>
+              <textarea id="engraveInput" name="customText" required rows="2" placeholder="e.g. Alex &amp; Sophia • Forever Together • 14.02.2026" class="form-input font-preview-input" oninput="updateLiveLaserEngrave(this.value)" style="font-family: 'Dancing Script', cursive; font-size: 1.15rem;"></textarea>
+              <span class="field-hint">💡 Precision laser frosting on 4mm optical acrylic. Comes with solid wooden stand.</span>
+            </div>
+
+            <!-- Live Visual Preview of Engraved Acrylic Plate -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold">3. Live Laser Engraving Preview</label>
+              <div class="acrylic-plate-simulator engrave-mode" id="acrylicEngraveSimulator">
+                <div class="acrylic-plate-shine"></div>
+                <div class="acrylic-engraved-name" id="acrylicEngraveLiveName" style="font-family: 'Dancing Script', cursive;">Alex &amp; Sophia</div>
+                <div class="acrylic-wooden-stand-base">🪵 Hardwood Desk Stand Base Included</div>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold">4. Plate Shape</label>
+              <div class="radio-card-grid">
+                <% product.shapes.forEach((sh, idx) => { %>
+                  <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
+                    <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
+                    <div class="card-radio-content">
+                      <strong><%= sh %></strong>
+                    </div>
+                  </label>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- 6. CUSTOM IMAGE PRINTED KEYCHAIN -->
+          <% if (product.customizerType === 'image-keychain') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold">1. Upload Photo for Keychain <span class="req-star">*</span></label>
+              <div class="file-dropzone">
+                <input type="file" id="keychainFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Keychain')">
+                <label for="keychainFile" class="dropzone-label">
+                  <span class="upload-icon">🔑</span>
+                  <span class="upload-title" id="keychainFileLabel">Upload Photo / Character Art</span>
+                  <span class="upload-hint">Square or portrait photo works best</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold">2. Acrylic Shape</label>
+              <div class="radio-card-grid">
+                <% product.shapes.forEach((sh, idx) => { %>
+                  <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
+                    <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
+                    <div class="card-radio-content">
+                      <strong><%= sh %></strong>
+                      <span class="card-price">₹100</span>
+                    </div>
+                  </label>
+                <% }) %>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- 7. PERSONALISED ENGRAVED LAMP -->
+          <% if (product.customizerType === 'engraved-lamp') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold">1. Select LED Base Type <span class="req-star">*</span></label>
+              <div class="radio-card-grid">
+                <label class="radio-card active">
+                  <input type="radio" name="lampBase" value="Warm Yellow Wooden LED Base" data-price="300" checked onchange="updateLampBase(this)">
+                  <div class="card-radio-content">
+                    <strong>Warm Yellow Wooden Base</strong>
+                    <span class="card-price">₹300</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="lampBase" value="RGB 7-Color Touch Base" data-price="350" onchange="updateLampBase(this)">
+                  <div class="card-radio-content">
+                    <strong>Multicolor RGB Touch Base</strong>
+                    <span class="card-price">₹350 (+₹50)</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="lampTextInput">2. Custom Names / Special Date to Engrave <span class="req-star">*</span></label>
+              <input type="text" id="lampTextInput" name="customText" required placeholder="e.g. Arun &amp; Kavya • 24.10.2026" class="form-input" oninput="updateLampText(this.value)">
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold">3. Optional Photo for Line-Art Engraving</label>
+              <div class="file-dropzone">
+                <input type="file" id="lampPhotoFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Lamp')">
+                <label for="lampPhotoFile" class="dropzone-label">
+                  <span class="upload-icon">💡</span>
+                  <span class="upload-title" id="lampPhotoLabel">Upload Couple / Portrait Photo</span>
+                  <span class="upload-hint">We convert your photo to laser line art for engraving</span>
+                </label>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Warning Notice for Incomplete Customization -->
+          <div class="validation-warning-box" id="validationWarning" style="display: none;">
+            ⚠️ <strong>Design Required:</strong> Please either upload a design image or type custom text for your T-Shirt before adding to cart!
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="customizer-card-section qty-section">
+            <label class="section-label-bold">Quantity</label>
             <div class="quantity-selector">
-              <button type="button" class="qty-btn" onclick="decrementQty()">−</button>
-              <input type="number" id="quantity" name="quantity" value="1" min="1" max="99">
-              <button type="button" class="qty-btn" onclick="incrementQty()">+</button>
+              <button type="button" class="qty-btn" onclick="decrementProductQty()">−</button>
+              <input type="number" id="productQuantity" name="quantity" value="1" min="1" max="99" onchange="recalculateFinalPrice()">
+              <button type="button" class="qty-btn" onclick="incrementProductQty()">+</button>
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-lg btn-block">Add to Cart — ₹<%= product.price.toLocaleString() %></button>
+          <!-- Add to Cart Submit Button -->
+          <button type="submit" class="btn btn-primary btn-lg btn-block btn-add-cart" id="addToCartBtn">
+            <span><%= product.customizerType === 'tshirt' ? '🎨 Add Customized T-Shirt to Cart — ₹' : '🛒 Add to Cart — ₹' %></span><span id="btnDynamicPrice"><%= product.price.toLocaleString() %></span>
+          </button>
         </form>
 
-        <div class="product-features">
-          <h3>Features</h3>
-          <ul>
+        <!-- Product Features List -->
+        <div class="product-features-box">
+          <h3>Product Specifications &amp; Features</h3>
+          <ul class="features-checklist">
             <% product.features.forEach(f => { %>
-              <li><%= f %></li>
+              <li><span class="check-icon">✓</span> <%= f %></li>
             <% }) %>
           </ul>
         </div>
@@ -87,38 +503,305 @@
   </div>
 </section>
 
-<% if (related.length > 0) { %>
-<section class="section" style="background: var(--bg);">
+<!-- Related Products Section -->
+<% if (related && related.length > 0) { %>
+<section class="section related-products-section">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">Related</span>
-      <h2 class="section-title">You Might Also Like</h2>
+      <span class="section-label">Explore More</span>
+      <h2 class="section-title">Other Items You Can Customize</h2>
     </div>
     <div class="products-grid">
-      <% related.forEach(product => { %>
-        <a href="/products/<%= product.id %>" class="product-card tilt-card">
+      <% related.forEach(rel => { %>
+        <div class="product-card tilt-card">
           <div class="product-image">
-            <img src="<%= product.image %>" alt="<%= product.name %>" loading="lazy">
-            <% if (product.badge) { %><span class="badge"><%= product.badge %></span><% } %>
-            <div class="product-card-overlay">
-              <span class="quick-view-btn">Quick View</span>
-            </div>
+            <img src="<%= rel.image %>" alt="<%= rel.name %>" loading="lazy">
+            <% if (rel.badge) { %><span class="badge"><%= rel.badge %></span><% } %>
           </div>
           <div class="product-info">
-            <span class="product-category"><%= product.category %></span>
-            <h3><%= product.name %></h3>
+            <span class="product-category"><%= rel.category.replace('-', ' ') %></span>
+            <h3><%= rel.name %></h3>
             <div class="product-price">
-              <span class="current">₹<%= product.price.toLocaleString() %></span>
-              <% if (product.originalPrice > product.price) { %>
-                <span class="original">₹<%= product.originalPrice.toLocaleString() %></span>
-              <% } %>
+              <span class="current">₹<%= rel.price.toLocaleString() %></span>
             </div>
+            <a href="/products/<%= rel.id %>" class="btn btn-outline btn-block" style="margin-top: 10px;">Customize →</a>
           </div>
-        </a>
+        </div>
       <% }) %>
     </div>
   </div>
 </section>
 <% } %>
+
+<!-- Client-side Interactive Customizer Controller Script -->
+<script>
+  let basePrice = <%= product.price %>;
+  let currentUnitPrice = <%= product.price %>;
+  const isTshirt = <%= product.customizerType === 'tshirt' ? 'true' : 'false' %>;
+
+  // Recalculate price when quantity changes
+  function recalculateFinalPrice() {
+    const qty = parseInt(document.getElementById('productQuantity').value) || 1;
+    const total = currentUnitPrice * qty;
+    document.getElementById('dynamicDisplayPrice').textContent = total.toLocaleString();
+    document.getElementById('btnDynamicPrice').textContent = total.toLocaleString();
+    document.getElementById('calculatedPriceInput').value = currentUnitPrice;
+  }
+
+  function incrementProductQty() {
+    const input = document.getElementById('productQuantity');
+    input.value = (parseInt(input.value) || 1) + 1;
+    recalculateFinalPrice();
+  }
+
+  function decrementProductQty() {
+    const input = document.getElementById('productQuantity');
+    if (parseInt(input.value) > 1) {
+      input.value = parseInt(input.value) - 1;
+      recalculateFinalPrice();
+    }
+  }
+
+  // T-Shirt Customization Mode Switching (Upload / Text / Both)
+  function setTshirtMode(mode) {
+    document.querySelectorAll('.mode-tab-btn').forEach(b => b.classList.remove('active'));
+    const panelUpload = document.getElementById('panelUpload');
+    const panelText = document.getElementById('panelText');
+    const warning = document.getElementById('validationWarning');
+    if (warning) warning.style.display = 'none';
+
+    if (mode === 'upload') {
+      document.getElementById('modeBtnUpload').classList.add('active');
+      if (panelUpload) panelUpload.style.display = 'block';
+      if (panelText) panelText.style.display = 'none';
+    } else if (mode === 'text') {
+      document.getElementById('modeBtnText').classList.add('active');
+      if (panelUpload) panelUpload.style.display = 'none';
+      if (panelText) panelText.style.display = 'block';
+    } else if (mode === 'both') {
+      document.getElementById('modeBtnBoth').classList.add('active');
+      if (panelUpload) panelUpload.style.display = 'block';
+      if (panelText) panelText.style.display = 'block';
+    }
+  }
+
+  // T-Shirt Placement Logic
+  function updateTshirtPlacement(radio) {
+    document.querySelectorAll('#tshirtPlacementSection .radio-card').forEach(c => c.classList.remove('active'));
+    radio.closest('.radio-card').classList.add('active');
+    const price = parseInt(radio.getAttribute('data-price')) || 300;
+    currentUnitPrice = price;
+    recalculateFinalPrice();
+
+    const isBoth = radio.value.includes('Both');
+    const backUpload = document.getElementById('backUploadWrapper');
+    const backText = document.getElementById('backTextWrapper');
+    const frontUploadHeading = document.getElementById('frontUploadHeading');
+
+    if (backUpload) backUpload.style.display = isBoth ? 'block' : 'none';
+    if (backText) backText.style.display = isBoth ? 'block' : 'none';
+    if (frontUploadHeading) {
+      frontUploadHeading.textContent = isBoth ? '1. Upload Front Artwork / Graphic:' : 'Upload Artwork / Graphic:';
+    }
+  }
+
+  // Mug Sides Logic
+  function updateMugSides(radio) {
+    document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+    radio.closest('.radio-card').classList.add('active');
+    const price = parseInt(radio.getAttribute('data-price')) || 150;
+    currentUnitPrice = price;
+    recalculateFinalPrice();
+  }
+
+  // Lamp Base Logic
+  function updateLampBase(radio) {
+    document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+    radio.closest('.radio-card').classList.add('active');
+    const price = parseInt(radio.getAttribute('data-price')) || 300;
+    currentUnitPrice = price;
+    recalculateFinalPrice();
+  }
+
+  // Live T-Shirt Text Slogan Preview
+  function updateTshirtLiveSlogan(val) {
+    const overlay = document.getElementById('tshirtSloganOverlay');
+    const sloganEl = document.getElementById('liveTshirtSlogan');
+    if (overlay && sloganEl) {
+      if (val.trim()) {
+        sloganEl.textContent = val;
+        overlay.style.display = 'block';
+      } else {
+        overlay.style.display = 'none';
+      }
+    }
+  }
+
+  // Live Laser Cut Out Inside Rectangle Simulator
+  function updateLiveLaserCut(val) {
+    const liveName = document.getElementById('acrylicCutLiveName');
+    const input = document.getElementById('laserNameInput');
+    const fontSelect = document.getElementById('laserFontSelect');
+    const font = fontSelect ? fontSelect.value : 'Space Grotesk';
+    const text = val.trim() ? val.toUpperCase() : 'YOUR NAME';
+    if (liveName) {
+      liveName.textContent = text;
+      liveName.style.fontFamily = `'${font}', sans-serif, cursive`;
+    }
+    if (input) {
+      input.style.fontFamily = `'${font}', sans-serif, cursive`;
+    }
+  }
+
+  function applyLaserFont(font) {
+    const liveName = document.getElementById('acrylicCutLiveName');
+    const input = document.getElementById('laserNameInput');
+    if (liveName) {
+      liveName.style.fontFamily = `'${font}', sans-serif, cursive`;
+    }
+    if (input) {
+      input.style.fontFamily = `'${font}', sans-serif, cursive`;
+    }
+  }
+
+  // Live Laser Engraving Simulator
+  function updateLiveLaserEngrave(val) {
+    const liveName = document.getElementById('acrylicEngraveLiveName');
+    const input = document.getElementById('engraveInput');
+    const fontSelect = document.getElementById('engraveFontSelect');
+    const font = fontSelect ? fontSelect.value : 'Dancing Script';
+    const text = val.trim() ? val : 'Alex & Sophia';
+    if (liveName) {
+      liveName.textContent = text;
+      liveName.style.fontFamily = `'${font}', cursive, sans-serif`;
+    }
+    if (input) {
+      input.style.fontFamily = `'${font}', cursive, sans-serif`;
+    }
+  }
+
+  function applyEngraveFont(font) {
+    const liveName = document.getElementById('acrylicEngraveLiveName');
+    const input = document.getElementById('engraveInput');
+    if (liveName) {
+      liveName.style.fontFamily = `'${font}', cursive, sans-serif`;
+    }
+    if (input) {
+      input.style.fontFamily = `'${font}', cursive, sans-serif`;
+    }
+  }
+
+  // Universal Radio Selection Handler (Fixes mouse pad shape, sizes, placements, bases)
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        const parentCard = this.closest('.radio-card, .finish-pill, .size-option, .color-option');
+        if (parentCard) {
+          const grid = parentCard.parentElement;
+          if (grid) {
+            grid.querySelectorAll('.radio-card, .finish-pill, .size-option, .color-option').forEach(el => el.classList.remove('active'));
+          }
+          parentCard.classList.add('active');
+        }
+
+        const price = this.getAttribute('data-price');
+        if (price) {
+          currentUnitPrice = parseInt(price);
+          recalculateFinalPrice();
+        }
+      });
+    });
+  });
+
+  // Lamp Live Preview
+  function updateLampText(val) {
+    const el = document.getElementById('liveLampText');
+    if (el) el.textContent = val.trim() ? val : 'Custom Name';
+  }
+
+  const toggleLampBtn = document.getElementById('toggleLampLightBtn');
+  if (toggleLampBtn) {
+    let lampOn = true;
+    toggleLampBtn.addEventListener('click', () => {
+      lampOn = !lampOn;
+      const glow = document.getElementById('lampGlowEffect');
+      const text = document.getElementById('liveLampText');
+      if (lampOn) {
+        glow.style.opacity = '1';
+        if (text) text.style.textShadow = '0 0 20px #fef08a, 0 0 40px #f59e0b';
+        toggleLampBtn.textContent = '💡 Turn Lamp Light Off';
+      } else {
+        glow.style.opacity = '0';
+        if (text) text.style.textShadow = 'none';
+        toggleLampBtn.textContent = '💡 Turn Lamp Light On';
+      }
+    });
+  }
+
+  // Handle Image Upload Preview
+  function handleImageUpload(event, type) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const previewBadge = document.getElementById('imagePreviewContainer');
+        const previewThumb = document.getElementById('imagePreviewThumb');
+        const checkText = document.getElementById('previewCheckText');
+        if (previewBadge && previewThumb) {
+          previewThumb.src = e.target.result;
+          previewBadge.style.display = 'flex';
+          if (checkText) checkText.textContent = '✓ ' + type + ' Image Loaded';
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // Update upload label
+      const label = document.getElementById(event.target.id + 'Label') || event.target.parentElement.querySelector('.upload-title');
+      if (label) {
+        label.textContent = '✓ Selected: ' + file.name;
+        label.style.color = '#22c55e';
+      }
+
+      // Hide validation warning if shown
+      const warning = document.getElementById('validationWarning');
+      if (warning) warning.style.display = 'none';
+    }
+  }
+
+  // T-Shirt Form Validation: Prevent Adding Empty T-Shirt
+  const form = document.getElementById('customizerForm');
+  if (form && isTshirt) {
+    form.addEventListener('submit', function(e) {
+      const frontFile = document.getElementById('tshirtFileFront');
+      const backFile = document.getElementById('tshirtFileBack');
+      const textInput = document.getElementById('tshirtTextInput');
+      const backTextInput = document.getElementById('tshirtBackTextInput');
+      const warning = document.getElementById('validationWarning');
+
+      const hasFrontFile = frontFile && frontFile.files && frontFile.files.length > 0;
+      const hasBackFile = backFile && backFile.files && backFile.files.length > 0;
+      const hasText = textInput && textInput.value.trim().length > 0;
+      const hasBackText = backTextInput && backTextInput.value.trim().length > 0;
+
+      if (!hasFrontFile && !hasBackFile && !hasText && !hasBackText) {
+        e.preventDefault();
+        if (warning) {
+          warning.style.display = 'block';
+          warning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        const customizerBox = document.getElementById('tshirtCustomizerBox');
+        if (customizerBox) {
+          customizerBox.style.borderColor = '#ef4444';
+          customizerBox.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.4)';
+          setTimeout(() => {
+            customizerBox.style.borderColor = '';
+            customizerBox.style.boxShadow = '';
+          }, 3500);
+        }
+        return false;
+      }
+    });
+  }
+</script>
 
 <%- include('partials/footer') %>

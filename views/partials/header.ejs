@@ -3,37 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CustomPrints — Personalized Products</title>
+  <title>GOODYGUYS — Crafted for the Creators | Custom Streetwear &amp; Precision Laser Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Pacifico&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
-<body>
+<body class="streetwear-theme">
+  <!-- Top Ticker Marquee Announcement Bar (Inspired by NEVERMIND & URBAN THREADS) -->
+  <div class="top-marquee-bar">
+    <div class="marquee-track">
+      <div class="marquee-content">
+        <span>⚡ GOODYGUYS STUDIO &bull; LIMITED DROPS &bull; EXCLUSIVE CUSTOM APPAREL</span>
+        <span class="dot">&bull;</span>
+        <span>NO MINIMUM ORDERS</span>
+        <span class="dot">&bull;</span>
+        <span>PRECISION LASER CUT-THROUGH ACRYLIC &bull; 0.05MM ACCURACY</span>
+        <span class="dot">&bull;</span>
+        <span>WEAR YOUR IDEA &bull; PRINTED ON DEMAND</span>
+        <span class="dot">&bull;</span>
+        <span>FAST DISPATCH ACROSS INDIA</span>
+        <span class="dot">&bull;</span>
+        <span>100% QUALITY GUARANTEED</span>
+        <span class="dot">&bull;</span>
+        <span>💡 HAVE AN IDEA? CUSTOMIZE NOW</span>
+        <span class="dot">&bull;</span>
+      </div>
+      <div class="marquee-content" aria-hidden="true">
+        <span>⚡ GOODYGUYS STUDIO &bull; LIMITED DROPS &bull; EXCLUSIVE CUSTOM APPAREL</span>
+        <span class="dot">&bull;</span>
+        <span>NO MINIMUM ORDERS</span>
+        <span class="dot">&bull;</span>
+        <span>PRECISION LASER CUT-THROUGH ACRYLIC &bull; 0.05MM ACCURACY</span>
+        <span class="dot">&bull;</span>
+        <span>WEAR YOUR IDEA &bull; PRINTED ON DEMAND</span>
+        <span class="dot">&bull;</span>
+        <span>FAST DISPATCH ACROSS INDIA</span>
+        <span class="dot">&bull;</span>
+        <span>100% QUALITY GUARANTEED</span>
+        <span class="dot">&bull;</span>
+        <span>💡 HAVE AN IDEA? CUSTOMIZE NOW</span>
+        <span class="dot">&bull;</span>
+      </div>
+    </div>
+  </div>
+
   <header class="header" id="header">
-    <div class="container">
+    <div class="container header-container">
       <div class="header-inner">
-        <a href="/" class="logo">
-          <span class="logo-icon">✦</span>
-          <span class="logo-text">Custom<span>Prints</span></span>
+        <!-- Streetwear Logo with GOODYGUYS Branding -->
+        <a href="/" class="logo streetwear-logo">
+          <div class="logo-badge-icon">
+            <svg class="logo-crown-svg" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 24L7 8L16 16L20 4L24 16L33 8L36 24H4Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="4" cy="8" r="2" fill="currentColor"/>
+              <circle cx="20" cy="4" r="2" fill="currentColor"/>
+              <circle cx="36" cy="8" r="2" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="logo-text-group">
+            <span class="logo-brand">GOODY<span class="brand-volt">GUYS</span></span>
+            <span class="logo-tagline">CUSTOM APPAREL &amp; LASER STUDIO</span>
+          </div>
         </a>
+
+        <!-- Main Navigation Links -->
         <nav class="nav" id="nav">
-          <a href="/">Home</a>
-          <a href="/products">All Products</a>
-          <a href="/products?category=t-shirts">T-Shirts</a>
-          <a href="/products?category=goodies">Goodies</a>
-          <a href="/products?category=keychains">Keychains</a>
-          <a href="/products?category=photos">Photos</a>
-          <a href="/admin">Orders</a>
-        </nav>
-        <div class="header-actions">
-          <a href="/cart" class="cart-link">
-            🛒
-            <span class="cart-badge" id="cart-count"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span>
+          <a href="/" class="nav-link">HOME</a>
+          <a href="/products" class="nav-link">THE DROP</a>
+          <a href="/suggest" class="nav-link nav-highlight">
+            <span>💡 SUGGEST IDEA</span>
+            <span class="nav-tag-badge">NEW</span>
           </a>
-          <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
+        </nav>
+
+        <!-- Header Actions: Search, Wishlist/Account, Cart -->
+        <div class="header-actions">
+          <form class="header-search-form" method="GET" action="/products">
+            <button type="submit" class="search-submit-icon" aria-label="Search">🔍</button>
+            <input type="text" name="search" placeholder="Search apparel, mugs, acrylics..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+          </form>
+
+          <a href="/cart" class="cart-link streetwear-cart" title="Shopping Cart">
+            <svg class="cart-bag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span class="cart-badge volt-badge" id="cart-count"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span>
+          </a>
+
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
       </div>
     </div>

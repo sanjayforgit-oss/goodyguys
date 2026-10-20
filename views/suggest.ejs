@@ -1,0 +1,110 @@
+<%- include('partials/header') %>
+
+<section class="page-header">
+  <div class="container">
+    <span class="section-label">💡 Community Studio</span>
+    <h1>Customer Ideas &amp; Suggestions</h1>
+    <p>We own high-precision Laser Cutters and HD printing equipment. Tell us what new products you'd like us to create!</p>
+  </div>
+</section>
+
+<section class="section suggest-page" style="padding-top: 40px;">
+  <div class="container">
+    <div class="suggest-layout">
+      <!-- Left Column: Submit New Suggestion Form -->
+      <div class="suggest-form-card">
+        <div class="suggest-form-header">
+          <span class="pill-badge">✨ Co-Create With Us</span>
+          <h2>Submit Your Product Idea</h2>
+          <p>Whether it's an acrylic wall clock, personalized anime keychain, or wedding cake topper, we can laser cut and print it!</p>
+        </div>
+
+        <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+          <div class="alert-box success">
+            🎉 <%= successMessage %>
+          </div>
+        <% } %>
+
+        <form class="suggest-form" method="POST" action="/suggest">
+          <div class="form-group">
+            <label for="suggestTitle">Product Concept Name <span class="req-star">*</span></label>
+            <input type="text" id="suggestTitle" name="title" required placeholder="e.g. Scannable Acrylic Spotify Plaque, Neon LED Sign" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="suggestCategory">Category <span class="req-star">*</span></label>
+            <select id="suggestCategory" name="category" class="form-input">
+              <option value="laser-acrylic">⚡ Laser Cut / Engraved Acrylic</option>
+              <option value="t-shirts">👕 Apparel &amp; T-Shirts</option>
+              <option value="drinkware">☕ Mugs &amp; Drinkware</option>
+              <option value="desk">🖱️ Mouse Pads &amp; Desk Setup</option>
+              <option value="keychains">🔑 Keychains &amp; Nameplates</option>
+              <option value="lamps">💡 3D Night Lamps</option>
+              <option value="other">✨ Other Creative Items</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="suggestDesc">Describe Your Idea &amp; Design Specifications <span class="req-star">*</span></label>
+            <textarea id="suggestDesc" name="description" rows="4" required placeholder="Explain how you envision this product (colors, dimensions, acrylic mirror finish, laser details)..." class="form-input"></textarea>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="suggestName">Your Name <span class="req-star">*</span></label>
+              <input type="text" id="suggestName" name="name" required placeholder="Your Name" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="suggestContact">WhatsApp / Phone Number</label>
+              <input type="tel" id="suggestContact" name="contact" placeholder="+91 98765 43210" class="form-input">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block">🚀 Submit Product Suggestion</button>
+        </form>
+      </div>
+
+      <!-- Right Column: Community Ideas Board with Upvotes -->
+      <div class="suggest-board-card">
+        <div class="board-header">
+          <h3>🔥 Community Ideas Board (<%= suggestions.length %>)</h3>
+          <p>Vote for the ideas you want us to add to our catalog next!</p>
+        </div>
+
+        <div class="suggestions-list">
+          <% suggestions.slice().reverse().forEach(s => { %>
+            <div class="suggestion-item">
+              <div class="suggestion-main">
+                <div class="suggestion-top">
+                  <span class="suggestion-category-tag"><%= s.category.replace('-', ' ') %></span>
+                  <% if (s.status) { %>
+                    <span class="suggestion-status-badge"><%= s.status %></span>
+                  <% } %>
+                </div>
+                <h4><%= s.title %></h4>
+                <p><%= s.description %></p>
+                <div class="suggestion-author-row">
+                  <span>Suggested by <strong><%= s.name %></strong></span>
+                  <span class="s-dot">•</span>
+                  <span><%= s.date %></span>
+                </div>
+              </div>
+              <div class="suggestion-vote">
+                <form method="POST" action="/suggest/upvote">
+                  <input type="hidden" name="id" value="<%= s.id %>">
+                  <button type="submit" class="upvote-btn" title="Upvote this idea">
+                    <span class="upvote-arrow">▲</span>
+                    <span class="upvote-count"><%= s.upvotes || 0 %></span>
+                    <span class="upvote-label">Votes</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

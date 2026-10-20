@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="mpBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18182e"/>
+      <stop offset="100%" stop-color="#0f0f1c"/>
+    </linearGradient>
+    <linearGradient id="neonGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="padSurface" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141524"/>
+      <stop offset="100%" stop-color="#0d0e17"/>
+    </linearGradient>
+    <filter id="padShadow">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <rect width="500" height="500" rx="24" fill="url(#mpBg)"/>
+  
+  <!-- Mouse Pad with perspective/tilt -->
+  <g transform="translate(65, 95)" filter="url(#padShadow)">
+    <!-- Base / Edge Stitching -->
+    <rect x="0" y="0" width="370" height="270" rx="26" fill="none" stroke="url(#neonGlow)" stroke-width="4"/>
+    <!-- Surface -->
+    <rect x="6" y="6" width="358" height="258" rx="22" fill="url(#padSurface)"/>
+
+    <!-- Dynamic Custom Artwork Pattern -->
+    <g transform="translate(20, 20)">
+      <path d="M 0 160 Q 90 80 180 130 T 330 90 L 330 230 L 0 230 Z" fill="url(#neonGlow)" opacity="0.35"/>
+      <path d="M 0 190 Q 110 130 200 170 T 330 140 L 330 230 L 0 230 Z" fill="#ec4899" opacity="0.25"/>
+      <circle cx="165" cy="90" r="45" fill="none" stroke="#06b6d4" stroke-width="3" stroke-dasharray="8 6"/>
+      <circle cx="165" cy="90" r="30" fill="url(#neonGlow)" opacity="0.8"/>
+      <text x="165" y="96" text-anchor="middle" fill="#ffffff" font-family="'Inter', sans-serif" font-size="14" font-weight="800">HD PRINT</text>
+    </g>
+
+    <!-- Sleek Mouse Icon resting on pad -->
+    <g transform="translate(240, 130)" filter="url(#padShadow)">
+      <rect x="0" y="0" width="60" height="96" rx="30" fill="#24263b" stroke="#4a4d6f" stroke-width="2"/>
+      <line x1="30" y1="12" x2="30" y2="38" stroke="#06b6d4" stroke-width="2.5"/>
+      <circle cx="30" cy="24" r="4" fill="#06b6d4"/>
+    </g>
+  </g>
+
+  <rect x="35" y="420" width="150" height="34" rx="17" fill="#06b6d4" fill-opacity="0.2" stroke="#06b6d4" stroke-width="1.5"/>
+  <text x="110" y="442" text-anchor="middle" fill="#67e8f9" font-family="'Inter', sans-serif" font-size="13" font-weight="600">Ultra-Smooth Fabric</text>
+</svg>

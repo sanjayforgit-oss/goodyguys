@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18182e"/>
+      <stop offset="100%" stop-color="#0f0f1c"/>
+    </linearGradient>
+    <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a2b3d"/>
+      <stop offset="100%" stop-color="#191a26"/>
+    </linearGradient>
+    <linearGradient id="artGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="500" height="500" rx="24" fill="url(#bgGrad)"/>
+  <circle cx="250" cy="240" r="170" fill="#8b5cf6" opacity="0.08" filter="url(#glow)"/>
+  
+  <!-- T-Shirt Body -->
+  <g transform="translate(50, 40)">
+    <!-- Shadow -->
+    <path d="M120 70 L60 140 L105 180 L130 150 L130 380 L270 380 L270 150 L295 180 L340 140 L280 70 Q240 100 200 100 Q160 100 120 70 Z" fill="#000" opacity="0.4" transform="translate(6, 10)"/>
+    <!-- Main Shirt -->
+    <path d="M120 70 L60 140 L105 180 L130 150 L130 380 L270 380 L270 150 L295 180 L340 140 L280 70 Q240 100 200 100 Q160 100 120 70 Z" fill="url(#shirtGrad)" stroke="#3f405c" stroke-width="3"/>
+    <!-- Collar -->
+    <path d="M160 70 Q200 105 240 70 Q200 88 160 70 Z" fill="#3b3d54"/>
+    <!-- Sleeve Stitching -->
+    <line x1="68" y1="130" x2="110" y2="168" stroke="#3f405c" stroke-width="2" stroke-dasharray="4 3"/>
+    <line x1="332" y1="130" x2="290" y2="168" stroke="#3f405c" stroke-width="2" stroke-dasharray="4 3"/>
+    <!-- Bottom Hem -->
+    <line x1="130" y1="365" x2="270" y2="365" stroke="#3f405c" stroke-width="2" stroke-dasharray="4 3"/>
+
+    <!-- Custom Print Graphic Area (Front) -->
+    <rect x="155" y="160" width="90" height="115" rx="10" fill="#0c0d17" stroke="#6366f1" stroke-dasharray="3 3" opacity="0.8"/>
+    <g transform="translate(162, 170)">
+      <circle cx="38" cy="35" r="24" fill="url(#artGrad)"/>
+      <path d="M22 45 L34 25 L46 45 Z" fill="#fff" opacity="0.9"/>
+      <path d="M38 45 L48 32 L58 45 Z" fill="#fff" opacity="0.6"/>
+      <text x="38" y="80" text-anchor="middle" fill="#f1f5f9" font-family="'Inter', sans-serif" font-size="11" font-weight="700">YOUR ART</text>
+      <text x="38" y="94" text-anchor="middle" fill="#a78bfa" font-family="'Inter', sans-serif" font-size="8">FRONT / BACK</text>
+    </g>
+  </g>
+  <rect x="35" y="420" width="130" height="34" rx="17" fill="#8b5cf6" fill-opacity="0.2" stroke="#8b5cf6" stroke-width="1.5"/>
+  <text x="100" y="442" text-anchor="middle" fill="#c4b5fd" font-family="'Inter', sans-serif" font-size="13" font-weight="600">Front / Back Options</text>
+</svg>

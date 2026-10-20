@@ -1,0 +1,32 @@
+<%- include('partials/header') %>
+
+<section class="admin-login-page">
+  <div class="container">
+    <div class="admin-login-card">
+      <div class="admin-login-icon">🔒</div>
+      <span class="pill-badge">Studio Management</span>
+      <h1>Admin Portal</h1>
+      <p>Enter the workshop management password to view custom print queues &amp; orders.</p>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert-box error">
+          ⚠️ <%= error %>
+        </div>
+      <% } %>
+
+      <form method="POST" action="/admin/login" class="admin-login-form">
+        <div class="form-group">
+          <label for="adminPassword">Admin Password</label>
+          <input type="password" id="adminPassword" name="password" required placeholder="Enter password (default: admin123)" class="form-input form-input-lg">
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Unlock Dashboard →</button>
+      </form>
+
+      <div class="admin-login-footer">
+        <span>Default password during development: <code>admin123</code></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
