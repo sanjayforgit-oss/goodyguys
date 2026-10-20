@@ -931,7 +931,7 @@ app.get('/api/placeholder/:width/:height', (req, res) => {
       </linearGradient>
     </defs>
     <rect width="100%" height="100%" fill="url(#bg)" rx="8"/>
-    <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#d4ff00" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="bold">${text}</text>
+    <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#00ff66" font-family="'Space Grotesk',sans-serif" font-size="20" font-weight="bold">${text}</text>
   </svg>`;
   res.setHeader('Content-Type', 'image/svg+xml');
   res.send(svg);

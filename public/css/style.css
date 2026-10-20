@@ -1,7 +1,7 @@
 /* ==========================================================================
    GOODYGUYS CUSTOM APPAREL & PRECISION LASER STUDIO - STREETWEAR DESIGN SYSTEM
    Inspired by Reference Lookbooks (NEVERMIND, URBAN THREADS & INKED)
-   Colors: Matte Charcoal (#080808), Electric Acid Volt (#d4ff00), Safety Orange (#ff5500),
+   Colors: Matte Charcoal (#080808), Electric Acid Volt (#00ff66), Safety Orange (#ff5500),
    Electric Blue (#00b4d8), Warm Cream Paper (#f4f4ee)
    ========================================================================== */
 
@@ -11,11 +11,12 @@
 
 :root {
   /* Streetwear Multi-Reference Color Palette */
-  --primary: #d4ff00;          /* Electric Acid Volt Yellow */
-  --primary-hover: #bde600;
-  --primary-dark: #a1c700;
-  --primary-light: #e6ff55;
-  --primary-glow: rgba(212, 255, 0, 0.3);
+  --primary: #00ff66;          /* Vivid Bright Electric Green */
+  --volt: #00ff66;             /* Neon Bright Green Accent */
+  --primary-hover: #00e05a;
+  --primary-dark: #00b848;
+  --primary-light: #33ff85;
+  --primary-glow: rgba(0, 255, 102, 0.3);
   
   --secondary: #ff5500;        /* Streetwear Alert Safety Orange (Urban Threads) */
   --secondary-glow: rgba(255, 85, 0, 0.35);
@@ -23,7 +24,7 @@
   --accent-blue: #00b4d8;      /* Electric Cobalt / Cyan (Urban Threads) */
   --accent-blue-deep: #2563eb;
   
-  --accent: #d4ff00;
+  --accent: #00ff66;
   --bg-deep: #080808;          /* Pure Matte Streetwear Black */
   --bg: #0d0d0f;
   --bg-card: #141416;
@@ -41,14 +42,14 @@
   --text-muted: #9ca3af;
   --text-dim: #6b7280;
   --border: rgba(255, 255, 255, 0.12);
-  --border-glow: rgba(212, 255, 0, 0.35);
+  --border-glow: rgba(0, 255, 102, 0.35);
   
   --radius-sm: 4px;
   --radius: 8px;
   --radius-lg: 16px;
   --radius-xl: 24px;
   --shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 35px rgba(212, 255, 0, 0.25);
+  --shadow-glow: 0 0 35px rgba(0, 255, 102, 0.25);
   --transition: 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   
   /* Streetwear Typography */
@@ -177,7 +178,7 @@ body {
   width: 28px;
   height: 20px;
   color: var(--primary);
-  filter: drop-shadow(0 0 6px rgba(212, 255, 0, 0.6));
+  filter: drop-shadow(0 0 6px rgba(0, 255, 102, 0.6));
 }
 
 .logo-text-group {
@@ -236,12 +237,12 @@ body {
 
 .nav-link.nav-highlight {
   color: var(--primary);
-  background: rgba(212, 255, 0, 0.08);
-  border: 1px solid rgba(212, 255, 0, 0.25);
+  background: rgba(0, 255, 102, 0.08);
+  border: 1px solid rgba(0, 255, 102, 0.25);
 }
 
 .nav-link.nav-highlight:hover {
-  background: rgba(212, 255, 0, 0.16);
+  background: rgba(0, 255, 102, 0.16);
 }
 
 .nav-tag-badge {
@@ -284,7 +285,7 @@ body {
   border-color: var(--primary);
   width: 250px;
   background: #1a1a1f;
-  box-shadow: 0 0 15px rgba(212, 255, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
 }
 
 .search-submit-icon {
@@ -340,7 +341,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(212, 255, 0, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 255, 102, 0.5);
 }
 
 .menu-toggle {
@@ -417,7 +418,7 @@ body {
   color: var(--primary);
   display: inline-block;
   transform: rotate(-3deg) scale(1.06);
-  text-shadow: 0 0 30px rgba(212, 255, 0, 0.4);
+  text-shadow: 0 0 30px rgba(0, 255, 102, 0.4);
   letter-spacing: normal;
   padding: 0 8px;
 }
@@ -459,14 +460,14 @@ body {
   border-radius: 4px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 6px 25px rgba(212, 255, 0, 0.35);
+  box-shadow: 0 6px 25px rgba(0, 255, 102, 0.35);
   transition: all var(--transition);
 }
 
 .btn-streetwear-volt:hover {
   background: var(--primary-hover);
   transform: translateY(-3px);
-  box-shadow: 0 10px 35px rgba(212, 255, 0, 0.5);
+  box-shadow: 0 10px 35px rgba(0, 255, 102, 0.5);
   color: #000000;
 }
 
@@ -493,7 +494,7 @@ body {
 .btn-streetwear-ghost:hover {
   border-color: var(--primary);
   color: var(--primary);
-  background: rgba(212, 255, 0, 0.08);
+  background: rgba(0, 255, 102, 0.08);
   transform: translateY(-3px);
 }
 
@@ -637,7 +638,7 @@ body {
   background: var(--primary);
   color: #080808;
   border: none;
-  box-shadow: 0 8px 30px rgba(212, 255, 0, 0.4);
+  box-shadow: 0 8px 30px rgba(0, 255, 102, 0.4);
 }
 
 .sticker-volt .sticker-bold {
@@ -805,7 +806,7 @@ body {
   border-color: var(--primary);
   background: #1a1a20;
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(212, 255, 0, 0.25);
+  box-shadow: 0 8px 25px rgba(0, 255, 102, 0.25);
 }
 
 .marquee-card-img-wrap {
@@ -987,8 +988,8 @@ body {
   font-size: 0.78rem;
   font-weight: 800;
   color: var(--primary);
-  background: rgba(212, 255, 0, 0.1);
-  border: 1px solid rgba(212, 255, 0, 0.3);
+  background: rgba(0, 255, 102, 0.1);
+  border: 1px solid rgba(0, 255, 102, 0.3);
   padding: 6px 14px;
   border-radius: 100px;
   letter-spacing: 1px;
@@ -1312,7 +1313,7 @@ body {
 .btn-card-action:hover {
   background: var(--primary);
   color: #000000;
-  box-shadow: 0 4px 18px rgba(212, 255, 0, 0.45);
+  box-shadow: 0 4px 18px rgba(0, 255, 102, 0.45);
 }
 
 .cart-btn-icon {
@@ -1495,7 +1496,7 @@ body {
   position: absolute;
   width: 75px;
   height: 24px;
-  background: rgba(212, 255, 0, 0.88);
+  background: rgba(0, 255, 102, 0.88);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   z-index: 5;
 }
@@ -1556,7 +1557,7 @@ body {
   color: var(--primary);
   display: inline-block;
   transform: rotate(-2deg);
-  text-shadow: 0 0 25px rgba(212, 255, 0, 0.45);
+  text-shadow: 0 0 25px rgba(0, 255, 102, 0.45);
 }
 
 .manifesto-copy {
@@ -1611,8 +1612,8 @@ body {
   font-weight: 800;
   letter-spacing: 1.5px;
   color: var(--primary);
-  background: rgba(212, 255, 0, 0.1);
-  border: 1px solid rgba(212, 255, 0, 0.3);
+  background: rgba(0, 255, 102, 0.1);
+  border: 1px solid rgba(0, 255, 102, 0.3);
   padding: 4px 12px;
   border-radius: 100px;
   display: inline-block;
@@ -1703,7 +1704,7 @@ body {
   outline: none;
   border-color: var(--primary);
   background: #1a1a20;
-  box-shadow: 0 0 15px rgba(212, 255, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
 }
 
 .form-row-dual {
@@ -1731,7 +1732,7 @@ body {
 .btn-sugg-submit:hover {
   background: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(212, 255, 0, 0.4);
+  box-shadow: 0 6px 25px rgba(0, 255, 102, 0.4);
 }
 
 /* ===== 4-STEP HOW IT WORKS ===== */
@@ -1779,7 +1780,7 @@ body {
 }
 
 .how-step-card:hover {
-  border-color: rgba(212, 255, 0, 0.4);
+  border-color: rgba(0, 255, 102, 0.4);
   transform: translateY(-5px);
   background: #18181c;
 }
@@ -1893,9 +1894,9 @@ body {
 }
 
 .footer-tag-pill.volt-pill {
-  background: rgba(212, 255, 0, 0.12);
+  background: rgba(0, 255, 102, 0.12);
   color: var(--primary);
-  border-color: rgba(212, 255, 0, 0.3);
+  border-color: rgba(0, 255, 102, 0.3);
 }
 
 .footer-links h4, .footer-contact h4 {
@@ -2432,7 +2433,7 @@ body {
   transition: var(--transition);
 }
 
-.cart-item:hover { border-color: rgba(212, 255, 0, 0.2); }
+.cart-item:hover { border-color: rgba(0, 255, 102, 0.2); }
 
 .cart-item-image {
   width: 120px; height: 120px;
@@ -2717,7 +2718,7 @@ body {
 /* Top Announcement Bar */
 .top-announcement {
   background: linear-gradient(90deg, #181028, #2a103c, #1a1835);
-  border-bottom: 1px solid rgba(212, 255, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 255, 102, 0.25);
   font-size: 0.82rem;
   padding: 6px 0;
   position: relative;
@@ -2865,9 +2866,9 @@ body {
 }
 .slide-tag {
   display: inline-block;
-  background: rgba(212, 255, 0, 0.2);
+  background: rgba(0, 255, 102, 0.2);
   color: var(--primary-light);
-  border: 1px solid rgba(212, 255, 0, 0.4);
+  border: 1px solid rgba(0, 255, 102, 0.4);
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -2896,7 +2897,7 @@ body {
   margin-bottom: 28px;
 }
 .slide-price-tag {
-  background: rgba(212, 255, 0, 0.25);
+  background: rgba(0, 255, 102, 0.25);
   color: #fff;
   border: 1.5px solid var(--primary);
   font-size: 1.5rem;
@@ -3052,7 +3053,7 @@ body {
   transition: var(--transition);
 }
 .quick-pill:hover {
-  background: rgba(212, 255, 0, 0.2);
+  background: rgba(0, 255, 102, 0.2);
   border-color: var(--primary);
   color: #fff;
 }
@@ -3087,9 +3088,9 @@ body {
 .capability-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 10px; }
 .capability-card p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px; }
 .cap-badge {
-  background: rgba(212, 255, 0, 0.15);
+  background: rgba(0, 255, 102, 0.15);
   color: var(--primary-light);
-  border: 1px solid rgba(212, 255, 0, 0.3);
+  border: 1px solid rgba(0, 255, 102, 0.3);
   padding: 4px 10px;
   border-radius: 8px;
   font-size: 0.78rem;
@@ -3158,7 +3159,7 @@ body {
 .suggestions-highlight-section { padding-top: 30px; }
 .suggestion-cta-card {
   background: linear-gradient(135deg, #13122b, #1d1633);
-  border: 1px solid rgba(212, 255, 0, 0.3);
+  border: 1px solid rgba(0, 255, 102, 0.3);
   border-radius: var(--radius-xl);
   padding: 45px;
   position: relative;
@@ -3446,8 +3447,8 @@ body {
 .radio-card:hover { border-color: var(--primary-light); }
 .radio-card.active {
   border-color: var(--primary);
-  background: rgba(212, 255, 0, 0.15);
-  box-shadow: 0 0 15px rgba(212, 255, 0, 0.2);
+  background: rgba(0, 255, 102, 0.15);
+  box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
 }
 .card-radio-content strong { display: block; font-size: 0.9rem; margin-bottom: 4px; }
 .card-price { font-size: 0.85rem; color: var(--primary-light); font-weight: 700; }
@@ -3489,7 +3490,7 @@ body {
 .font-choice-card input { display: none; }
 .font-choice-card.active {
   border-color: var(--primary);
-  background: rgba(212, 255, 0, 0.15);
+  background: rgba(0, 255, 102, 0.15);
 }
 .font-preview { display: block; font-size: 1.3rem; margin-bottom: 6px; }
 .font-cursive { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: #fef08a; }
@@ -3509,7 +3510,7 @@ body {
 }
 .file-dropzone:hover {
   border-color: var(--primary);
-  background: rgba(212, 255, 0, 0.1);
+  background: rgba(0, 255, 102, 0.1);
 }
 .file-input-hidden { display: none; }
 .dropzone-label { cursor: pointer; display: block; }
@@ -3531,7 +3532,7 @@ body {
 }
 .color-option input:checked + .color-swatch-pill {
   border-color: var(--primary);
-  background: rgba(212, 255, 0, 0.2);
+  background: rgba(0, 255, 102, 0.2);
   color: #fff;
 }
 
@@ -3580,7 +3581,7 @@ body {
   align-items: center;
 }
 .spec-tag.highlight {
-  background: rgba(212, 255, 0, 0.15);
+  background: rgba(0, 255, 102, 0.15);
   border-left: 3px solid var(--primary);
   padding: 3px 8px;
   border-radius: 4px;
@@ -3615,9 +3616,9 @@ body {
 .suggest-form-header h2 { font-size: 1.6rem; font-weight: 800; margin: 8px 0; }
 .suggest-form-header p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 .pill-badge {
-  background: rgba(212, 255, 0, 0.15);
+  background: rgba(0, 255, 102, 0.15);
   color: var(--primary-light);
-  border: 1px solid rgba(212, 255, 0, 0.3);
+  border: 1px solid rgba(0, 255, 102, 0.3);
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.78rem;
@@ -3667,8 +3668,8 @@ body {
 .suggestion-author-row { font-size: 0.78rem; color: var(--text-dim); display: flex; gap: 8px; }
 .suggestion-vote { display: flex; align-items: center; }
 .upvote-btn {
-  background: rgba(212, 255, 0, 0.1);
-  border: 1.5px solid rgba(212, 255, 0, 0.3);
+  background: rgba(0, 255, 102, 0.1);
+  border: 1.5px solid rgba(0, 255, 102, 0.3);
   color: var(--text);
   border-radius: 12px;
   padding: 10px 14px;
@@ -3855,7 +3856,7 @@ body {
   text-transform: uppercase;
 }
 .order-status-badge.status-confirmed { background: rgba(234, 179, 8, 0.15); color: #fef08a; border: 1px solid #eab308; }
-.order-status-badge.status-printinglasercutting { background: rgba(212, 255, 0, 0.2); color: #c4b5fd; border: 1px solid var(--primary); }
+.order-status-badge.status-printinglasercutting { background: rgba(0, 255, 102, 0.2); color: #c4b5fd; border: 1px solid var(--primary); }
 .order-status-badge.status-qualityinspected { background: rgba(6, 182, 212, 0.2); color: #67e8f9; border: 1px solid #06b6d4; }
 .order-status-badge.status-dispatched { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid #3b82f6; }
 .order-status-badge.status-delivered { background: rgba(34, 197, 94, 0.2); color: #86efac; border: 1px solid #22c55e; }
@@ -3962,7 +3963,7 @@ body {
   transition: var(--transition);
 }
 .mode-tab-btn.active, .mode-tab-btn:hover {
-  background: rgba(212, 255, 0, 0.2);
+  background: rgba(0, 255, 102, 0.2);
   border-color: var(--primary);
   color: #fff;
 }
@@ -4170,9 +4171,9 @@ button.btn {
 .btn-primary,
 a.btn-primary,
 button.btn-primary {
-  background: var(--primary, #d4ff00) !important;
+  background: var(--primary, #00ff66) !important;
   color: #000000 !important;
-  border: 1px solid var(--primary, #d4ff00) !important;
+  border: 1px solid var(--primary, #00ff66) !important;
   font-weight: 800;
   letter-spacing: 0.5px;
 }
@@ -4183,7 +4184,7 @@ button.btn-primary:hover {
   background: #b8e600 !important;
   color: #000000 !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 255, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 255, 102, 0.4);
 }
 
 .btn-outline,
@@ -4197,9 +4198,9 @@ button.btn-outline {
 .btn-outline:hover,
 a.btn-outline:hover,
 button.btn-outline:hover {
-  border-color: var(--primary, #d4ff00) !important;
-  color: var(--primary, #d4ff00) !important;
-  background: rgba(212, 255, 0, 0.08) !important;
+  border-color: var(--primary, #00ff66) !important;
+  color: var(--primary, #00ff66) !important;
+  background: rgba(0, 255, 102, 0.08) !important;
   transform: translateY(-2px);
 }
 
@@ -4222,7 +4223,7 @@ button.btn-outline:hover {
 .btn-cart-checkout {
   display: block;
   width: 100%;
-  background: var(--primary, #d4ff00);
+  background: var(--primary, #00ff66);
   color: #000000;
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 800;
@@ -4233,7 +4234,7 @@ button.btn-outline:hover {
   text-decoration: none !important;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  box-shadow: 0 6px 25px rgba(212, 255, 0, 0.35);
+  box-shadow: 0 6px 25px rgba(0, 255, 102, 0.35);
   transition: all 0.2s ease;
   margin-top: 14px;
 }
@@ -4242,7 +4243,7 @@ button.btn-outline:hover {
   background: #e2ff40;
   color: #000000;
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(212, 255, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 255, 102, 0.5);
 }
 
 .btn-cart-continue {
@@ -4275,9 +4276,9 @@ button.btn-outline:hover {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  background: var(--primary, #d4ff00) !important;
+  background: var(--primary, #00ff66) !important;
   color: #000000 !important;
-  border: 1px solid var(--primary, #d4ff00) !important;
+  border: 1px solid var(--primary, #00ff66) !important;
   padding: 13px 18px;
   border-radius: 8px;
   font-family: 'Space Grotesk', sans-serif;
@@ -4286,14 +4287,14 @@ button.btn-outline:hover {
   text-decoration: none !important;
   transition: all 0.25s ease;
   margin-top: 14px;
-  box-shadow: 0 4px 18px rgba(212, 255, 0, 0.25);
+  box-shadow: 0 4px 18px rgba(0, 255, 102, 0.25);
 }
 
 .btn-catalog-action:hover {
   background: #e2ff40 !important;
   color: #000000 !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 255, 0, 0.45);
+  box-shadow: 0 8px 25px rgba(0, 255, 102, 0.45);
 }
 
 /* 2. UNIVERSAL DARK STREETWEAR FORM INPUTS */
@@ -4326,8 +4327,8 @@ textarea:focus,
 select:focus,
 .form-input:focus {
   outline: none !important;
-  border-color: var(--primary, #d4ff00) !important;
-  box-shadow: 0 0 0 3px rgba(212, 255, 0, 0.2) !important;
+  border-color: var(--primary, #00ff66) !important;
+  box-shadow: 0 0 0 3px rgba(0, 255, 102, 0.2) !important;
   background: #191922 !important;
 }
 
@@ -4382,9 +4383,9 @@ select option {
 }
 
 .product-card:hover {
-  border-color: var(--primary, #d4ff00) !important;
+  border-color: var(--primary, #00ff66) !important;
   transform: translateY(-4px);
-  box-shadow: 0 12px 35px rgba(212, 255, 0, 0.2);
+  box-shadow: 0 12px 35px rgba(0, 255, 102, 0.2);
 }
 
 .product-image {
@@ -4428,9 +4429,9 @@ select option {
 }
 
 .product-image .badge.badge-hot {
-  background: var(--primary, #d4ff00) !important;
+  background: var(--primary, #00ff66) !important;
   color: #000000 !important;
-  border-color: var(--primary, #d4ff00) !important;
+  border-color: var(--primary, #00ff66) !important;
 }
 
 .product-image .badge.badge-laser {
@@ -4467,7 +4468,7 @@ select option {
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 1px;
-  color: var(--primary, #d4ff00);
+  color: var(--primary, #00ff66);
   margin-bottom: 6px;
   display: block;
 }
@@ -4499,7 +4500,7 @@ select option {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.35rem;
   font-weight: 800;
-  color: var(--primary, #d4ff00);
+  color: var(--primary, #00ff66);
 }
 
 .product-price .original {
@@ -4577,9 +4578,9 @@ select option {
   letter-spacing: 3px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.12);
-  -webkit-text-stroke: 1.8px #d4ff00;
+  -webkit-text-stroke: 1.8px #00ff66;
   text-shadow: 
-    0 0 12px rgba(212, 255, 0, 0.4),
+    0 0 12px rgba(0, 255, 102, 0.4),
     inset 0 2px 4px rgba(0, 0, 0, 0.9);
   transition: all 0.2s ease;
   word-break: break-word;
@@ -4608,9 +4609,9 @@ select option {
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.8px;
-  color: #d4ff00;
-  background: rgba(212, 255, 0, 0.12);
-  border: 1px solid rgba(212, 255, 0, 0.3);
+  color: #00ff66;
+  background: rgba(0, 255, 102, 0.12);
+  border: 1px solid rgba(0, 255, 102, 0.3);
   padding: 4px 12px;
   border-radius: 20px;
   z-index: 2;
@@ -4634,7 +4635,7 @@ select option {
   align-items: center;
   gap: 14px;
   background: #141418;
-  border: 1.5px solid var(--primary, #d4ff00);
+  border: 1.5px solid var(--primary, #00ff66);
   border-radius: 10px;
   padding: 14px 18px;
 }
@@ -4661,7 +4662,7 @@ select option {
   font-size: 0.75rem;
   font-weight: 800;
   color: #000000;
-  background: var(--primary, #d4ff00);
+  background: var(--primary, #00ff66);
   padding: 3px 10px;
   border-radius: 20px;
   text-transform: uppercase;
@@ -4673,7 +4674,7 @@ select option {
   font-weight: 700;
   letter-spacing: 0.5px;
   background: #181822 !important;
-  border-color: rgba(212, 255, 0, 0.4) !important;
+  border-color: rgba(0, 255, 102, 0.4) !important;
 }
 
 /* 5. ADMIN DASHBOARD ENHANCEMENTS */
@@ -4705,10 +4706,10 @@ select option {
 }
 
 .admin-tab-btn.active {
-  background: var(--primary, #d4ff00);
+  background: var(--primary, #00ff66);
   color: #000000;
-  border-color: var(--primary, #d4ff00);
-  box-shadow: 0 4px 15px rgba(212, 255, 0, 0.3);
+  border-color: var(--primary, #00ff66);
+  box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3);
 }
 
 .btn-admin-nav {
@@ -4735,7 +4736,7 @@ select option {
 
 .admin-add-product-box {
   background: #16161d;
-  border: 1.5px solid var(--primary, #d4ff00);
+  border: 1.5px solid var(--primary, #00ff66);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 28px;
@@ -4891,7 +4892,7 @@ select option {
 }
 
 .btn-quick-save:hover {
-  background: var(--primary, #d4ff00);
+  background: var(--primary, #00ff66);
   color: #000000;
 }
 
@@ -5074,8 +5075,8 @@ select option {
 }
 
 .sugg-category-badge {
-  background: rgba(212, 255, 0, 0.12);
-  color: #d4ff00;
+  background: rgba(0, 255, 102, 0.12);
+  color: #00ff66;
   padding: 3px 8px;
   border-radius: 4px;
   font-weight: 700;
@@ -5161,7 +5162,7 @@ select option {
   width: auto;
   height: auto;
   padding: 12px 20px;
-  background: var(--volt, #d4ff00);
+  background: var(--volt, #00ff66);
   color: #000000;
   font-weight: 800;
   font-size: 0.95rem;
@@ -5196,9 +5197,9 @@ select option {
 
 .notfound-glitch-badge {
   display: inline-block;
-  background: rgba(212, 255, 0, 0.15);
-  color: var(--volt, #d4ff00);
-  border: 1px solid var(--volt, #d4ff00);
+  background: rgba(0, 255, 102, 0.15);
+  color: var(--volt, #00ff66);
+  border: 1px solid var(--volt, #00ff66);
   font-size: 0.85rem;
   font-weight: 800;
   letter-spacing: 2px;
@@ -5243,7 +5244,7 @@ select option {
 }
 
 .notfound-search input:focus {
-  border-color: var(--volt, #d4ff00);
+  border-color: var(--volt, #00ff66);
   outline: none;
 }
 
