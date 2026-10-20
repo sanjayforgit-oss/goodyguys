@@ -1,26 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // 1. Mobile menu toggle
+  // 1. Mobile menu toggle with full backdrop and body scroll lock
   const menuToggle = document.getElementById('menuToggle');
   const nav = document.getElementById('nav');
 
   if (menuToggle && nav) {
+    function closeMobileNav() {
+      nav.classList.remove('active');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.textContent = '☰';
+      document.body.classList.remove('nav-open');
+    }
+
     menuToggle.addEventListener('click', function(e) {
       e.stopPropagation();
-      nav.classList.toggle('active');
-      menuToggle.textContent = nav.classList.contains('active') ? '✕' : '☰';
+      const isActive = nav.classList.toggle('active');
+      menuToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+      menuToggle.textContent = isActive ? '✕' : '☰';
+      document.body.classList.toggle('nav-open', isActive);
     });
 
     document.addEventListener('click', function(e) {
       if (nav.classList.contains('active') && !nav.contains(e.target) && !menuToggle.contains(e.target)) {
-        nav.classList.remove('active');
-        menuToggle.textContent = '☰';
+        closeMobileNav();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && nav.classList.contains('active')) {
+        closeMobileNav();
+      }
+    });
+
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768 && nav.classList.contains('active')) {
+        closeMobileNav();
       }
     });
 
     nav.querySelectorAll('a').forEach(a => {
       a.addEventListener('click', () => {
-        nav.classList.remove('active');
-        menuToggle.textContent = '☰';
+        closeMobileNav();
       });
     });
   }
