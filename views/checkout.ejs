@@ -13,6 +13,12 @@
     <div class="checkout-layout">
       <!-- Checkout Form -->
       <form class="checkout-form" id="checkoutOrderForm" method="POST" action="/checkout" enctype="multipart/form-data">
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert-box error" style="margin-bottom: 24px; padding: 14px 18px; border-radius: 8px;">
+            ⚠️ <%= error %>
+          </div>
+        <% } %>
+
         <!-- 1. Customer Information -->
         <div class="checkout-section">
           <h2>1. Contact Information</h2>

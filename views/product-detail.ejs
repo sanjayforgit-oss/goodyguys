@@ -475,11 +475,11 @@
 
           <!-- Quantity Selector -->
           <div class="customizer-card-section qty-section">
-            <label class="section-label-bold">Quantity</label>
+            <label for="productQuantity" class="section-label-bold">Quantity</label>
             <div class="quantity-selector">
-              <button type="button" class="qty-btn" onclick="decrementProductQty()">−</button>
-              <input type="number" id="productQuantity" name="quantity" value="1" min="1" max="99" onchange="recalculateFinalPrice()">
-              <button type="button" class="qty-btn" onclick="incrementProductQty()">+</button>
+              <button type="button" class="qty-btn" onclick="decrementProductQty()" aria-label="Decrease quantity">−</button>
+              <input type="number" id="productQuantity" name="quantity" value="1" min="1" max="99" onchange="recalculateFinalPrice()" aria-label="Item quantity">
+              <button type="button" class="qty-btn" onclick="incrementProductQty()" aria-label="Increase quantity">+</button>
             </div>
           </div>
 

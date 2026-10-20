@@ -1,0 +1,24 @@
+<%- include('partials/header') %>
+
+<section class="notfound-page">
+  <div class="container">
+    <div class="notfound-card">
+      <div class="notfound-glitch-badge">404 ERROR</div>
+      <h1 class="notfound-title">DROP NOT FOUND.</h1>
+      <p class="notfound-sub">The design, product page, or custom route you are looking for has been moved, unlisted, or does not exist in our workshop catalog.</p>
+      
+      <form class="notfound-search" method="GET" action="/products">
+        <input type="text" name="search" placeholder="Search t-shirts, laser acrylics, mugs..." class="form-input form-input-lg" aria-label="Search catalog">
+        <button type="submit" class="btn-streetwear-volt">Search Studio &rarr;</button>
+      </form>
+
+      <div class="notfound-actions">
+        <a href="/" class="btn-streetwear-ghost">&larr; Back to Home</a>
+        <a href="/products" class="btn-streetwear-volt">Explore The Drop</a>
+        <a href="/suggest" class="btn-streetwear-orange">💡 Suggest an Idea</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

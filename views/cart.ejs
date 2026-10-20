@@ -104,9 +104,9 @@
               <div class="cart-item-actions">
                 <form method="POST" action="/cart/update" class="cart-qty-form">
                   <input type="hidden" name="index" value="<%= index %>">
-                  <button type="submit" name="quantity" value="<%= item.quantity - 1 %>" class="qty-btn" <%= item.quantity <= 1 ? 'disabled' : '' %>>−</button>
+                  <button type="submit" name="quantity" value="<%= item.quantity - 1 %>" class="qty-btn" <%= item.quantity <= 1 ? 'disabled' : '' %> aria-label="Decrease quantity">−</button>
                   <span class="qty-display"><%= item.quantity %></span>
-                  <button type="submit" name="quantity" value="<%= item.quantity + 1 %>" class="qty-btn">+</button>
+                  <button type="submit" name="quantity" value="<%= item.quantity + 1 %>" class="qty-btn" aria-label="Increase quantity">+</button>
                 </form>
                 <form method="POST" action="/cart/remove">
                   <input type="hidden" name="index" value="<%= index %>">

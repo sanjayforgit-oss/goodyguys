@@ -124,9 +124,9 @@
   
   <div class="product-marquee-viewport">
     <div class="product-marquee-track">
-      <% [1, 2].forEach(() => { %>
+      <% [1, 2].forEach((iteration, iterIdx) => { %>
         <% products.forEach(prod => { %>
-          <a href="/products/<%= prod.id %>" class="marquee-product-card" title="Customize <%= prod.name %>">
+          <a href="/products/<%= prod.id %>" class="marquee-product-card" title="Customize <%= prod.name %>" <%- iterIdx > 0 ? 'aria-hidden="true" tabindex="-1"' : '' %>>
             <div class="marquee-card-img-wrap">
               <img src="<%= prod.image %>" alt="<%= prod.name %>" loading="lazy">
               <span class="marquee-card-badge <%= prod.id === 5 ? 'badge-cut' : '' %>">
@@ -396,7 +396,7 @@
               </div>
 
               <div class="form-group-compact">
-                <select name="category" class="sugg-select">
+                <select name="category" aria-label="Select product category" class="sugg-select">
                   <option value="laser-acrylic">⚡ Laser Cut Acrylic Creation</option>
                   <option value="t-shirts">👕 Streetwear / Apparel Idea</option>
                   <option value="mugs">☕ Custom Drinkware / Mug Idea</option>

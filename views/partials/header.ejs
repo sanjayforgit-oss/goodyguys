@@ -3,7 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GOODYGUYS — Crafted for the Creators | Custom Streetwear &amp; Precision Laser Studio</title>
+  <title><%= typeof title !== 'undefined' && title ? title : 'GOODYGUYS — Crafted for the Creators | Custom Streetwear & Precision Laser Studio' %></title>
+  <meta name="description" content="<%= typeof description !== 'undefined' && description ? description : 'GOODYGUYS Studio: Premium custom streetwear t-shirts, personalized photo drinkware, and precision laser-cut and engraved optical acrylic merchandise hand-crafted on demand with zero minimum orders.' %>">
+  <link rel="canonical" href="<%= typeof canonical !== 'undefined' && canonical ? canonical : 'https://goodyguys-custom.netlify.app' %>">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://goodyguys-custom.netlify.app/">
+  <meta property="og:title" content="<%= typeof title !== 'undefined' && title ? title : 'GOODYGUYS — Crafted for the Creators' %>">
+  <meta property="og:description" content="Custom streetwear t-shirts, personalized mugs, gaming mousepads, and precision laser-cut optical acrylic keychains. No minimum orders.">
+  <meta property="og:image" content="https://goodyguys-custom.netlify.app/images/hero-streetwear-model.jpg">
+
+  <!-- Twitter Meta -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= typeof title !== 'undefined' && title ? title : 'GOODYGUYS — Crafted for the Creators' %>">
+  <meta name="twitter:description" content="Custom streetwear t-shirts, personalized mugs, gaming mousepads, and precision laser-cut optical acrylic keychains.">
+  <meta name="twitter:image" content="https://goodyguys-custom.netlify.app/images/hero-streetwear-model.jpg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&family=Dancing+Script:wght@600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Pacifico&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -11,8 +27,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body class="streetwear-theme">
-  <!-- Top Ticker Marquee Announcement Bar (Inspired by NEVERMIND & URBAN THREADS) -->
-  <div class="top-marquee-bar">
+  <!-- Accessibility: Skip to Main Content Link -->
+  <a href="#mainContent" class="skip-to-content sr-only">Skip to main content</a>
+
+  <!-- Top Ticker Marquee Announcement Bar -->
+  <div class="top-marquee-bar" role="region" aria-label="Announcement Ticker">
     <div class="marquee-track">
       <div class="marquee-content">
         <span>⚡ GOODYGUYS STUDIO &bull; LIMITED DROPS &bull; EXCLUSIVE CUSTOM APPAREL</span>
@@ -69,7 +88,7 @@
         </a>
 
         <!-- Main Navigation Links -->
-        <nav class="nav" id="nav">
+        <nav class="nav" id="nav" aria-label="Main Navigation">
           <a href="/" class="nav-link">HOME</a>
           <a href="/products" class="nav-link">THE DROP</a>
           <a href="/suggest" class="nav-link nav-highlight">
@@ -78,14 +97,14 @@
           </a>
         </nav>
 
-        <!-- Header Actions: Search, Wishlist/Account, Cart -->
+        <!-- Header Actions: Search, Cart -->
         <div class="header-actions">
-          <form class="header-search-form" method="GET" action="/products">
-            <button type="submit" class="search-submit-icon" aria-label="Search">🔍</button>
-            <input type="text" name="search" placeholder="Search apparel, mugs, acrylics..." value="<%= typeof search !== 'undefined' ? search : '' %>">
+          <form class="header-search-form" method="GET" action="/products" role="search">
+            <button type="submit" class="search-submit-icon" aria-label="Search products">🔍</button>
+            <input type="text" name="search" placeholder="Search apparel, mugs, acrylics..." value="<%= typeof search !== 'undefined' ? search : '' %>" aria-label="Search catalog">
           </form>
 
-          <a href="/cart" class="cart-link streetwear-cart" title="Shopping Cart">
+          <a href="/cart" class="cart-link streetwear-cart" title="Shopping Cart" aria-label="Shopping Cart">
             <svg class="cart-bag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -94,7 +113,7 @@
             <span class="cart-badge volt-badge" id="cart-count"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span>
           </a>
 
-          <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu">
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
@@ -103,4 +122,4 @@
       </div>
     </div>
   </header>
-  <main class="main">
+  <main class="main" id="mainContent">
