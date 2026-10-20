@@ -134,7 +134,7 @@
     "name": "Name Cut Acrylic Keychain",
     "category": "keychains",
     "customizerType": "acrylic-cut",
-    "description": "Precision laser-cut transparent rectangular acrylic keychain. Your custom name is precision cut out through the solid 4mm crystal-clear acrylic slab, creating striking hollow stencil letters. Comes complete with stainless steel split keyring.",
+    "description": "Precision laser cut-through transparent acrylic keychain. Your custom name is cut out through the solid 4mm clear optical acrylic slab, creating hollow stencil silhouette letters. Complete with stainless steel split keyring.",
     "price": 100,
     "originalPrice": 199,
     "image": "/images/real-acrylic-cut.jpg",
@@ -165,22 +165,19 @@
   },
   {
     "id": 5,
-    "name": "Name Engraved Acrylic Keychain",
+    "name": "Name Silhouette Cut & Engraved Keychain",
     "category": "keychains",
     "customizerType": "name-engraved-keychain",
-    "description": "Personalized laser engraved clear acrylic keychain with your custom name, initials, or motivational word etched directly onto the polished acrylic surface in your chosen font. Includes durable stainless steel keyring.",
+    "description": "Personalized optical clear acrylic keychain where the acrylic plate is custom laser-cut around the contour silhouette of your name (cursive script or bold typography), paired with frosted laser surface engraving. Attached with durable stainless steel split keyring.",
     "price": 100,
     "originalPrice": 199,
-    "image": "/images/real-acrylic-engrave.jpg",
-    "badge": "Laser Etched",
+    "image": "/images/real-keychain.jpg",
+    "badge": "Name Silhouette",
     "active": true,
     "requiresImage": false,
     "requiresText": true,
     "shapes": [
-      "Classic Rectangle (6x3cm)",
-      "Modern Hexagon Tag",
-      "Minimalist Rounded Bar",
-      "Circle Medallion (4.5cm)"
+      "Custom Name Silhouette Contour (Shape Matches Name)"
     ],
     "fonts": [
       "Dancing Script",
@@ -193,10 +190,45 @@
     ],
     "customizable": true,
     "features": [
-      "High-Resolution Laser Frosted Surface Etching",
-      "Crystal Clear 4mm Optical Acrylic",
-      "Includes Split Keyring for Bike / Car / Bag Keys",
-      "Permanent Etching — Never Fades or Peels"
+      "Custom Acrylic Contour Cut Along the Exact Shape of Your Name",
+      "Laser Frosted Name Engraving & Outer Outline Cutting",
+      "Heavy-Duty 4mm Cast Optical Acrylic",
+      "Stainless Steel Split Keyring Included",
+      "Zero Minimum Order Quantity"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Rectangle Bar Name Engraved Keychain (80x20mm)",
+    "category": "keychains",
+    "customizerType": "name-engraved-keychain",
+    "description": "Sleek 80mm × 20mm (8cm × 2cm) crystal clear rectangular optical acrylic bar keychain. Your custom name, initials, or motivational word is precision laser engraved in crisp frosted white lettering across the center with diamond-polished beveled edges and stainless steel keyring.",
+    "price": 100,
+    "originalPrice": 199,
+    "image": "/images/real-name-rectangle-keychain.jpg",
+    "badge": "80×20mm Bar",
+    "active": true,
+    "requiresImage": false,
+    "requiresText": true,
+    "shapes": [
+      "Classic Rectangle Bar (80x20mm)"
+    ],
+    "fonts": [
+      "Space Grotesk",
+      "Bebas Neue",
+      "Dancing Script",
+      "Playfair Display",
+      "Permanent Marker",
+      "Courier Prime",
+      "Pacifico"
+    ],
+    "customizable": true,
+    "features": [
+      "Classic 80mm × 20mm (8cm × 2cm) Rectangular Bar Profile",
+      "High-Resolution Laser Frosted Surface Lettering",
+      "Diamond-Polished 4mm Cast Optical Acrylic",
+      "Heavy-Duty Stainless Steel Split Keyring & Link Chain",
+      "Permanent Laser Frosting — Never Fades or Peels"
     ]
   },
   {
@@ -204,24 +236,24 @@
     "name": "Image Engraved Acrylic Keychain",
     "category": "keychains",
     "customizerType": "image-engraved-keychain",
-    "description": "Turn your favorite photo, pet portrait, couple silhouette, anime art, or car into a laser engraved acrylic keychain! Our laser studio vectorizes your image and etches it with frosted precision onto clear acrylic with split keyring.",
+    "description": "Turn your favorite couple photo, pet portrait, car, or anime character into a laser engraved acrylic keychain! Our laser studio vectorizes your image and etches it with fine frosted halftone lines on crystal-clear optical acrylic with stainless steel split keyring.",
     "price": 100,
     "originalPrice": 220,
-    "image": "/images/real-keychain.jpg",
+    "image": "/images/real-photo-engraved-keychain.jpg",
     "badge": "Photo Laser",
     "active": true,
     "requiresImage": true,
     "requiresText": false,
     "shapes": [
+      "Circle Tag (5cm Dia)",
       "Square Tag (5x5cm)",
       "Rectangle Tag (6x4cm)",
-      "Circle Tag (5cm Dia)",
       "Silhouette Cutout"
     ],
     "customizable": true,
     "features": [
-      "Photo-to-Vector Laser Engraving Conversion",
-      "Permanent Frosted Etching on Clear Acrylic",
+      "Photo-to-Vector Laser Halftone Engraving Conversion",
+      "Permanent Frosted Etching on Clear Optical Acrylic",
       "Stainless Steel Split Keyring Included",
       "Waterproof, Scratch-Resistant & Lightweight"
     ]
@@ -231,10 +263,10 @@
     "name": "Custom Photo Printed Keychain",
     "category": "keychains",
     "customizerType": "image-keychain",
-    "description": "Pocket-sized acrylic keychain featuring full-color high-resolution printed photograph, character artwork, or couple memory. Sealed with a clear high-gloss protective finish.",
+    "description": "Pocket-sized clear acrylic keychain featuring full-color high-resolution printed photograph, character artwork, or couple memory. Sealed with a clear high-gloss protective finish.",
     "price": 100,
     "originalPrice": 180,
-    "image": "/images/real-keychain.jpg",
+    "image": "/images/real-photo-engraved-keychain.jpg",
     "badge": "Color Print",
     "active": true,
     "requiresImage": true,
