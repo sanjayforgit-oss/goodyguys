@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
               <label for="phone">WhatsApp / Phone Number <span class="req-star">*</span></label>
-              <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 98765 43210">
+              <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 90369 69700">
               <span class="field-hint">We will send design preview &amp; tracking updates on WhatsApp</span>
             </div>
           </div>
@@ -88,13 +88,14 @@
             cartItems.forEach(item => { calcSub += item.unitPrice * item.quantity; });
             let shipFee = calcSub >= 499 ? 0 : 49;
             let finalPayAmount = calcSub + shipFee;
-            let storeUpiId = "goodyguys@upi"; // Store UPI ID
+            let storeUpiId = typeof upiId !== 'undefined' && upiId ? upiId : "9036969700@upi";
+            let storeUpiNumber = "9036969700";
           %>
           <div class="upi-payment-container" id="upiPaymentBox">
             <div class="upi-header">
               <span class="upi-step-tag">Step-by-Step Payment</span>
               <h3>Scan &amp; Pay via GPay / PhonePe / Paytm</h3>
-              <p>Pay <strong>₹<%= finalPayAmount.toLocaleString() %></strong> directly to our workshop bank account with 0% gateway charges.</p>
+              <p>Pay <strong>₹<%= finalPayAmount.toLocaleString() %></strong> directly to our workshop account with 0% gateway charges.</p>
             </div>
 
             <div class="upi-grid-details">
@@ -110,12 +111,15 @@
               <!-- UPI Info & Steps -->
               <div class="upi-instructions-card">
                 <div class="upi-id-row">
-                  <span class="id-label">Store UPI ID:</span>
+                  <span class="id-label">Store UPI Number:</span>
                   <div class="upi-id-copy-box">
-                    <code id="merchantUpiId"><%= storeUpiId %></code>
+                    <code id="merchantUpiId"><%= storeUpiNumber %></code>
                     <button type="button" class="btn btn-sm btn-outline" onclick="copyUpiId()">📋 Copy</button>
                   </div>
                   <span id="copySuccessMsg" style="display:none; color: #22c55e; font-size: 0.75rem;">✓ Copied!</span>
+                </div>
+                <div style="font-size: 0.8rem; color: #94a3b8; margin-top: -6px; margin-bottom: 12px;">
+                  UPI ID: <strong style="color: #ffffff;"><%= storeUpiId %></strong>
                 </div>
 
                 <div class="upi-steps-list">
@@ -125,7 +129,7 @@
                   </div>
                   <div class="upi-step-item">
                     <span class="num">2</span>
-                    <p>Scan the QR code or transfer <strong>₹<%= finalPayAmount.toLocaleString() %></strong> to <code><%= storeUpiId %></code>.</p>
+                    <p>Scan the QR code or transfer <strong>₹<%= finalPayAmount.toLocaleString() %></strong> to UPI Number <code><%= storeUpiNumber %></code> (or UPI ID <code><%= storeUpiId %></code>).</p>
                   </div>
                   <div class="upi-step-item">
                     <span class="num">3</span>

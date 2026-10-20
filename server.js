@@ -478,7 +478,8 @@ app.get('/checkout', (req, res) => {
     title: 'Checkout & Delivery Details | GOODYGUYS',
     cartItems,
     subtotal,
-    error: req.query.error || null
+    error: req.query.error || null,
+    upiId: process.env.STORE_UPI_ID || '9036969700@upi'
   });
 });
 
