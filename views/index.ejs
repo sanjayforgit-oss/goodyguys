@@ -192,13 +192,12 @@
 
     <!-- Category Filter Bar (Inspired by Streetwear Navs) -->
     <div class="streetwear-filter-bar">
-      <button class="filter-pill active" data-category="all">ALL ITEMS (7)</button>
+      <button class="filter-pill active" data-category="all">ALL ITEMS (<%= products.length %>)</button>
       <button class="filter-pill" data-category="t-shirts">👕 T-SHIRTS</button>
       <button class="filter-pill" data-category="mugs">☕ MUGS</button>
       <button class="filter-pill" data-category="mousepads">🖱️ MOUSE PADS</button>
-      <button class="filter-pill" data-category="laser-acrylic">⚡ LASER ACRYLIC</button>
-      <button class="filter-pill" data-category="lamps">💡 3D LAMPS</button>
       <button class="filter-pill" data-category="keychains">🔑 KEYCHAINS</button>
+      <button class="filter-pill" data-category="desk-plaques-lamps">⚡ DESK PLAQUES &amp; LAMPS</button>
     </div>
 
     <!-- Product Grid with Realistic Commercial Photography -->
@@ -206,8 +205,8 @@
       <% products.forEach(product => { %>
         <div class="streetwear-card" data-category="<%= product.category %>">
           <!-- Top Tag Badge -->
-          <div class="card-badge-corner <%= product.id === 5 ? 'badge-cut' : product.badge === 'Bestseller' ? 'badge-best' : product.badge === 'Laser Tech' ? 'badge-tech' : 'badge-new' %>">
-            <%= product.id === 5 ? '✂️ LASER CUT-THROUGH' : product.badge ? product.badge.toUpperCase() : 'NEW' %>
+          <div class="card-badge-corner <%= product.customizerType === 'acrylic-cut' ? 'badge-cut' : product.badge === 'Bestseller' ? 'badge-best' : product.badge === 'Desk Art' ? 'badge-tech' : 'badge-new' %>">
+            <%= product.customizerType === 'acrylic-cut' ? '✂️ LASER CUT' : product.badge ? product.badge.toUpperCase() : 'NEW' %>
           </div>
 
           <!-- Product Realistic Image -->
@@ -216,7 +215,7 @@
               <img src="<%= product.image %>" alt="<%= product.name %>" class="card-prod-img" loading="lazy">
             </a>
             <div class="card-custom-overlay-tag">
-              <%= product.id === 5 ? '✂️ FREESTANDING CUT-OUT LETTERS (NO ENGRAVING)' : product.customizerType === 'tshirt' ? '👕 CUSTOM FRONT / BACK' : product.requiresText && product.requiresImage ? '📸 PHOTO + ✍️ TEXT' : product.requiresImage ? '📸 CUSTOM IMAGE' : '⚡ CUSTOM NAME' %>
+              <%= product.customizerType === 'acrylic-cut' ? '✂️ HOLLOW CUT-THROUGH LETTERS' : product.customizerType === 'tshirt' ? '👕 CUSTOM FRONT / BACK' : product.customizerType === 'desk-plaque' ? '🪵 WOODEN STAND • CUSTOM SIZES' : product.requiresText && product.requiresImage ? '📸 PHOTO + ✍️ TEXT' : product.requiresImage ? '📸 CUSTOM IMAGE' : '⚡ CUSTOM NAME' %>
             </div>
           </div>
 
@@ -236,6 +235,10 @@
                 <span class="card-option-note">(Front / Back / Both)</span>
               <% } else if (product.sideOptions) { %>
                 <span class="card-option-note">(1 side ₹150 / 3 sides ₹200)</span>
+              <% } else if (product.customizerType === 'desk-plaque') { %>
+                <span class="card-option-note">(Stand Included • ₹250 / ₹400 / ₹700)</span>
+              <% } else if (product.customizerType === 'engraved-lamp') { %>
+                <span class="card-option-note">(Warm Wood / RGB ₹300–₹350)</span>
               <% } %>
             </div>
 
@@ -245,7 +248,7 @@
 
             <!-- Full-width Streetwear Black Button -->
             <a href="/products/<%= product.id %>" class="btn-card-action">
-              <span><%= product.customizerType === 'tshirt' ? 'CUSTOMIZE T-SHIRT' : product.id === 5 ? 'CUT MY NAME' : 'CUSTOMIZE NOW' %></span>
+              <span><%= product.customizerType === 'tshirt' ? 'CUSTOMIZE T-SHIRT' : product.customizerType === 'acrylic-cut' ? 'CUT MY NAME' : 'CUSTOMIZE NOW' %></span>
               <span class="cart-btn-icon">🛒</span>
             </a>
           </div>

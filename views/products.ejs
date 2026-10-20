@@ -37,18 +37,13 @@
             </a>
           </li>
           <li>
-            <a href="/products?category=laser-acrylic" class="<%= currentCategory === 'laser-acrylic' ? 'active' : '' %>">
-              ⚡ Laser Cut Acrylic (₹100)
-            </a>
-          </li>
-          <li>
             <a href="/products?category=keychains" class="<%= currentCategory === 'keychains' ? 'active' : '' %>">
-              🔑 Keychains (₹100)
+              🔑 Custom Keychains (₹100)
             </a>
           </li>
           <li>
-            <a href="/products?category=lamps" class="<%= currentCategory === 'lamps' ? 'active' : '' %>">
-              💡 3D Lamps (₹300)
+            <a href="/products?category=desk-plaques-lamps" class="<%= currentCategory === 'desk-plaques-lamps' ? 'active' : '' %>">
+              ⚡ Desk Plaques &amp; 3D Lamps (₹250–₹700)
             </a>
           </li>
         </ul>
@@ -110,8 +105,12 @@
                       <span class="price-note">(Both Sides ₹400)</span>
                     <% } else if (product.sideOptions) { %>
                       <span class="price-note">(1-3 sides ₹150–₹200)</span>
-                    <% } else if (product.placementOptions) { %>
-                      <span class="price-note">(Front / Back / Both)</span>
+                    <% } else if (product.customizerType === 'desk-plaque') { %>
+                      <span class="price-note">(Stand Included • ₹250 / ₹400 / ₹700)</span>
+                    <% } else if (product.customizerType === 'engraved-lamp') { %>
+                      <span class="price-note">(Warm Wood / RGB ₹300–₹350)</span>
+                    <% } else if (product.category === 'keychains') { %>
+                      <span class="price-note">(Keyring Included • ₹100)</span>
                     <% } %>
                   </div>
                   <a href="/products/<%= product.id %>" class="btn-catalog-action">

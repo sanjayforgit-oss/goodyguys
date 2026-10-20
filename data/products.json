@@ -4,7 +4,7 @@
     "name": "Custom T-Shirt Print",
     "category": "t-shirts",
     "customizerType": "tshirt",
-    "description": "Premium 100% combed cotton t-shirt with high-definition digital print. Specifically printed on crisp white and bright pastel t-shirts for optimum color vibrancy. Choose front print, back print, or both front & back with your custom graphics or text.",
+    "description": "Premium 100% combed cotton t-shirt with high-definition digital sublimation print. Specifically printed on crisp white and bright pastel t-shirts for optimum color vibrancy. Choose front print, back print, or both front & back with your custom graphics or text.",
     "price": 300,
     "originalPrice": 499,
     "image": "/images/real-tshirt.jpg",
@@ -131,46 +131,10 @@
   },
   {
     "id": 4,
-    "name": "Name Engraving in Acrylic",
-    "category": "laser-acrylic",
-    "customizerType": "acrylic-engrave",
-    "description": "Laser engraved personalized transparent acrylic desk plate or plaque. Permanent precision frosted etching of any name, motivational quote, or custom message with complimentary wooden stand.",
-    "price": 100,
-    "originalPrice": 199,
-    "image": "/images/real-acrylic-engrave.jpg",
-    "badge": "Laser Tech",
-    "active": true,
-    "requiresImage": false,
-    "requiresText": true,
-    "shapes": [
-      "Rectangular Desk Plate",
-      "Modern Hexagon",
-      "Classic Shield",
-      "Circle Badge"
-    ],
-    "fonts": [
-      "Dancing Script",
-      "Bebas Neue",
-      "Space Grotesk",
-      "Playfair Display",
-      "Permanent Marker",
-      "Courier Prime",
-      "Pacifico"
-    ],
-    "customizable": true,
-    "features": [
-      "Precision Laser Surface Frosted Etching",
-      "Durable 4mm Crystal Clear Optical Acrylic",
-      "Natural Hardwood Desk Stand Included",
-      "Zero Fading / Never Wears Off"
-    ]
-  },
-  {
-    "id": 5,
-    "name": "Name Cut in Acrylic",
-    "category": "laser-acrylic",
+    "name": "Name Cut Acrylic Keychain",
+    "category": "keychains",
     "customizerType": "acrylic-cut",
-    "description": "Precision laser-cut transparent rectangular acrylic keychain. The keychain is crafted in a clean rectangular acrylic plate where your custom name is precision cut through the crystal-clear slab, creating sleek hollow stencil lettering inside the rectangle.",
+    "description": "Precision laser-cut transparent rectangular acrylic keychain. Your custom name is precision cut out through the solid 4mm crystal-clear acrylic slab, creating striking hollow stencil letters. Comes complete with stainless steel split keyring.",
     "price": 100,
     "originalPrice": 199,
     "image": "/images/real-acrylic-cut.jpg",
@@ -182,6 +146,43 @@
       "Transparent Clear (Optical Acrylic)"
     ],
     "fonts": [
+      "Space Grotesk",
+      "Bebas Neue",
+      "Dancing Script",
+      "Playfair Display",
+      "Permanent Marker",
+      "Courier Prime",
+      "Pacifico"
+    ],
+    "customizable": true,
+    "features": [
+      "Precision Cut-Through Lettering Inside Clear Rectangle",
+      "Heavy-Duty 4mm Cast Optical Acrylic",
+      "Diamond-Polished Smooth Edges",
+      "Stainless Steel Split Keyring Included",
+      "No Minimum Orders"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Name Engraved Acrylic Keychain",
+    "category": "keychains",
+    "customizerType": "name-engraved-keychain",
+    "description": "Personalized laser engraved clear acrylic keychain with your custom name, initials, or motivational word etched directly onto the polished acrylic surface in your chosen font. Includes durable stainless steel keyring.",
+    "price": 100,
+    "originalPrice": 199,
+    "image": "/images/real-acrylic-engrave.jpg",
+    "badge": "Laser Etched",
+    "active": true,
+    "requiresImage": false,
+    "requiresText": true,
+    "shapes": [
+      "Classic Rectangle (6x3cm)",
+      "Modern Hexagon Tag",
+      "Minimalist Rounded Bar",
+      "Circle Medallion (4.5cm)"
+    ],
+    "fonts": [
       "Dancing Script",
       "Bebas Neue",
       "Space Grotesk",
@@ -192,23 +193,49 @@
     ],
     "customizable": true,
     "features": [
-      "Precision Laser Cut-Through Inside Transparent Rectangle",
-      "Solid 4mm Crystal Clear Optical Acrylic Slab",
-      "Ultra-Smooth Diamond-Polished Finished Edges",
-      "Heavy-Duty Stainless Steel Keyring Included",
-      "100% In-House Precision Laser Atelier Production"
+      "High-Resolution Laser Frosted Surface Etching",
+      "Crystal Clear 4mm Optical Acrylic",
+      "Includes Split Keyring for Bike / Car / Bag Keys",
+      "Permanent Etching — Never Fades or Peels"
     ]
   },
   {
     "id": 6,
-    "name": "Custom Image Printed Keychain",
+    "name": "Image Engraved Acrylic Keychain",
+    "category": "keychains",
+    "customizerType": "image-engraved-keychain",
+    "description": "Turn your favorite photo, pet portrait, couple silhouette, anime art, or car into a laser engraved acrylic keychain! Our laser studio vectorizes your image and etches it with frosted precision onto clear acrylic with split keyring.",
+    "price": 100,
+    "originalPrice": 220,
+    "image": "/images/real-keychain.jpg",
+    "badge": "Photo Laser",
+    "active": true,
+    "requiresImage": true,
+    "requiresText": false,
+    "shapes": [
+      "Square Tag (5x5cm)",
+      "Rectangle Tag (6x4cm)",
+      "Circle Tag (5cm Dia)",
+      "Silhouette Cutout"
+    ],
+    "customizable": true,
+    "features": [
+      "Photo-to-Vector Laser Engraving Conversion",
+      "Permanent Frosted Etching on Clear Acrylic",
+      "Stainless Steel Split Keyring Included",
+      "Waterproof, Scratch-Resistant & Lightweight"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Custom Photo Printed Keychain",
     "category": "keychains",
     "customizerType": "image-keychain",
-    "description": "Pocket-sized personalized acrylic keychain featuring your favorite photograph, character artwork, or couple memory. Protected by a crystal clear scratch-resistant resin coat.",
+    "description": "Pocket-sized acrylic keychain featuring full-color high-resolution printed photograph, character artwork, or couple memory. Sealed with a clear high-gloss protective finish.",
     "price": 100,
     "originalPrice": 180,
     "image": "/images/real-keychain.jpg",
-    "badge": "Budget Pick",
+    "badge": "Color Print",
     "active": true,
     "requiresImage": true,
     "requiresText": false,
@@ -220,22 +247,57 @@
     ],
     "customizable": true,
     "features": [
-      "High-Res Double-Sided Photo Print",
+      "Full Color HD Sublimation Photo Print",
       "Crystal Clear Optical Acrylic",
       "Scratch & Water Resistant",
       "Reinforced Heavy Duty Ring"
     ]
   },
   {
-    "id": 7,
-    "name": "Personalised Engraved Lamp",
-    "category": "lamps",
+    "id": 8,
+    "name": "Engraved Image Acrylic Plaque (with Stand)",
+    "category": "desk-plaques-lamps",
+    "customizerType": "desk-plaque",
+    "description": "Premium laser engraved acrylic photo plaque or Spotify scannable song frame resting on a natural solid hardwood desk stand. Features customizable sizing: Compact Desk Stand (<15x15cm) at ₹250, Studio Standard (up to 2x2ft) at ₹400, or Grand Display (>2x2ft) at ₹700.",
+    "price": 250,
+    "originalPrice": 499,
+    "image": "/images/real-acrylic-engrave.jpg",
+    "badge": "Desk Art",
+    "active": true,
+    "requiresImage": true,
+    "requiresText": true,
+    "sizes": [
+      "Compact Desk Stand (< 15cm × 15cm) — ₹250",
+      "Studio Standard Stand (15cm × 15cm to 2ft × 2ft) — ₹400",
+      "Grand Statement Plaque (> 2ft × 2ft) — ₹700"
+    ],
+    "fonts": [
+      "Dancing Script",
+      "Bebas Neue",
+      "Space Grotesk",
+      "Playfair Display",
+      "Permanent Marker",
+      "Courier Prime"
+    ],
+    "customizable": true,
+    "features": [
+      "Solid Natural Hardwood Groove Desk Stand Included",
+      "Durable 4mm Crystal Clear Cast Acrylic",
+      "Custom Size Pricing: <15cm (₹250), Up to 2ft (₹400), >2ft (₹700)",
+      "Optional Scannable Spotify Song Code or Couple Portrait",
+      "Precision Laser Frosted Etching That Lasts Forever"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Personalised 3D Illusion LED Lamp",
+    "category": "desk-plaques-lamps",
     "customizerType": "engraved-lamp",
     "description": "Illuminated 3D illusion acrylic night lamp. Laser engraved with your names, special date, or couple portrait, placed on a natural wooden LED base creating a warm romantic glow.",
     "price": 300,
     "originalPrice": 599,
     "image": "/images/real-lamp.jpg",
-    "badge": "Romantic Gift",
+    "badge": "LED Glow",
     "active": true,
     "requiresImage": false,
     "requiresText": true,

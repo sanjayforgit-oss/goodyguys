@@ -380,6 +380,26 @@ app.post('/cart/add', upload.fields([
   } else if (product.customizerType === 'engraved-lamp') {
     if (lampBase && lampBase.includes('RGB')) unitPrice = 350;
     else unitPrice = 300;
+  } else if (product.customizerType === 'desk-plaque') {
+    const cleanSize = (size || '').toLowerCase();
+    const widthNum = parseFloat(req.body?.customWidth) || 0;
+    const heightNum = parseFloat(req.body?.customHeight) || 0;
+
+    if (widthNum > 0 && heightNum > 0) {
+      if (widthNum <= 15 && heightNum <= 15) {
+        unitPrice = 250;
+      } else if (widthNum > 60 || heightNum > 60) {
+        unitPrice = 700;
+      } else {
+        unitPrice = 400;
+      }
+    } else if (cleanSize.includes('250') || cleanSize.includes('compact') || cleanSize.includes('< 15') || cleanSize.includes('15cm')) {
+      unitPrice = 250;
+    } else if (cleanSize.includes('700') || cleanSize.includes('grand') || cleanSize.includes('> 2ft') || cleanSize.includes('large')) {
+      unitPrice = 700;
+    } else {
+      unitPrice = 400; // Standard medium default
+    }
   }
 
   // Handle uploaded images safely
@@ -395,6 +415,12 @@ app.post('/cart/add', upload.fields([
     }
   }
 
+  // If custom dimensions provided, format size string for order receipt
+  let formattedSize = size || '';
+  if (req.body?.customWidth && req.body?.customHeight) {
+    formattedSize = `${formattedSize ? formattedSize + ' ' : ''}[Dimensions: ${req.body.customWidth}cm × ${req.body.customHeight}cm]`;
+  }
+
   const cartItem = {
     productId: id,
     unitPrice,
@@ -406,7 +432,7 @@ app.post('/cart/add', upload.fields([
     material: material || '',
     fontStyle: fontStyle || '',
     color: color || '',
-    size: size || '',
+    size: formattedSize,
     shape: shape || '',
     customImageName,
     customImagePath

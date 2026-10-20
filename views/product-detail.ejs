@@ -350,8 +350,8 @@
             </div>
           <% } %>
 
-          <!-- 5. ACRYLIC NAME ENGRAVING (Laser Surface Frosted Etching) -->
-          <% if (product.customizerType === 'acrylic-engrave') { %>
+          <!-- 5. NAME ENGRAVED ACRYLIC KEYCHAIN -->
+          <% if (product.customizerType === 'name-engraved-keychain' || product.customizerType === 'acrylic-engrave') { %>
             <div class="customizer-card-section">
               <label class="section-label-bold" for="engraveFontSelect">1. Select Engraving Font Style</label>
               <div class="font-dropdown-wrapper">
@@ -368,42 +368,82 @@
             </div>
 
             <div class="customizer-card-section">
-              <label class="section-label-bold" for="engraveInput">2. Name or Quote to Engrave <span class="req-star">*</span></label>
-              <textarea id="engraveInput" name="customText" required rows="2" placeholder="e.g. Alex &amp; Sophia • Forever Together • 14.02.2026" class="form-input font-preview-input" oninput="updateLiveLaserEngrave(this.value)" style="font-family: 'Dancing Script', cursive; font-size: 1.15rem;"></textarea>
-              <span class="field-hint">💡 Precision laser frosting on 4mm optical acrylic. Comes with solid wooden stand.</span>
+              <label class="section-label-bold" for="engraveInput">2. Name or Initials to Engrave <span class="req-star">*</span></label>
+              <input type="text" id="engraveInput" name="customText" required placeholder="e.g. Alex / Priya / 07 / GOAT" class="form-input font-preview-input" oninput="updateLiveLaserEngrave(this.value)" style="font-family: 'Dancing Script', cursive; font-size: 1.15rem;">
+              <span class="field-hint">💡 Precision laser frosting on 4mm optical acrylic. Stainless steel keyring included.</span>
             </div>
 
-            <!-- Live Visual Preview of Engraved Acrylic Plate -->
+            <!-- Live Visual Preview of Engraved Acrylic Keychain -->
             <div class="customizer-card-section">
               <label class="section-label-bold">3. Live Laser Engraving Preview</label>
               <div class="acrylic-plate-simulator engrave-mode" id="acrylicEngraveSimulator">
+                <div class="acrylic-keyring-hole" title="Laser Drilled Hole for Keyring"></div>
                 <div class="acrylic-plate-shine"></div>
-                <div class="acrylic-engraved-name" id="acrylicEngraveLiveName" style="font-family: 'Dancing Script', cursive;">Alex &amp; Sophia</div>
-                <div class="acrylic-wooden-stand-base">🪵 Hardwood Desk Stand Base Included</div>
+                <div class="acrylic-engraved-name" id="acrylicEngraveLiveName" style="font-family: 'Dancing Script', cursive;">Alex</div>
+                <div class="acrylic-spec-badge">🔑 Clear Optical Acrylic &bull; Stainless Keyring Included</div>
+              </div>
+            </div>
+
+            <% if (product.shapes && product.shapes.length > 0) { %>
+              <div class="customizer-card-section">
+                <label class="section-label-bold">4. Keychain Tag Shape</label>
+                <div class="radio-card-grid">
+                  <% product.shapes.forEach((sh, idx) => { %>
+                    <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
+                      <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
+                      <div class="card-radio-content">
+                        <strong><%= sh %></strong>
+                      </div>
+                    </label>
+                  <% }) %>
+                </div>
+              </div>
+            <% } %>
+          <% } %>
+
+          <!-- 6. IMAGE ENGRAVED ACRYLIC KEYCHAIN -->
+          <% if (product.customizerType === 'image-engraved-keychain') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold">1. Upload Photo for Laser Vector Engraving <span class="req-star">*</span></label>
+              <div class="file-dropzone">
+                <input type="file" id="engraveImageFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'LaserEngraveKeychain')" required>
+                <label for="engraveImageFile" class="dropzone-label">
+                  <span class="upload-icon">⚡</span>
+                  <span class="upload-title" id="engraveImageLabel">Upload Photo / Portrait / Pet / Car</span>
+                  <span class="upload-hint">Our laser atelier vectorizes your photo into permanent frosted engraving</span>
+                </label>
               </div>
             </div>
 
             <div class="customizer-card-section">
-              <label class="section-label-bold">4. Plate Shape</label>
-              <div class="radio-card-grid">
-                <% product.shapes.forEach((sh, idx) => { %>
-                  <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
-                    <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
-                    <div class="card-radio-content">
-                      <strong><%= sh %></strong>
-                    </div>
-                  </label>
-                <% }) %>
-              </div>
+              <label class="section-label-bold" for="engraveImageTextInput">2. Optional Name or Date Below Engraving</label>
+              <input type="text" id="engraveImageTextInput" name="customText" placeholder="e.g. Max / Bruno / 24.10.2026" class="form-input">
+              <span class="field-hint">💡 Heavy-duty stainless steel keyring included.</span>
             </div>
+
+            <% if (product.shapes && product.shapes.length > 0) { %>
+              <div class="customizer-card-section">
+                <label class="section-label-bold">3. Keychain Shape</label>
+                <div class="radio-card-grid">
+                  <% product.shapes.forEach((sh, idx) => { %>
+                    <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
+                      <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
+                      <div class="card-radio-content">
+                        <strong><%= sh %></strong>
+                      </div>
+                    </label>
+                  <% }) %>
+                </div>
+              </div>
+            <% } %>
           <% } %>
 
-          <!-- 6. CUSTOM IMAGE PRINTED KEYCHAIN -->
+          <!-- 7. CUSTOM PHOTO PRINTED KEYCHAIN -->
           <% if (product.customizerType === 'image-keychain') { %>
             <div class="customizer-card-section">
               <label class="section-label-bold">1. Upload Photo for Keychain <span class="req-star">*</span></label>
               <div class="file-dropzone">
-                <input type="file" id="keychainFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Keychain')">
+                <input type="file" id="keychainFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Keychain')" required>
                 <label for="keychainFile" class="dropzone-label">
                   <span class="upload-icon">🔑</span>
                   <span class="upload-title" id="keychainFileLabel">Upload Photo / Character Art</span>
@@ -412,23 +452,107 @@
               </div>
             </div>
 
+            <% if (product.shapes && product.shapes.length > 0) { %>
+              <div class="customizer-card-section">
+                <label class="section-label-bold">2. Acrylic Shape</label>
+                <div class="radio-card-grid">
+                  <% product.shapes.forEach((sh, idx) => { %>
+                    <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
+                      <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
+                      <div class="card-radio-content">
+                        <strong><%= sh %></strong>
+                        <span class="card-price">₹100</span>
+                      </div>
+                    </label>
+                  <% }) %>
+                </div>
+              </div>
+            <% } %>
+          <% } %>
+
+          <!-- 8. ENGRAVED IMAGE IN A STAND (DESK PLAQUE WITH WOODEN BASE) -->
+          <% if (product.customizerType === 'desk-plaque') { %>
             <div class="customizer-card-section">
-              <label class="section-label-bold">2. Acrylic Shape</label>
-              <div class="radio-card-grid">
-                <% product.shapes.forEach((sh, idx) => { %>
-                  <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
-                    <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
-                    <div class="card-radio-content">
-                      <strong><%= sh %></strong>
-                      <span class="card-price">₹100</span>
+              <label class="section-label-bold">1. Upload Image / Photo / Spotify Song Cover <span class="req-star">*</span></label>
+              <div class="file-dropzone">
+                <input type="file" id="plaqueImageFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'DeskPlaque')" required>
+                <label for="plaqueImageFile" class="dropzone-label">
+                  <span class="upload-icon">🖼️</span>
+                  <span class="upload-title" id="plaqueImageLabel">Upload Photo (Couple / Portrait / Album Cover)</span>
+                  <span class="upload-hint">High resolution photo for crisp laser etching</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="plaqueTextInput">2. Custom Names, Quote, or Spotify Song Title <span class="req-star">*</span></label>
+              <textarea id="plaqueTextInput" name="customText" required rows="2" placeholder="e.g. Starboy - The Weeknd (or Arun &amp; Kavya • 24.10.2026)" class="form-input"></textarea>
+            </div>
+
+            <div class="customizer-card-section" id="plaqueSizeSection">
+              <label class="section-label-bold">3. Select Plaque Size Option <span class="req-star">*</span></label>
+              <div class="radio-card-grid" style="grid-template-columns: 1fr;">
+                <label class="radio-card" id="cardSizeSmall">
+                  <input type="radio" name="size" id="sizeSmall" value="Compact Desk Stand (< 15cm × 15cm) — ₹250" data-price="250" onchange="updatePlaqueSize(this)">
+                  <div class="card-radio-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                      <strong>Compact Desk Stand (&lt; 15cm × 15cm)</strong>
+                      <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 2px;">Perfect for office desk or study table. Solid wooden stand included.</p>
                     </div>
-                  </label>
-                <% }) %>
+                    <span class="card-price" style="font-size: 1.1rem; color: var(--primary);">₹250</span>
+                  </div>
+                </label>
+
+                <label class="radio-card active" id="cardSizeMedium">
+                  <input type="radio" name="size" id="sizeMedium" value="Studio Standard Stand (15cm × 15cm to 2ft × 2ft) — ₹400" data-price="400" checked onchange="updatePlaqueSize(this)">
+                  <div class="card-radio-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                      <strong>Studio Standard Stand (15cm × 15cm to 2ft × 2ft) <span class="pill-badge" style="font-size: 0.7rem; margin-left: 6px;">POPULAR</span></strong>
+                      <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 2px;">Ideal A5/A4/8"×10" display size. Solid wooden stand included.</p>
+                    </div>
+                    <span class="card-price" style="font-size: 1.1rem; color: var(--primary);">₹400</span>
+                  </div>
+                </label>
+
+                <label class="radio-card" id="cardSizeLarge">
+                  <input type="radio" name="size" id="sizeLarge" value="Grand Statement Plaque (> 2ft × 2ft) — ₹700" data-price="700" onchange="updatePlaqueSize(this)">
+                  <div class="card-radio-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                      <strong>Grand Statement Plaque (&gt; 2ft × 2ft / 60cm+)</strong>
+                      <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 2px;">Extra large statement piece for studio, reception, or living room wall/desk.</p>
+                    </div>
+                    <span class="card-price" style="font-size: 1.1rem; color: var(--primary);">₹700</span>
+                  </div>
+                </label>
+              </div>
+
+              <!-- Custom Dimensions Input Box -->
+              <div style="margin-top: 16px; padding: 14px; background: rgba(255, 255, 255, 0.03); border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 8px;">
+                <label style="font-size: 0.85rem; font-weight: 700; color: #ffffff; display: block; margin-bottom: 6px;">📐 Or Enter Exact Custom Dimensions (cm):</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <input type="number" id="customWidthInput" name="customWidth" placeholder="Width (cm)" min="5" max="150" class="form-input form-input-sm" oninput="calculateCustomDimensions()" style="flex: 1;">
+                  <span style="color: #94a3b8;">&times;</span>
+                  <input type="number" id="customHeightInput" name="customHeight" placeholder="Height (cm)" min="5" max="150" class="form-input form-input-sm" oninput="calculateCustomDimensions()" style="flex: 1;">
+                </div>
+                <div id="dimPriceIndicator" style="margin-top: 8px; font-size: 0.82rem; color: var(--primary);">
+                  💡 Pricing rules: Under 15cm = ₹250 &bull; Up to 2ft = ₹400 &bull; Over 2ft = ₹700
+                </div>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <div class="single-finish-card">
+                <div class="finish-icon-wrap">🪵</div>
+                <div class="finish-info">
+                  <strong>Natural Solid Hardwood Groove Desk Stand Included</strong>
+                  <p>Every plaque comes with a precision-grooved natural wooden base to rest securely on any flat surface.</p>
+                </div>
+                <span class="finish-badge" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">FREE STAND</span>
               </div>
             </div>
           <% } %>
 
-          <!-- 7. PERSONALISED ENGRAVED LAMP -->
+          <!-- 9. PERSONALISED ENGRAVED LAMP -->
           <% if (product.customizerType === 'engraved-lamp') { %>
             <div class="customizer-card-section">
               <label class="section-label-bold">1. Select LED Base Type <span class="req-star">*</span></label>
@@ -621,6 +745,54 @@
     const price = parseInt(radio.getAttribute('data-price')) || 300;
     currentUnitPrice = price;
     recalculateFinalPrice();
+  }
+
+  // Desk Plaque Size & Dynamic Dimension Pricing Calculator
+  function updatePlaqueSize(radio) {
+    document.querySelectorAll('#plaqueSizeSection .radio-card').forEach(c => c.classList.remove('active'));
+    radio.closest('.radio-card').classList.add('active');
+    const price = parseInt(radio.getAttribute('data-price')) || 400;
+    currentUnitPrice = price;
+    recalculateFinalPrice();
+  }
+
+  function calculateCustomDimensions() {
+    const w = parseFloat(document.getElementById('customWidthInput')?.value) || 0;
+    const h = parseFloat(document.getElementById('customHeightInput')?.value) || 0;
+    if (w <= 0 || h <= 0) return;
+
+    let targetPrice = 400;
+    let targetRadioId = 'sizeMedium';
+    let tierText = 'Standard Tier (15cm to 2ft)';
+
+    if (w <= 15 && h <= 15) {
+      targetPrice = 250;
+      targetRadioId = 'sizeSmall';
+      tierText = 'Compact Desk Tier (< 15cm)';
+    } else if (w > 60 || h > 60) {
+      targetPrice = 700;
+      targetRadioId = 'sizeLarge';
+      tierText = 'Grand Statement Plaque (> 2ft)';
+    } else {
+      targetPrice = 400;
+      targetRadioId = 'sizeMedium';
+      tierText = 'Studio Standard Tier (15cm to 2ft)';
+    }
+
+    const radio = document.getElementById(targetRadioId);
+    if (radio) {
+      radio.checked = true;
+      document.querySelectorAll('#plaqueSizeSection .radio-card').forEach(c => c.classList.remove('active'));
+      radio.closest('.radio-card')?.classList.add('active');
+    }
+
+    currentUnitPrice = targetPrice;
+    recalculateFinalPrice();
+
+    const indicator = document.getElementById('dimPriceIndicator');
+    if (indicator) {
+      indicator.innerHTML = `✓ Dimensions: <strong>${w}cm &times; ${h}cm</strong> &bull; ${tierText} &bull; Price: <strong style="color: var(--primary);">₹${targetPrice}</strong>`;
+    }
   }
 
   // Live T-Shirt Text Slogan Preview

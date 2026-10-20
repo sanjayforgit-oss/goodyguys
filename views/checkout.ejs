@@ -169,6 +169,7 @@
             <div class="checkout-item-details">
               <p class="checkout-item-name"><%= item.product.name %></p>
               <% if (item.customText) { %><p class="checkout-item-sub">✍️ <%= item.customText %></p><% } %>
+              <% if (item.size) { %><p class="checkout-item-sub">📐 Size: <%= item.size %></p><% } %>
               <% if (item.placement) { %><p class="checkout-item-sub">Placement: <%= item.placement %></p><% } %>
               <% if (item.mugSides) { %><p class="checkout-item-sub">Sides: <%= item.mugSides %></p><% } %>
               <p class="checkout-item-qty">Qty: <%= item.quantity %> × ₹<%= item.unitPrice %></p>
