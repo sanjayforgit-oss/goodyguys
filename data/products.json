@@ -236,7 +236,7 @@
     "name": "Image Engraved Acrylic Keychain",
     "category": "keychains",
     "customizerType": "image-engraved-keychain",
-    "description": "Turn your favorite couple photo, pet portrait, car, or anime character into a laser engraved acrylic keychain! Our laser studio vectorizes your image and etches it with fine frosted halftone lines on crystal-clear optical acrylic with stainless steel split keyring.",
+    "description": "Turn your favorite couple photo, pet portrait, car, or anime character into a laser engraved acrylic keychain! Vectorized and etched with fine frosted halftone lines on crystal-clear optical acrylic with stainless steel split keyring. Choose from Heart Shape, Circle, Square, Rectangle, Rounded Tag, or Custom Silhouette.",
     "price": 100,
     "originalPrice": 220,
     "image": "/images/real-photo-engraved-keychain.jpg",
@@ -245,13 +245,16 @@
     "requiresImage": true,
     "requiresText": false,
     "shapes": [
-      "Circle Tag (5cm Dia)",
-      "Square Tag (5x5cm)",
-      "Rectangle Tag (6x4cm)",
-      "Silhouette Cutout"
+      "❤️ Heart Shape (5×5cm)",
+      "⭕ Circle Medallion (5cm Dia)",
+      "⬛ Square Tag (5×5cm)",
+      "▭ Classic Rectangle Tag (6×4cm)",
+      "▢ Rounded Rectangle (6×3.5cm)",
+      "✨ Custom Silhouette Cutout"
     ],
     "customizable": true,
     "features": [
+      "All Shapes Available: Heart, Circle, Square, Rectangle, Rounded Tag & Silhouette",
       "Photo-to-Vector Laser Halftone Engraving Conversion",
       "Permanent Frosted Etching on Clear Optical Acrylic",
       "Stainless Steel Split Keyring Included",
@@ -259,38 +262,11 @@
     ]
   },
   {
-    "id": 7,
-    "name": "Custom Photo Printed Keychain",
-    "category": "keychains",
-    "customizerType": "image-keychain",
-    "description": "Pocket-sized clear acrylic keychain featuring full-color high-resolution printed photograph, character artwork, or couple memory. Sealed with a clear high-gloss protective finish.",
-    "price": 100,
-    "originalPrice": 180,
-    "image": "/images/real-photo-engraved-keychain.jpg",
-    "badge": "Color Print",
-    "active": true,
-    "requiresImage": true,
-    "requiresText": false,
-    "shapes": [
-      "Square (5x5cm)",
-      "Circle (5cm Dia)",
-      "Heart Shape",
-      "Rounded Rectangle"
-    ],
-    "customizable": true,
-    "features": [
-      "Full Color HD Sublimation Photo Print",
-      "Crystal Clear Optical Acrylic",
-      "Scratch & Water Resistant",
-      "Reinforced Heavy Duty Ring"
-    ]
-  },
-  {
     "id": 8,
     "name": "Engraved Image Acrylic Plaque (with Stand)",
     "category": "desk-plaques-lamps",
     "customizerType": "desk-plaque",
-    "description": "Premium laser engraved acrylic photo plaque or Spotify scannable song frame resting on a natural solid hardwood desk stand. Features customizable sizing: Compact Desk Stand (<15x15cm) at ₹250, Studio Standard (up to 2x2ft) at ₹400, or Grand Display (>2x2ft) at ₹700.",
+    "description": "Premium laser engraved acrylic photo plaque or Spotify scannable song frame resting on a natural solid hardwood desk stand. Features customizable sizing: Compact Desk Stand (<15x15cm) at ₹250, Studio Standard (15cm to 30cm) at ₹400, or Large Statement Plaque (30cm to 45cm) at ₹700. For custom orders above 45cm, contact: 9036969700.",
     "price": 250,
     "originalPrice": 499,
     "image": "/images/real-acrylic-engrave.jpg",
@@ -300,8 +276,8 @@
     "requiresText": true,
     "sizes": [
       "Compact Desk Stand (< 15cm × 15cm) — ₹250",
-      "Studio Standard Stand (15cm × 15cm to 2ft × 2ft) — ₹400",
-      "Grand Statement Plaque (> 2ft × 2ft) — ₹700"
+      "Studio Standard Stand (15cm × 15cm to 30cm × 30cm) — ₹400",
+      "Large Statement Plaque (30cm × 30cm to 45cm × 45cm) — ₹700"
     ],
     "fonts": [
       "Dancing Script",
@@ -315,7 +291,8 @@
     "features": [
       "Solid Natural Hardwood Groove Desk Stand Included",
       "Durable 4mm Crystal Clear Cast Acrylic",
-      "Custom Size Pricing: <15cm (₹250), Up to 2ft (₹400), >2ft (₹700)",
+      "Custom Size Pricing: <15cm (₹250), 15cm–30cm (₹400), 30cm–45cm (₹700)",
+      "Above 45cm Custom Orders Hotline: 9036969700",
       "Optional Scannable Spotify Song Code or Couple Portrait",
       "Precision Laser Frosted Etching That Lasts Forever"
     ]

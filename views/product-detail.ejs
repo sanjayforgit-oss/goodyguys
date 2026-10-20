@@ -423,45 +423,29 @@
 
             <% if (product.shapes && product.shapes.length > 0) { %>
               <div class="customizer-card-section">
-                <label class="section-label-bold">3. Keychain Shape</label>
-                <div class="radio-card-grid">
+                <label class="section-label-bold">3. Select Keychain Acrylic Shape <span class="req-star">*</span></label>
+                <div class="radio-card-grid" style="grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));">
                   <% product.shapes.forEach((sh, idx) => { %>
                     <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
                       <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
                       <div class="card-radio-content">
+                        <div class="shape-visual-icon" style="margin-bottom: 8px; color: var(--primary);">
+                          <% if (sh.toLowerCase().includes('heart')) { %>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,23,68,0.18)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                          <% } else if (sh.toLowerCase().includes('circle') || sh.toLowerCase().includes('round')) { %>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,23,68,0.18)" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle></svg>
+                          <% } else if (sh.toLowerCase().includes('square')) { %>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,23,68,0.18)" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg>
+                          <% } else if (sh.toLowerCase().includes('rounded') || sh.toLowerCase().includes('bar')) { %>
+                            <svg width="34" height="24" viewBox="0 0 34 24" fill="rgba(255,23,68,0.18)" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="30" height="18" rx="8"></rect></svg>
+                          <% } else if (sh.toLowerCase().includes('rectangle')) { %>
+                            <svg width="36" height="24" viewBox="0 0 36 24" fill="rgba(255,23,68,0.18)" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="32" height="16" rx="2"></rect></svg>
+                          <% } else { %>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,23,68,0.18)" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                          <% } %>
+                        </div>
                         <strong><%= sh %></strong>
-                      </div>
-                    </label>
-                  <% }) %>
-                </div>
-              </div>
-            <% } %>
-          <% } %>
-
-          <!-- 7. CUSTOM PHOTO PRINTED KEYCHAIN -->
-          <% if (product.customizerType === 'image-keychain') { %>
-            <div class="customizer-card-section">
-              <label class="section-label-bold">1. Upload Photo for Keychain <span class="req-star">*</span></label>
-              <div class="file-dropzone">
-                <input type="file" id="keychainFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Keychain')" required>
-                <label for="keychainFile" class="dropzone-label">
-                  <span class="upload-icon">🔑</span>
-                  <span class="upload-title" id="keychainFileLabel">Upload Photo / Character Art</span>
-                  <span class="upload-hint">Square or portrait photo works best</span>
-                </label>
-              </div>
-            </div>
-
-            <% if (product.shapes && product.shapes.length > 0) { %>
-              <div class="customizer-card-section">
-                <label class="section-label-bold">2. Acrylic Shape</label>
-                <div class="radio-card-grid">
-                  <% product.shapes.forEach((sh, idx) => { %>
-                    <label class="radio-card <%= idx === 0 ? 'active' : '' %>">
-                      <input type="radio" name="shape" value="<%= sh %>" <%= idx === 0 ? 'checked' : '' %>>
-                      <div class="card-radio-content">
-                        <strong><%= sh %></strong>
-                        <span class="card-price">₹100</span>
+                        <span class="card-price" style="font-size: 0.78rem; color: #86efac;">Keyring Included • ₹100</span>
                       </div>
                     </label>
                   <% }) %>
@@ -504,10 +488,10 @@
                 </label>
 
                 <label class="radio-card active" id="cardSizeMedium">
-                  <input type="radio" name="size" id="sizeMedium" value="Studio Standard Stand (15cm × 15cm to 2ft × 2ft) — ₹400" data-price="400" checked onchange="updatePlaqueSize(this)">
+                  <input type="radio" name="size" id="sizeMedium" value="Studio Standard Stand (15cm × 15cm to 30cm × 30cm) — ₹400" data-price="400" checked onchange="updatePlaqueSize(this)">
                   <div class="card-radio-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <div>
-                      <strong>Studio Standard Stand (15cm × 15cm to 2ft × 2ft) <span class="pill-badge" style="font-size: 0.7rem; margin-left: 6px;">POPULAR</span></strong>
+                      <strong>Studio Standard Stand (15cm × 15cm to 30cm × 30cm) <span class="pill-badge" style="font-size: 0.7rem; margin-left: 6px;">POPULAR</span></strong>
                       <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 2px;">Ideal A5/A4/8"×10" display size. Solid wooden stand included.</p>
                     </div>
                     <span class="card-price" style="font-size: 1.1rem; color: var(--primary);">₹400</span>
@@ -515,15 +499,24 @@
                 </label>
 
                 <label class="radio-card" id="cardSizeLarge">
-                  <input type="radio" name="size" id="sizeLarge" value="Grand Statement Plaque (> 2ft × 2ft) — ₹700" data-price="700" onchange="updatePlaqueSize(this)">
+                  <input type="radio" name="size" id="sizeLarge" value="Large Statement Plaque (30cm × 30cm to 45cm × 45cm) — ₹700" data-price="700" onchange="updatePlaqueSize(this)">
                   <div class="card-radio-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <div>
-                      <strong>Grand Statement Plaque (&gt; 2ft × 2ft / 60cm+)</strong>
+                      <strong>Large Statement Plaque (30cm × 30cm to 45cm × 45cm)</strong>
                       <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 2px;">Extra large statement piece for studio, reception, or living room wall/desk.</p>
                     </div>
                     <span class="card-price" style="font-size: 1.1rem; color: var(--primary);">₹700</span>
                   </div>
                 </label>
+              </div>
+
+              <!-- Hotline Callout for sizes above 45cm -->
+              <div class="plaque-custom-contact-callout" style="margin-top: 14px; padding: 14px 18px; background: rgba(255, 23, 68, 0.08); border: 1.5px solid rgba(255, 23, 68, 0.35); border-radius: 10px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+                <div>
+                  <strong style="color: #ffffff; font-size: 0.92rem; display: block;">⚡ Need Size Above 45cm × 45cm?</strong>
+                  <span style="font-size: 0.82rem; color: #cbd5e1;">For oversized grand wall plaques, large studio installations, or custom architectural sizes (> 45cm), please contact us directly for custom orders & pricing!</span>
+                </div>
+                <a href="tel:+919036969700" class="btn btn-sm" style="background: var(--primary, #ff1744); color: #fff; font-weight: 800; text-decoration: none; border-radius: 6px; padding: 8px 16px; white-space: nowrap;">📞 9036969700</a>
               </div>
 
               <!-- Custom Dimensions Input Box -->
@@ -535,7 +528,7 @@
                   <input type="number" id="customHeightInput" name="customHeight" placeholder="Height (cm)" min="5" max="150" class="form-input form-input-sm" oninput="calculateCustomDimensions()" style="flex: 1;">
                 </div>
                 <div id="dimPriceIndicator" style="margin-top: 8px; font-size: 0.82rem; color: var(--primary);">
-                  💡 Pricing rules: Under 15cm = ₹250 &bull; Up to 2ft = ₹400 &bull; Over 2ft = ₹700
+                  💡 Pricing rules: Under 15cm = ₹250 &bull; 15cm to 30cm = ₹400 &bull; 30cm to 45cm = ₹700 &bull; Above 45cm: Call 9036969700
                 </div>
               </div>
             </div>
@@ -768,15 +761,19 @@
     if (w <= 15 && h <= 15) {
       targetPrice = 250;
       targetRadioId = 'sizeSmall';
-      tierText = 'Compact Desk Tier (< 15cm)';
-    } else if (w > 60 || h > 60) {
-      targetPrice = 700;
-      targetRadioId = 'sizeLarge';
-      tierText = 'Grand Statement Plaque (> 2ft)';
-    } else {
+      tierText = 'Compact Desk Tier (< 15cm × 15cm)';
+    } else if (w <= 30 && h <= 30) {
       targetPrice = 400;
       targetRadioId = 'sizeMedium';
-      tierText = 'Studio Standard Tier (15cm to 2ft)';
+      tierText = 'Studio Standard Tier (15cm × 15cm to 30cm × 30cm)';
+    } else if (w <= 45 && h <= 45) {
+      targetPrice = 700;
+      targetRadioId = 'sizeLarge';
+      tierText = 'Large Statement Tier (30cm × 30cm to 45cm × 45cm)';
+    } else {
+      targetPrice = 700;
+      targetRadioId = 'sizeLarge';
+      tierText = 'Above 45cm (Contact 9036969700 for custom order)';
     }
 
     const radio = document.getElementById(targetRadioId);
