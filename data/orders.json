@@ -55,5 +55,45 @@
     "total": 499,
     "status": "Delivered",
     "date": "15 Oct 2026, 11:57 pm"
+  },
+  {
+    "id": "GGMVGY1WVCJ49",
+    "items": [
+      {
+        "productId": 5,
+        "unitPrice": 100,
+        "quantity": 1,
+        "customText": "FIRESTORE VERIFY",
+        "placement": "",
+        "mugSides": "",
+        "lampBase": "",
+        "material": "",
+        "fontStyle": "Space Grotesk",
+        "color": "",
+        "size": "",
+        "shape": "",
+        "customImageName": "",
+        "customImagePath": "",
+        "productName": "Name Cut in Acrylic"
+      }
+    ],
+    "customer": {
+      "name": "Firebase Test User",
+      "email": "test@goodyguys.in",
+      "phone": "9876543210",
+      "address": "100 Studio Way, Tech Park",
+      "city": "Chennai",
+      "pincode": "600001",
+      "specialNotes": ""
+    },
+    "paymentMethod": "COD",
+    "upiTransactionId": "",
+    "paymentStatus": "COD (Pay on Delivery)",
+    "paymentProofFile": null,
+    "subtotal": 100,
+    "shipping": 49,
+    "total": 149,
+    "status": "Confirmed",
+    "date": "20 Oct 2026, 10:45 pm"
   }
 ]

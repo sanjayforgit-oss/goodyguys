@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const os = require('os');
 const multer = require('multer');
+const fb = require('./firebase');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -481,8 +482,8 @@ app.get('/checkout', (req, res) => {
   });
 });
 
-// 9. Place Order with Server-Side Validation (CWE-20)
-app.post('/checkout', upload.single('paymentProof'), (req, res) => {
+// 9. Place Order with Server-Side Validation (CWE-20) & Cloud Firestore Persistence
+app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
   const cart = req.session.cart || [];
   if (cart.length === 0) {
     return res.redirect('/cart');
@@ -574,10 +575,16 @@ app.post('/checkout', upload.single('paymentProof'), (req, res) => {
     })
   };
 
-  // Resilient persistence
+  // Resilient persistence (Local/Tmp + Cloud Firestore)
   const allOrders = getOrders();
   allOrders.push(order);
   saveOrders(allOrders);
+
+  try {
+    await fb.saveOrderToFirebase(order);
+  } catch (fbErr) {
+    console.warn('[Firebase] Warning saving order:', fbErr.message);
+  }
 
   if (!req.session.orders) req.session.orders = [];
   req.session.orders.push(order);
@@ -598,8 +605,19 @@ app.get('/order-success', (req, res) => {
 });
 
 // 11. Suggestions Board Page
-app.get('/suggest', (req, res) => {
-  const suggestions = getSuggestions();
+app.get('/suggest', async (req, res) => {
+  let suggestions = getSuggestions();
+  if (fb.isFirebaseEnabled()) {
+    try {
+      const cloudSuggestions = await fb.getSuggestionsFromFirebase();
+      if (cloudSuggestions && cloudSuggestions.length > 0) {
+        suggestions = cloudSuggestions;
+        memorySuggestions = suggestions;
+      }
+    } catch (fbErr) {
+      console.warn('[Suggest] Firebase fetch fallback:', fbErr.message);
+    }
+  }
   const successMessage = req.query.submitted ? 'Your suggestion has been submitted! Our workshop team will review it.' : '';
   res.render('suggest', {
     title: 'Co-Create & Suggest Ideas | GOODYGUYS Community',
@@ -609,7 +627,7 @@ app.get('/suggest', (req, res) => {
 });
 
 // 12. Submit New Suggestion
-app.post('/suggest', (req, res) => {
+app.post('/suggest', async (req, res) => {
   const { title, category, description, name, contact } = req.body || {};
   if (title && description && name) {
     const suggestions = getSuggestions();
@@ -626,12 +644,13 @@ app.post('/suggest', (req, res) => {
     };
     suggestions.push(newSuggestion);
     saveSuggestions(suggestions);
+    await fb.saveSuggestionToFirebase(newSuggestion);
   }
   res.redirect('/suggest?submitted=1');
 });
 
 // 13. Upvote Suggestion
-app.post('/suggest/upvote', (req, res) => {
+app.post('/suggest/upvote', async (req, res) => {
   const { id } = req.body || {};
   const suggestions = getSuggestions();
   const target = suggestions.find(s => s.id === parseInt(id, 10));
@@ -639,6 +658,7 @@ app.post('/suggest/upvote', (req, res) => {
     target.upvotes = (target.upvotes || 0) + 1;
     saveSuggestions(suggestions);
   }
+  await fb.upvoteSuggestionInFirebase(id);
   res.redirect('/suggest');
 });
 
@@ -661,10 +681,46 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
-app.get('/admin', requireAdmin, (req, res) => {
-  const orders = getOrders();
+app.get('/admin', requireAdmin, async (req, res) => {
+  let orders = getOrders();
+  let suggestions = getSuggestions();
+
+  // If Firebase is connected, fetch live cloud orders and suggestions
+  if (fb.isFirebaseEnabled()) {
+    try {
+      const cloudOrders = await fb.getOrdersFromFirebase();
+      if (cloudOrders && cloudOrders.length > 0) {
+        const seen = new Set();
+        const merged = [];
+        [...cloudOrders, ...orders].forEach(o => {
+          if (o && o.id && !seen.has(o.id)) {
+            seen.add(o.id);
+            merged.push(o);
+          }
+        });
+        orders = merged;
+        memoryOrders = orders;
+      }
+
+      const cloudSuggestions = await fb.getSuggestionsFromFirebase();
+      if (cloudSuggestions && cloudSuggestions.length > 0) {
+        const seen = new Set();
+        const merged = [];
+        [...cloudSuggestions, ...suggestions].forEach(s => {
+          if (s && s.id && !seen.has(String(s.id))) {
+            seen.add(String(s.id));
+            merged.push(s);
+          }
+        });
+        suggestions = merged;
+        memorySuggestions = suggestions;
+      }
+    } catch (fbErr) {
+      console.warn('[Admin] Firebase fetch fallback:', fbErr.message);
+    }
+  }
+
   const products = getProducts();
-  const suggestions = getSuggestions();
   const activeTab = req.query.tab || 'orders';
   res.render('admin', {
     title: 'Studio Management Dashboard | GOODYGUYS',
@@ -672,7 +728,8 @@ app.get('/admin', requireAdmin, (req, res) => {
     products,
     suggestions,
     suggestionsCount: suggestions.length,
-    activeTab
+    activeTab,
+    isFirebaseConnected: fb.isFirebaseEnabled()
   });
 });
 
@@ -732,7 +789,7 @@ app.get('/admin/logout', (req, res) => {
 });
 
 // Update Order Status in Admin
-app.post('/admin/orders/status', requireAdmin, (req, res) => {
+app.post('/admin/orders/status', requireAdmin, async (req, res) => {
   const { orderId, status } = req.body || {};
   const allOrders = getOrders();
   const order = allOrders.find(o => o.id === orderId);
@@ -740,11 +797,12 @@ app.post('/admin/orders/status', requireAdmin, (req, res) => {
     order.status = status;
     saveOrders(allOrders);
   }
+  await fb.updateOrderStatusInFirebase(orderId, status);
   res.redirect('/admin?tab=orders');
 });
 
 // Verify Payment in Admin
-app.post('/admin/orders/verify-payment', requireAdmin, (req, res) => {
+app.post('/admin/orders/verify-payment', requireAdmin, async (req, res) => {
   const { orderId } = req.body || {};
   const allOrders = getOrders();
   const order = allOrders.find(o => o.id === orderId);
@@ -753,23 +811,25 @@ app.post('/admin/orders/verify-payment', requireAdmin, (req, res) => {
     order.status = 'Printing / Laser Cutting';
     saveOrders(allOrders);
   }
+  await fb.verifyPaymentInFirebase(orderId);
   res.redirect('/admin?tab=orders');
 });
 
 // Admin: Toggle Product Active/Inactive
-app.post('/admin/products/toggle', requireAdmin, (req, res) => {
+app.post('/admin/products/toggle', requireAdmin, async (req, res) => {
   const { productId } = req.body || {};
   const allProducts = getProducts();
   const prod = allProducts.find(p => p.id === parseInt(productId, 10));
   if (prod) {
     prod.active = prod.active === false ? true : false;
     saveProducts(allProducts);
+    await fb.saveSingleProductToFirebase(prod);
   }
   res.redirect('/admin?tab=products');
 });
 
 // Admin: Edit Existing Product
-app.post('/admin/products/edit', requireAdmin, (req, res) => {
+app.post('/admin/products/edit', requireAdmin, async (req, res) => {
   const { productId, name, price, originalPrice, description, badge, category } = req.body || {};
   const allProducts = getProducts();
   const prod = allProducts.find(p => p.id === parseInt(productId, 10));
@@ -781,12 +841,13 @@ app.post('/admin/products/edit', requireAdmin, (req, res) => {
     if (badge !== undefined) prod.badge = badge;
     if (category) prod.category = category;
     saveProducts(allProducts);
+    await fb.saveSingleProductToFirebase(prod);
   }
   res.redirect('/admin?tab=products');
 });
 
 // Admin: Add New Product
-app.post('/admin/products/add', requireAdmin, (req, res) => {
+app.post('/admin/products/add', requireAdmin, async (req, res) => {
   const { name, category, price, originalPrice, description, badge, customizerType, image } = req.body || {};
   const allProducts = getProducts();
   const newId = allProducts.length > 0 ? Math.max(...allProducts.map(p => p.id)) + 1 : 1;
@@ -812,20 +873,22 @@ app.post('/admin/products/add', requireAdmin, (req, res) => {
   };
   allProducts.push(newProduct);
   saveProducts(allProducts);
+  await fb.saveSingleProductToFirebase(newProduct);
   res.redirect('/admin?tab=products');
 });
 
 // Admin: Delete Product
-app.post('/admin/products/delete', requireAdmin, (req, res) => {
+app.post('/admin/products/delete', requireAdmin, async (req, res) => {
   const { productId } = req.body || {};
   let allProducts = getProducts();
   allProducts = allProducts.filter(p => p.id !== parseInt(productId, 10));
   saveProducts(allProducts);
+  await fb.deleteProductFromFirebase(productId);
   res.redirect('/admin?tab=products');
 });
 
 // Admin: Toggle Product Options
-app.post('/admin/products/toggle-option', requireAdmin, (req, res) => {
+app.post('/admin/products/toggle-option', requireAdmin, async (req, res) => {
   const { productId, optionType, optionValue, enabled } = req.body || {};
   const allProducts = getProducts();
   const prod = allProducts.find(p => p.id === parseInt(productId, 10));
@@ -838,12 +901,13 @@ app.post('/admin/products/toggle-option', requireAdmin, (req, res) => {
       prod.disabledOptions = prod.disabledOptions.filter(k => k !== optKey);
     }
     saveProducts(allProducts);
+    await fb.saveSingleProductToFirebase(prod);
   }
   res.redirect('/admin?tab=options');
 });
 
 // Admin: Update Customer Suggestion Status
-app.post('/admin/suggestions/status', requireAdmin, (req, res) => {
+app.post('/admin/suggestions/status', requireAdmin, async (req, res) => {
   const { suggestionId, status } = req.body || {};
   const suggestions = getSuggestions();
   const sugg = suggestions.find(s => s.id === parseInt(suggestionId, 10));
@@ -851,6 +915,7 @@ app.post('/admin/suggestions/status', requireAdmin, (req, res) => {
     sugg.status = status;
     saveSuggestions(suggestions);
   }
+  await fb.updateSuggestionStatusInFirebase(suggestionId, status);
   res.redirect('/admin?tab=suggestions');
 });
 
