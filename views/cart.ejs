@@ -132,9 +132,9 @@
             <span class="total-amount">₹<%= (subtotal + (subtotal >= 499 ? 0 : 49)).toLocaleString() %></span>
           </div>
           <% if (subtotal < 499) { %>
-            <p class="free-shipping-msg">Add ₹<%= (499 - subtotal).toLocaleString() %> more to unlock <strong>FREE Shipping</strong>!</p>
+            <p class="free-shipping-msg">Add ₹<%= (499 - subtotal).toLocaleString() %> more to unlock <strong>FREE Shipping</strong> (or use coupon <strong>SATHYABAMA</strong> at checkout for free campus delivery)!</p>
           <% } else { %>
-            <p class="free-shipping-msg success">🎉 You unlocked FREE Shipping across India!</p>
+            <p class="free-shipping-msg success">🎉 You unlocked FREE Delivery!</p>
           <% } %>
           <a href="/checkout" class="btn-cart-checkout">Proceed to Checkout &rarr;</a>
           <a href="/products" class="btn-cart-continue">&larr; Continue Shopping</a>

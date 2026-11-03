@@ -168,6 +168,9 @@
                     <div class="order-total-summary">
                       <span>Order Total:</span>
                       <strong class="total-val">₹<%= order.total.toLocaleString() %></strong>
+                      <% if (order.couponCode) { %>
+                        <span style="font-size: 0.75rem; color: #4ade80; display: block; margin-top: 2px;">🎓 Coupon: <%= order.couponCode %> (Free Campus Delivery)</span>
+                      <% } %>
                     </div>
 
                     <!-- UPI Verification Box -->

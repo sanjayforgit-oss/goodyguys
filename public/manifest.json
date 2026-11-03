@@ -1,0 +1,16 @@
+{
+  "name": "GOODYGUYS Studio",
+  "short_name": "GOODYGUYS",
+  "description": "Custom Apparel & Precision Laser Studio hand-crafted on demand",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#ff1744",
+  "icons": [
+    {
+      "src": "/images/hero-streetwear-model.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

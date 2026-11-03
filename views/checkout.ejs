@@ -42,29 +42,73 @@
         <!-- 2. Shipping Address -->
         <div class="checkout-section">
           <h2>2. Delivery Address</h2>
+
+          <!-- Campus Exclusive Service Notice -->
+          <div class="campus-delivery-banner">
+            <span class="campus-banner-icon">📍</span>
+            <div class="campus-banner-text">
+              <strong>Exclusive Campus Service Zone: Sathyabama College, Chennai</strong>
+              <p>We currently operate and deliver <strong>exclusively inside Sathyabama Institute of Science and Technology Campus (Jeppiaar Nagar, Rajiv Gandhi Salai OMR, Chennai - 600119)</strong>. Please provide your hostel, department, lab, or staff quarters address.</p>
+            </div>
+          </div>
+
           <div class="form-group">
-            <label for="address">Street Address, Flat / House No, Area <span class="req-star">*</span></label>
-            <textarea id="address" name="address" class="form-input" rows="2" required placeholder="e.g. Flat 402, Sunshine Heights, MG Road, Landmark near Metro Station"></textarea>
+            <label for="address">Campus Block, Hostel Name &amp; Room No. / Dept <span class="req-star">*</span></label>
+            <textarea id="address" name="address" class="form-input" rows="2" required placeholder="e.g. Room 214, Mother Teresa Hostel (or Mech Dept / Block 5 / Staff Quarters), Sathyabama Campus, OMR, Chennai" oninput="validateDeliveryLocation()"></textarea>
           </div>
           <div class="form-row-2">
             <div class="form-group">
-              <label for="city">City / Town <span class="req-star">*</span></label>
-              <input type="text" id="city" name="city" class="form-input" required placeholder="e.g. Chennai / Bengaluru / Mumbai">
+              <label for="city">City / Location <span class="req-star">*</span></label>
+              <input type="text" id="city" name="city" class="form-input" required value="Chennai" placeholder="Chennai" oninput="validateDeliveryLocation()">
             </div>
             <div class="form-group">
               <label for="pincode">Pincode <span class="req-star">*</span></label>
-              <input type="text" id="pincode" name="pincode" class="form-input" required placeholder="e.g. 600001" pattern="[0-9]{6}">
+              <input type="text" id="pincode" name="pincode" class="form-input" required value="600119" placeholder="600119" pattern="[0-9]{6}" maxlength="6" oninput="validateDeliveryLocation()">
+              <span class="field-hint">Campus Postal Pincode: <strong>600119</strong> (Jeppiaar Nagar, OMR)</span>
             </div>
           </div>
-          <div class="form-group">
-            <label for="specialNotes">Special Workshop Instructions (Optional)</label>
-            <input type="text" id="specialNotes" name="specialNotes" class="form-input" placeholder="e.g. Please engrave names in all caps, or call before delivery">
+
+          <!-- Dynamic Delivery Availability Banner -->
+          <div id="deliveryStatusBanner" class="delivery-status-banner eligible">
+            ✓ <strong>Delivery Available</strong>: Sathyabama College Campus, Chennai (Pincode: 600119).
+          </div>
+
+          <div class="form-group" style="margin-top: 14px;">
+            <label for="specialNotes">Special Workshop / Delivery Instructions (Optional)</label>
+            <input type="text" id="specialNotes" name="specialNotes" class="form-input" placeholder="e.g. Call before delivery, or leave at hostel reception">
           </div>
         </div>
 
-        <!-- 3. Payment Method -->
+        <!-- 3. Campus Coupon & Offers -->
         <div class="checkout-section">
-          <h2>3. Select Payment Method</h2>
+          <h2>3. Campus Offer &amp; Coupon</h2>
+
+          <div class="campus-coupon-card">
+            <!-- Message area for customer -->
+            <div class="coupon-message-box">
+              <div class="coupon-message-title">
+                <span class="coupon-badge-pill">CAMPUS SPECIAL</span>
+                <span>Free Delivery Inside Sathyabama College</span>
+              </div>
+              <div class="coupon-message-body">
+                Delivery inside <strong>Sathyabama Institute of Science and Technology campus, Chennai</strong> is completely <strong>FREE</strong>! Use coupon code <span class="coupon-code-click" onclick="fillCoupon('SATHYABAMA')">SATHYABAMA</span> below to remove your delivery charges.
+              </div>
+            </div>
+
+            <!-- Coupon Input Box -->
+            <label for="couponInput" style="display:block; font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-bottom: 8px;">Have a Promo / Campus Coupon Code?</label>
+            <div class="coupon-input-wrapper">
+              <input type="text" id="couponInput" placeholder="ENTER COUPON CODE" maxlength="20" autocomplete="off">
+              <button type="button" class="btn-apply-coupon" id="btnApplyCoupon" onclick="applyCouponCode()">Apply Coupon</button>
+            </div>
+            <div id="couponFeedback"></div>
+            <input type="hidden" name="couponCode" id="hiddenCouponCode" value="">
+          </div>
+        </div>
+
+        <!-- 4. Payment Method -->
+        <div class="checkout-section">
+          <h2>4. Select Payment Method</h2>
           <div class="payment-options">
             <label class="payment-option active" id="payOptionUpi">
               <input type="radio" name="paymentMethod" value="UPI (GPay / PhonePe)" checked onchange="togglePaymentMode('UPI')">
@@ -95,13 +139,13 @@
             <div class="upi-header">
               <span class="upi-step-tag">Step-by-Step Payment</span>
               <h3>Scan &amp; Pay via GPay / PhonePe / Paytm</h3>
-              <p>Pay <strong>₹<%= finalPayAmount.toLocaleString() %></strong> directly to our workshop account with 0% gateway charges.</p>
+              <p>Pay <strong id="upiPayAmountTxt">₹<%= finalPayAmount.toLocaleString() %></strong> directly to our workshop account with 0% gateway charges.</p>
             </div>
 
             <div class="upi-grid-details">
               <!-- QR Code Card -->
               <div class="upi-qr-card">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=<%= encodeURIComponent('upi://pay?pa=' + storeUpiId + '&pn=GOODYGUYS+Studio&am=' + finalPayAmount + '&cu=INR&tn=GOODYGUYSOrder') %>" alt="UPI Payment QR Code" class="upi-qr-img">
+                <img id="dynamicUpiQr" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=<%= encodeURIComponent('upi://pay?pa=' + storeUpiId + '&pn=GOODYGUYS+Studio&am=' + finalPayAmount + '&cu=INR&tn=GOODYGUYSOrder') %>" alt="UPI Payment QR Code" class="upi-qr-img">
                 <span class="qr-label">Scan with any UPI App</span>
                 <div class="upi-apps-icons">
                   <span>GPay</span> • <span>PhonePe</span> • <span>Paytm</span> • <span>BHIM</span>
@@ -129,7 +173,7 @@
                   </div>
                   <div class="upi-step-item">
                     <span class="num">2</span>
-                    <p>Scan the QR code or transfer <strong>₹<%= finalPayAmount.toLocaleString() %></strong> to UPI Number <code><%= storeUpiNumber %></code> (or UPI ID <code><%= storeUpiId %></code>).</p>
+                    <p>Scan the QR code or transfer <strong id="upiStepAmountTxt">₹<%= finalPayAmount.toLocaleString() %></strong> to UPI Number <code><%= storeUpiNumber %></code> (or UPI ID <code><%= storeUpiId %></code>).</p>
                   </div>
                   <div class="upi-step-item">
                     <span class="num">3</span>
@@ -184,17 +228,21 @@
           <span>₹<%= runningSubtotal.toLocaleString() %></span>
         </div>
         <div class="summary-row">
-          <span>Standard Delivery</span>
-          <span><%= runningSubtotal >= 499 ? 'FREE' : '₹49' %></span>
+          <span>Delivery Charge</span>
+          <span id="summaryDeliveryFee"><%= runningSubtotal >= 499 ? 'FREE' : '₹49' %></span>
+        </div>
+        <div class="summary-row" id="summaryCouponRow" style="display: none; color: #4ade80;">
+          <span>Campus Coupon (<span id="summaryCouponName"></span>)</span>
+          <span id="summaryDiscount">-₹49</span>
         </div>
         <div class="summary-row summary-total">
           <span>Total Amount</span>
-          <span class="total-amount">₹<%= (runningSubtotal + (runningSubtotal >= 499 ? 0 : 49)).toLocaleString() %></span>
+          <span class="total-amount" id="summaryTotalAmount">₹<%= (runningSubtotal + (runningSubtotal >= 499 ? 0 : 49)).toLocaleString() %></span>
         </div>
 
         <div class="checkout-trust-badges">
           <span>🔒 256-bit Secure Checkout</span>
-          <span>⚡ Direct Bank Verification</span>
+          <span>🎓 Direct Sathyabama Campus Delivery</span>
         </div>
       </div>
     </div>
@@ -202,6 +250,154 @@
 </section>
 
 <script>
+  // Dynamic Pricing Variables for Client-Side Calculation
+  const subtotalVal = <%= runningSubtotal %>;
+  let baseShippingVal = <%= runningSubtotal >= 499 ? 0 : 49 %>;
+  let appliedDiscountVal = 0;
+  const storeUpi = "<%= storeUpiId %>";
+
+  function recalculateTotals() {
+    const finalTotal = Math.max(0, subtotalVal + baseShippingVal - appliedDiscountVal);
+    
+    // Update summary labels
+    const totalEl = document.getElementById('summaryTotalAmount');
+    if (totalEl) totalEl.textContent = '₹' + finalTotal.toLocaleString();
+
+    // Update UPI card labels
+    const upiHeaderTxt = document.getElementById('upiPayAmountTxt');
+    if (upiHeaderTxt) upiHeaderTxt.textContent = '₹' + finalTotal.toLocaleString();
+
+    const upiStepTxt = document.getElementById('upiStepAmountTxt');
+    if (upiStepTxt) upiStepTxt.textContent = '₹' + finalTotal.toLocaleString();
+
+    // Update Dynamic QR code image URL
+    const qrImg = document.getElementById('dynamicUpiQr');
+    if (qrImg) {
+      const upiUrl = 'upi://pay?pa=' + encodeURIComponent(storeUpi) + '&pn=GOODYGUYS+Studio&am=' + finalTotal + '&cu=INR&tn=GOODYGUYSOrder';
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(upiUrl);
+    }
+  }
+
+  // Coupon Handlers
+  function fillCoupon(code) {
+    const input = document.getElementById('couponInput');
+    if (input) {
+      input.value = code;
+      applyCouponCode();
+    }
+  }
+
+  function applyCouponCode() {
+    const input = document.getElementById('couponInput');
+    const feedback = document.getElementById('couponFeedback');
+    const hiddenField = document.getElementById('hiddenCouponCode');
+    const couponRow = document.getElementById('summaryCouponRow');
+    const couponNameEl = document.getElementById('summaryCouponName');
+    const deliveryFeeEl = document.getElementById('summaryDeliveryFee');
+
+    if (!input) return;
+    const code = input.value.trim().toUpperCase();
+
+    if (!code) {
+      feedback.innerHTML = '<div class="coupon-alert error">⚠️ Please enter a coupon code.</div>';
+      return;
+    }
+
+    if (code === 'SATHYABAMA') {
+      appliedDiscountVal = baseShippingVal; // Removes full delivery fee
+      if (hiddenField) hiddenField.value = 'SATHYABAMA';
+
+      feedback.innerHTML = `
+        <div class="coupon-alert success">
+          <span>✓ Coupon <strong>SATHYABAMA</strong> applied! Free campus delivery unlocked.</span>
+          <button type="button" class="btn-remove-coupon" onclick="removeCouponCode()">Remove</button>
+        </div>
+      `;
+
+      if (couponRow) couponRow.style.display = 'flex';
+      if (couponNameEl) couponNameEl.textContent = 'SATHYABAMA';
+      if (deliveryFeeEl) deliveryFeeEl.innerHTML = '<span style="color: #4ade80; font-weight: 700;">FREE (Coupon)</span>';
+
+      recalculateTotals();
+    } else {
+      feedback.innerHTML = `
+        <div class="coupon-alert error">
+          <span>⚠️ Invalid coupon code "${code}". Use <strong>SATHYABAMA</strong> for free delivery inside campus.</span>
+        </div>
+      `;
+    }
+  }
+
+  function removeCouponCode() {
+    appliedDiscountVal = 0;
+    const input = document.getElementById('couponInput');
+    const feedback = document.getElementById('couponFeedback');
+    const hiddenField = document.getElementById('hiddenCouponCode');
+    const couponRow = document.getElementById('summaryCouponRow');
+    const deliveryFeeEl = document.getElementById('summaryDeliveryFee');
+
+    if (input) input.value = '';
+    if (hiddenField) hiddenField.value = '';
+    if (feedback) feedback.innerHTML = '';
+    if (couponRow) couponRow.style.display = 'none';
+    if (deliveryFeeEl) deliveryFeeEl.textContent = baseShippingVal === 0 ? 'FREE' : '₹49';
+
+    recalculateTotals();
+  }
+
+  // Sathyabama Exclusive Campus Delivery Location Validation
+  function validateDeliveryLocation() {
+    const pincodeEl = document.getElementById('pincode');
+    const cityEl = document.getElementById('city');
+    const addressEl = document.getElementById('address');
+    const bannerEl = document.getElementById('deliveryStatusBanner');
+    const submitBtn = document.getElementById('btnPlaceOrder');
+
+    if (!pincodeEl || !bannerEl) return true;
+
+    const pin = pincodeEl.value.trim();
+    const city = (cityEl?.value || '').trim().toLowerCase();
+    const address = (addressEl?.value || '').trim().toLowerCase();
+
+    // Sathyabama College, Jeppiaar Nagar, OMR Chennai pincode: 600119
+    const isCampusPincode = pin === '600119';
+    const hasSathyabamaKeywords = address.includes('sathyabama') || address.includes('sist') || address.includes('jeppiaar') || city.includes('sathyabama');
+
+    // If pincode is 6 digits but not 600119
+    if (pin.length === 6 && !isCampusPincode) {
+      bannerEl.className = 'delivery-status-banner blocked';
+      bannerEl.innerHTML = `🚫 <strong>Delivery Not Available for Pincode ${pin}</strong><br>We currently deliver <strong>exclusively inside Sathyabama Institute of Science and Technology campus, Chennai (Pincode: 600119)</strong>. Delivery to outside areas is temporarily unavailable.`;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.cursor = 'not-allowed';
+      }
+      return false;
+    }
+
+    // If city is specified and not Chennai or Sathyabama
+    if (city && !city.includes('chennai') && !hasSathyabamaKeywords) {
+      bannerEl.className = 'delivery-status-banner blocked';
+      bannerEl.innerHTML = `🚫 <strong>Delivery Restricted to Sathyabama Campus, Chennai</strong><br>Currently, orders are only delivered within the Sathyabama University campus, Chennai - 600119.`;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+        submitBtn.style.cursor = 'not-allowed';
+      }
+      return false;
+    }
+
+    // Eligible
+    bannerEl.className = 'delivery-status-banner eligible';
+    bannerEl.innerHTML = `✓ <strong>Delivery Available</strong>: Sathyabama College Campus, Chennai (Pincode: 600119).`;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.style.cursor = 'pointer';
+    }
+    return true;
+  }
+
   function togglePaymentMode(mode) {
     const upiBox = document.getElementById('upiPaymentBox');
     const upiOption = document.getElementById('payOptionUpi');
@@ -232,10 +428,19 @@
     });
   }
 
-  // Validate UPI Transaction ID before submission
+  // Validate form submission
   const checkoutForm = document.getElementById('checkoutOrderForm');
   if (checkoutForm) {
     checkoutForm.addEventListener('submit', function(e) {
+      // 1. Check delivery location
+      if (!validateDeliveryLocation()) {
+        e.preventDefault();
+        alert('🚫 Delivery is currently available exclusively within Sathyabama College Campus, Chennai (Pincode: 600119). Please provide an address inside the campus.');
+        document.getElementById('pincode')?.focus();
+        return false;
+      }
+
+      // 2. Check UPI UTR
       const isUpi = document.querySelector('input[name="paymentMethod"]:checked')?.value.includes('UPI');
       if (isUpi) {
         const utr = document.getElementById('upiTransactionId').value.trim();
@@ -248,6 +453,9 @@
       }
     });
   }
+
+  // Initialize delivery check on page load
+  document.addEventListener('DOMContentLoaded', validateDeliveryLocation);
 </script>
 
 <%- include('partials/footer') %>

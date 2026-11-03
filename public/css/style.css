@@ -5411,3 +5411,213 @@ select option {
     flex-direction: column;
   }
 }
+
+/* ==========================================================================
+   CAMPUS DELIVERY RESTRICTION & SATHYABAMA COUPON SYSTEM
+   ========================================================================== */
+.campus-delivery-banner {
+  background: rgba(255, 23, 68, 0.08);
+  border: 1.5px solid rgba(255, 23, 68, 0.35);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.campus-banner-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.campus-banner-text strong {
+  display: block;
+  color: #ffffff;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.campus-banner-text p {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.campus-coupon-card {
+  background: #141418;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.campus-coupon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--primary, #ff1744);
+}
+
+.coupon-message-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.coupon-message-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.coupon-badge-pill {
+  background: var(--primary, #ff1744);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.coupon-message-body {
+  color: #cbd5e1;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.coupon-code-click {
+  background: rgba(255, 23, 68, 0.15);
+  color: var(--primary, #ff1744);
+  border: 1px dashed var(--primary, #ff1744);
+  font-family: monospace;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.coupon-code-click:hover {
+  background: var(--primary, #ff1744);
+  color: #ffffff;
+}
+
+.coupon-input-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.coupon-input-wrapper input {
+  flex: 1;
+  background: #191920;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 11px 16px;
+  border-radius: 8px;
+  font-family: 'Space Grotesk', monospace, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.coupon-input-wrapper input:focus {
+  border-color: var(--primary, #ff1744);
+  outline: none;
+}
+
+.btn-apply-coupon {
+  background: #22222a;
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0 20px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-apply-coupon:hover {
+  background: var(--primary, #ff1744);
+  border-color: var(--primary, #ff1744);
+  color: #ffffff;
+}
+
+.coupon-alert {
+  font-size: 0.84rem;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.coupon-alert.success {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  color: #86efac;
+}
+
+.coupon-alert.error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+.btn-remove-coupon {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.btn-remove-coupon:hover {
+  color: #dc2626;
+}
+
+.delivery-status-banner {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  display: none;
+}
+
+.delivery-status-banner.blocked {
+  display: block;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1.5px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.delivery-status-banner.eligible {
+  display: block;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1.5px solid rgba(34, 197, 94, 0.4);
+  color: #86efac;
+}
+

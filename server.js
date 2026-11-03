@@ -226,8 +226,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Static Assets
-app.use(express.static(path.join(__dirname, 'public')));
+// Static Assets & Service Worker Caching (JAMstack Local Performance)
+app.use((req, res, next) => {
+  if (req.path === '/sw.js') {
+    res.setHeader('Service-Worker-Allowed', '/');
+    res.setHeader('Cache-Control', 'no-cache');
+  }
+  next();
+});
+
+app.use(express.static(path.join(__dirname, 'public'), {
+  maxAge: '1d',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.css') || filePath.endsWith('.js') || filePath.endsWith('.jpg') || filePath.endsWith('.png') || filePath.endsWith('.svg')) {
+      res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    }
+  }
+}));
 app.use('/uploads', express.static(WRITABLE_UPLOAD_DIR));
 if (WRITABLE_UPLOAD_DIR !== BUNDLED_UPLOAD_DIR && fs.existsSync(BUNDLED_UPLOAD_DIR)) {
   app.use('/uploads', express.static(BUNDLED_UPLOAD_DIR));
@@ -516,7 +531,7 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
     return res.redirect('/cart');
   }
 
-  const { name, email, phone, address, city, pincode, specialNotes, paymentMethod, upiTransactionId } = req.body || {};
+  const { name, email, phone, address, city, pincode, specialNotes, paymentMethod, upiTransactionId, couponCode } = req.body || {};
 
   // Server-side field sanitization and validation
   const cleanName = (name || '').trim();
@@ -526,6 +541,7 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
   const cleanCity = (city || '').trim();
   const cleanPincode = (pincode || '').trim();
   const cleanUpiId = (upiTransactionId || '').trim();
+  const cleanCoupon = (couponCode || '').trim().toUpperCase();
   const isUpi = paymentMethod && paymentMethod.includes('UPI');
 
   if (!cleanName || cleanName.length < 2 || cleanName.length > 100) {
@@ -543,7 +559,7 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
   }
 
   if (!cleanAddress || cleanAddress.length < 5) {
-    return res.redirect('/checkout?error=' + encodeURIComponent('Please enter your complete delivery street address (at least 5 characters).'));
+    return res.redirect('/checkout?error=' + encodeURIComponent('Please enter your complete delivery address inside Sathyabama campus (at least 5 characters).'));
   }
 
   if (!cleanCity || cleanCity.length < 2) {
@@ -552,7 +568,20 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
 
   const pinRegex = /^\d{6}$/;
   if (!cleanPincode || !pinRegex.test(cleanPincode)) {
-    return res.redirect('/checkout?error=' + encodeURIComponent('Please enter a valid 6-digit postal pincode.'));
+    return res.redirect('/checkout?error=' + encodeURIComponent('Please enter a valid 6-digit postal pincode (600119 for Sathyabama campus).'));
+  }
+
+  // Exclusive Delivery Zone Validation: Sathyabama College, Chennai Only
+  const isSathyabamaPincode = cleanPincode === '600119';
+  const hasSathyabamaInAddress = /sathyabama|sist|jeppiaar/i.test(cleanAddress) || /sathyabama|sist|jeppiaar/i.test(cleanCity);
+  const isChennai = /chennai/i.test(cleanCity) || /chennai/i.test(cleanAddress);
+
+  if (!isSathyabamaPincode && !hasSathyabamaInAddress) {
+    return res.redirect('/checkout?error=' + encodeURIComponent('Delivery is currently available exclusively inside Sathyabama Institute of Science and Technology campus, Chennai (Pincode: 600119). Delivery to other locations is not supported at this time.'));
+  }
+
+  if (!isChennai && !hasSathyabamaInAddress) {
+    return res.redirect('/checkout?error=' + encodeURIComponent('Delivery is currently restricted to Sathyabama Campus, Chennai.'));
   }
 
   if (isUpi && (!cleanUpiId || cleanUpiId.length < 6)) {
@@ -570,7 +599,12 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
   });
 
   const subtotal = items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
-  const shipping = subtotal >= 499 ? 0 : 49;
+  
+  // SATHYABAMA Coupon Discount (Free Campus Delivery)
+  const isSathyabamaCoupon = cleanCoupon === 'SATHYABAMA';
+  const standardShipping = subtotal >= 499 ? 0 : 49;
+  const discount = isSathyabamaCoupon ? standardShipping : 0;
+  const shipping = Math.max(0, standardShipping - discount);
   const total = subtotal + shipping;
 
   const order = {
@@ -583,12 +617,15 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
       address: cleanAddress,
       city: cleanCity,
       pincode: cleanPincode,
-      specialNotes: (specialNotes || '').trim()
+      specialNotes: (specialNotes || '').trim(),
+      campus: 'Sathyabama Institute of Science and Technology, Chennai'
     },
     paymentMethod: paymentMethod || 'COD',
     upiTransactionId: cleanUpiId,
     paymentStatus: isUpi ? 'Pending Verification' : 'COD (Pay on Delivery)',
     paymentProofFile: req.file ? '/uploads/' + req.file.filename : null,
+    couponCode: isSathyabamaCoupon ? 'SATHYABAMA' : null,
+    discount,
     subtotal,
     shipping,
     total,
