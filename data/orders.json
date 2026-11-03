@@ -95,5 +95,48 @@
     "total": 149,
     "status": "Confirmed",
     "date": "20 Oct 2026, 10:45 pm"
+  },
+  {
+    "id": "GGMW14M81NE9F",
+    "items": [
+      {
+        "productId": 4,
+        "unitPrice": 100,
+        "quantity": 1,
+        "customText": "TESTNAME",
+        "placement": "",
+        "mugSides": "",
+        "lampBase": "",
+        "material": "",
+        "fontStyle": "",
+        "color": "",
+        "size": "",
+        "shape": "",
+        "customImageName": "",
+        "customImagePath": "",
+        "productName": "Name Cut Acrylic Keychain"
+      }
+    ],
+    "customer": {
+      "name": "Sanjay Student",
+      "email": "sanjay@gmail.com",
+      "phone": "9036969700",
+      "address": "Room 102 Hostel Block 3 Sathyabama Campus",
+      "city": "Chennai",
+      "pincode": "600119",
+      "specialNotes": "",
+      "campus": "Sathyabama Institute of Science and Technology, Chennai"
+    },
+    "paymentMethod": "COD",
+    "upiTransactionId": "",
+    "paymentStatus": "COD (Pay on Delivery)",
+    "paymentProofFile": null,
+    "couponCode": "SATHYABAMA",
+    "discount": 49,
+    "subtotal": 100,
+    "shipping": 0,
+    "total": 100,
+    "status": "Confirmed",
+    "date": "4 Nov 2026, 01:44 am"
   }
 ]
