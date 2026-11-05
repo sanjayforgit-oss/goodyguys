@@ -314,6 +314,25 @@ const getCustomerOrders = async (email) => {
     .sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
 };
 
+const deleteCustomer = async (email) => {
+  if (!email) return;
+  const cleanEmail = email.toLowerCase().trim();
+
+  // Local write
+  const customers = getCustomers();
+  const filtered = customers.filter(c => c.email.toLowerCase() !== cleanEmail);
+  saveCustomers(filtered);
+
+  // Cloud write
+  if (fb.isFirebaseEnabled()) {
+    try {
+      await fb.deleteCustomerFromFirebase(cleanEmail);
+    } catch (err) {
+      console.warn('[Customer Cloud Delete Warning]:', err.message);
+    }
+  }
+};
+
 // ============================================================================
 // MULTER FILE UPLOAD WITH STRICT VALIDATION
 // ============================================================================
@@ -433,6 +452,37 @@ app.get('/sitemap.xml', (req, res) => {
 app.get('/search', (req, res) => {
   const q = req.query.q || req.query.search || '';
   res.redirect(`/products${q ? `?search=${encodeURIComponent(q)}` : ''}`);
+});
+
+// ============================================================================
+// LEGAL & COMPLIANCE ROUTES (Pre-Launch 35-Item Checklist)
+// ============================================================================
+app.get('/privacy', (req, res) => {
+  res.render('privacy', {
+    title: 'Privacy Policy & Data Protection | GOODYGUYS Studio',
+    canonical: 'https://goodyguys-custom.netlify.app/privacy'
+  });
+});
+
+app.get('/terms', (req, res) => {
+  res.render('terms', {
+    title: 'Terms of Service & Creator Guidelines | GOODYGUYS',
+    canonical: 'https://goodyguys-custom.netlify.app/terms'
+  });
+});
+
+app.get('/refund-policy', (req, res) => {
+  res.render('refund-policy', {
+    title: 'Refund, Replacement & Cancellation Policy | GOODYGUYS',
+    canonical: 'https://goodyguys-custom.netlify.app/refund-policy'
+  });
+});
+
+app.get('/shipping-policy', (req, res) => {
+  res.render('shipping-policy', {
+    title: 'Campus Delivery & Shipping Policy | GOODYGUYS',
+    canonical: 'https://goodyguys-custom.netlify.app/shipping-policy'
+  });
 });
 
 // ============================================================================
@@ -1128,6 +1178,56 @@ app.post('/account/reorder', async (req, res) => {
   }
 
   res.redirect('/cart');
+});
+
+// 8. Download Customer Data Archive (ClassifiedLearn Checklist Item #5)
+app.get('/account/export-data', async (req, res) => {
+  if (!req.session.customer) {
+    return res.redirect('/login?redirect=account');
+  }
+  try {
+    const customer = await findCustomerByEmail(req.session.customer.email);
+    const orders = await getCustomerOrders(req.session.customer.email);
+
+    const exportPayload = {
+      exportDate: new Date().toISOString(),
+      studio: 'GOODYGUYS Custom Apparel & Laser Studio',
+      customerProfile: {
+        id: customer?.id || req.session.customer.id,
+        name: customer?.name || req.session.customer.name,
+        email: customer?.email || req.session.customer.email,
+        phone: customer?.phone || req.session.customer.phone,
+        createdAt: customer?.createdAt || null
+      },
+      savedDesignsCount: customer?.savedDesigns?.length || 0,
+      savedDesigns: customer?.savedDesigns || [],
+      totalOrdersCount: orders.length,
+      orders: orders
+    };
+
+    res.setHeader('Content-Disposition', `attachment; filename="goodyguys_data_export_${Date.now()}.json"`);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(exportPayload, null, 2));
+  } catch (err) {
+    console.warn('[Data Export Error]:', err.message);
+    res.redirect('/account?error=Failed+to+export+data');
+  }
+});
+
+// 9. Delete Customer Account & Data (ClassifiedLearn Checklist Item #6)
+app.post('/account/delete', async (req, res) => {
+  if (!req.session.customer) {
+    return res.redirect('/login');
+  }
+  const email = req.session.customer.email;
+  try {
+    await deleteCustomer(email);
+    delete req.session.customer;
+    res.redirect('/?notice=' + encodeURIComponent('Your GOODYGUYS creator account and associated data have been permanently erased.'));
+  } catch (err) {
+    console.warn('[Account Deletion Error]:', err.message);
+    res.redirect('/account?error=Failed+to+delete+account');
+  }
 });
 
 // ============================================================================

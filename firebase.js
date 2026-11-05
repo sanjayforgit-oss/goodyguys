@@ -314,6 +314,18 @@ const saveCustomerDesignToFirebase = async (email, designItem) => {
   }
 };
 
+const deleteCustomerFromFirebase = async (email) => {
+  if (!isFirebaseEnabled() || !email) return false;
+  try {
+    const cleanEmail = email.toLowerCase().trim();
+    await db.collection('customers').doc(cleanEmail).delete();
+    return true;
+  } catch (err) {
+    console.warn('[Firebase deleteCustomer Warning]:', err.message);
+    return false;
+  }
+};
+
 module.exports = {
   isFirebaseEnabled,
   getOrdersFromFirebase,
@@ -331,5 +343,6 @@ module.exports = {
   getCustomerByEmailFromFirebase,
   saveCustomerToFirebase,
   getCustomerOrdersFromFirebase,
-  saveCustomerDesignToFirebase
+  saveCustomerDesignToFirebase,
+  deleteCustomerFromFirebase
 };
