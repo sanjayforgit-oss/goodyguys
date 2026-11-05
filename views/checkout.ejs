@@ -21,19 +21,26 @@
 
         <!-- 1. Customer Information -->
         <div class="checkout-section">
-          <h2>1. Contact Information</h2>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h2 style="margin: 0;">1. Contact Information</h2>
+            <% if (typeof customer !== 'undefined' && customer) { %>
+              <span style="font-size: 0.8rem; color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.25); padding: 3px 10px; border-radius: 999px;">
+                ✓ Signed in as <%= customer.name %>
+              </span>
+            <% } %>
+          </div>
           <div class="form-group">
             <label for="name">Full Name <span class="req-star">*</span></label>
-            <input type="text" id="name" name="name" class="form-input" required placeholder="e.g. Rahul Sharma">
+            <input type="text" id="name" name="name" class="form-input" required placeholder="e.g. Rahul Sharma" value="<%= typeof customer !== 'undefined' && customer && customer.name ? customer.name : '' %>">
           </div>
           <div class="form-row-2">
             <div class="form-group">
               <label for="email">Email Address <span class="req-star">*</span></label>
-              <input type="email" id="email" name="email" class="form-input" required placeholder="rahul@example.com">
+              <input type="email" id="email" name="email" class="form-input" required placeholder="rahul@example.com" value="<%= typeof customer !== 'undefined' && customer && customer.email ? customer.email : '' %>">
             </div>
             <div class="form-group">
               <label for="phone">WhatsApp / Phone Number <span class="req-star">*</span></label>
-              <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 90369 69700">
+              <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 90369 69700" value="<%= typeof customer !== 'undefined' && customer && customer.phone ? customer.phone : '' %>">
               <span class="field-hint">We will send design preview &amp; tracking updates on WhatsApp</span>
             </div>
           </div>

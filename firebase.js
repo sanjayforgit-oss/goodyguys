@@ -232,6 +232,88 @@ const deleteProductFromFirebase = async (productId) => {
   }
 };
 
+// ============================================================================
+// CUSTOMERS & SAVED DESIGNS
+// ============================================================================
+const getCustomerByEmailFromFirebase = async (email) => {
+  if (!isFirebaseEnabled() || !email) return null;
+  try {
+    const cleanEmail = email.toLowerCase().trim();
+    const docRef = db.collection('customers').doc(cleanEmail);
+    const doc = await docRef.get();
+    if (doc.exists) {
+      return { ...doc.data(), firestoreDocId: doc.id };
+    }
+    const snapshot = await db.collection('customers').where('email', '==', cleanEmail).limit(1).get();
+    if (!snapshot.empty) {
+      const first = snapshot.docs[0];
+      return { ...first.data(), firestoreDocId: first.id };
+    }
+    return null;
+  } catch (err) {
+    console.warn('[Firebase getCustomer Warning]:', err.message);
+    return null;
+  }
+};
+
+const saveCustomerToFirebase = async (customer) => {
+  if (!isFirebaseEnabled() || !customer || !customer.email) return false;
+  try {
+    const cleanEmail = customer.email.toLowerCase().trim();
+    await db.collection('customers').doc(cleanEmail).set(customer, { merge: true });
+    return true;
+  } catch (err) {
+    console.warn('[Firebase saveCustomer Warning]:', err.message);
+    return false;
+  }
+};
+
+const getCustomerOrdersFromFirebase = async (email) => {
+  if (!isFirebaseEnabled() || !email) return null;
+  try {
+    const cleanEmail = email.toLowerCase().trim();
+    const snapshot = await db.collection('orders').where('customer.email', '==', cleanEmail).get();
+    if (snapshot.empty) return [];
+    const orders = snapshot.docs.map(doc => ({ ...doc.data(), firestoreDocId: doc.id }));
+    orders.sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
+    return orders;
+  } catch (err) {
+    console.warn('[Firebase getCustomerOrders Warning]:', err.message);
+    return null;
+  }
+};
+
+const saveCustomerDesignToFirebase = async (email, designItem) => {
+  if (!isFirebaseEnabled() || !email || !designItem) return false;
+  try {
+    const cleanEmail = email.toLowerCase().trim();
+    const docRef = db.collection('customers').doc(cleanEmail);
+    const doc = await docRef.get();
+    let savedDesigns = [];
+    if (doc.exists && Array.isArray(doc.data().savedDesigns)) {
+      savedDesigns = doc.data().savedDesigns;
+    }
+    const isDuplicate = savedDesigns.some(d => 
+      d.productId === designItem.productId && 
+      d.customText === designItem.customText && 
+      d.customImagePath === designItem.customImagePath &&
+      d.shape === designItem.shape &&
+      d.size === designItem.size
+    );
+    if (!isDuplicate) {
+      savedDesigns.unshift({
+        ...designItem,
+        savedAt: new Date().toISOString()
+      });
+      await docRef.set({ savedDesigns }, { merge: true });
+    }
+    return true;
+  } catch (err) {
+    console.warn('[Firebase saveCustomerDesign Warning]:', err.message);
+    return false;
+  }
+};
+
 module.exports = {
   isFirebaseEnabled,
   getOrdersFromFirebase,
@@ -245,5 +327,9 @@ module.exports = {
   getProductsFromFirebase,
   syncProductsToFirebase,
   saveSingleProductToFirebase,
-  deleteProductFromFirebase
+  deleteProductFromFirebase,
+  getCustomerByEmailFromFirebase,
+  saveCustomerToFirebase,
+  getCustomerOrdersFromFirebase,
+  saveCustomerDesignToFirebase
 };

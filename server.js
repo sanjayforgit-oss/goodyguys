@@ -3,6 +3,7 @@ const cookieSession = require('cookie-session');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const crypto = require('crypto');
 const multer = require('multer');
 const fb = require('./firebase');
 
@@ -65,6 +66,7 @@ try {
 let memoryProducts = null;
 let memorySuggestions = null;
 let memoryOrders = null;
+let memoryCustomers = null;
 
 const getFilePath = (fileName) => {
   const targetPath = path.join(WRITABLE_DATA_DIR, fileName);
@@ -169,6 +171,149 @@ const saveOrders = (data) => {
   }
 };
 
+const getCustomers = () => {
+  if (memoryCustomers) return memoryCustomers;
+  try {
+    const fPath = getFilePath('customers.json');
+    const data = JSON.parse(fs.readFileSync(fPath, 'utf-8'));
+    memoryCustomers = Array.isArray(data) ? data : [];
+    return memoryCustomers;
+  } catch (err) {
+    try {
+      const bundled = path.join(BUNDLED_DATA_DIR, 'customers.json');
+      memoryCustomers = JSON.parse(fs.readFileSync(bundled, 'utf-8'));
+      return memoryCustomers;
+    } catch (e2) {
+      memoryCustomers = [];
+      return memoryCustomers;
+    }
+  }
+};
+
+const saveCustomers = (data) => {
+  memoryCustomers = data;
+  try {
+    const fPath = path.join(WRITABLE_DATA_DIR, 'customers.json');
+    fs.writeFileSync(fPath, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[Storage Warning] customers.json write failed (kept in memory):', err.message);
+  }
+};
+
+// Cryptographic Password Hashing (Zero-dependency PBKDF2)
+const hashPassword = (password) => {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+  return { salt, hash };
+};
+
+const verifyPassword = (password, salt, storedHash) => {
+  if (!password || !salt || !storedHash) return false;
+  const hash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
+  return hash === storedHash;
+};
+
+// Customer Data Lookup & Persistence across Firestore + Local Storage
+const findCustomerByEmail = async (email) => {
+  if (!email) return null;
+  const cleanEmail = email.toLowerCase().trim();
+
+  // 1. Cloud Firestore lookup
+  if (fb.isFirebaseEnabled()) {
+    try {
+      const cloudCust = await fb.getCustomerByEmailFromFirebase(cleanEmail);
+      if (cloudCust) return cloudCust;
+    } catch (err) {
+      console.warn('[Customer Cloud Lookup Warning]:', err.message);
+    }
+  }
+
+  // 2. Local fallback lookup
+  const customers = getCustomers();
+  return customers.find(c => c.email.toLowerCase() === cleanEmail) || null;
+};
+
+const saveCustomer = async (customer) => {
+  if (!customer || !customer.email) return;
+  const cleanEmail = customer.email.toLowerCase().trim();
+  customer.email = cleanEmail;
+
+  // Local write
+  const customers = getCustomers();
+  const idx = customers.findIndex(c => c.email.toLowerCase() === cleanEmail);
+  if (idx >= 0) {
+    customers[idx] = { ...customers[idx], ...customer };
+  } else {
+    customers.push(customer);
+  }
+  saveCustomers(customers);
+
+  // Cloud write
+  if (fb.isFirebaseEnabled()) {
+    try {
+      await fb.saveCustomerToFirebase(customer);
+    } catch (err) {
+      console.warn('[Customer Cloud Save Warning]:', err.message);
+    }
+  }
+};
+
+const saveCustomerDesign = async (email, designItem) => {
+  if (!email || !designItem) return;
+  const cleanEmail = email.toLowerCase().trim();
+
+  // Local write
+  const customers = getCustomers();
+  const cust = customers.find(c => c.email.toLowerCase() === cleanEmail);
+  if (cust) {
+    if (!Array.isArray(cust.savedDesigns)) cust.savedDesigns = [];
+    const isDup = cust.savedDesigns.some(d =>
+      d.productId === designItem.productId &&
+      d.customText === designItem.customText &&
+      d.customImagePath === designItem.customImagePath &&
+      d.shape === designItem.shape &&
+      d.size === designItem.size
+    );
+    if (!isDup) {
+      cust.savedDesigns.unshift({
+        ...designItem,
+        savedAt: new Date().toISOString()
+      });
+      saveCustomers(customers);
+    }
+  }
+
+  // Cloud write
+  if (fb.isFirebaseEnabled()) {
+    try {
+      await fb.saveCustomerDesignToFirebase(cleanEmail, designItem);
+    } catch (err) {
+      console.warn('[Customer Design Cloud Save Warning]:', err.message);
+    }
+  }
+};
+
+const getCustomerOrders = async (email) => {
+  if (!email) return [];
+  const cleanEmail = email.toLowerCase().trim();
+
+  // Try Firebase first
+  if (fb.isFirebaseEnabled()) {
+    try {
+      const cloudOrders = await fb.getCustomerOrdersFromFirebase(cleanEmail);
+      if (cloudOrders && cloudOrders.length > 0) return cloudOrders;
+    } catch (err) {
+      console.warn('[Customer Orders Cloud Lookup Warning]:', err.message);
+    }
+  }
+
+  // Fallback to local orders
+  const orders = getOrders();
+  return orders
+    .filter(o => o.customer && o.customer.email && o.customer.email.toLowerCase() === cleanEmail)
+    .sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0));
+};
+
 // ============================================================================
 // MULTER FILE UPLOAD WITH STRICT VALIDATION
 // ============================================================================
@@ -266,6 +411,8 @@ app.use((req, res, next) => {
   if (!req.session.orders) req.session.orders = [];
   res.locals.cartCount = req.session.cart.reduce((sum, item) => sum + item.quantity, 0);
   res.locals.isAdmin = !!req.session.isAdmin;
+  res.locals.customer = req.session.customer || null;
+  res.locals.pendingCartItem = req.session.pendingCartItem || null;
   next();
 });
 
@@ -437,6 +584,7 @@ app.post('/cart/add', upload.fields([
   }
 
   const cartItem = {
+    id: 'item_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
     productId: id,
     unitPrice,
     quantity: qty,
@@ -450,10 +598,24 @@ app.post('/cart/add', upload.fields([
     size: formattedSize,
     shape: shape || '',
     customImageName,
-    customImagePath
+    customImagePath,
+    addedAt: new Date().toISOString()
   };
 
+  // Zero-Loss Authentication Gate:
+  // If the visitor is not logged in, preserve the custom design, text, and uploaded artwork in session.
+  // Then guide them to sign in or create an account so it is bound to their email profile.
+  if (!req.session.customer) {
+    req.session.pendingCartItem = cartItem;
+    req.session.authNotice = '⚡ We have preserved your custom design! Please sign in or create an account to link it to your profile and add it to your bag.';
+    return res.redirect('/login?redirect=cart&reason=customizer');
+  }
+
+  // If customer is already logged in:
   req.session.cart.push(cartItem);
+  saveCustomerDesign(req.session.customer.email, cartItem).catch(err => {
+    console.warn('[saveCustomerDesign error]:', err.message);
+  });
   res.redirect('/cart');
 });
 
@@ -610,6 +772,7 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
   const order = {
     id: 'GG' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase(),
     items,
+    customerId: req.session.customer ? req.session.customer.id : null,
     customer: {
       name: cleanName,
       email: cleanEmail,
@@ -636,7 +799,8 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
-    })
+    }),
+    createdAt: new Date().toISOString()
   };
 
   // Resilient persistence (Local/Tmp + Cloud Firestore)
@@ -648,6 +812,13 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
     await fb.saveOrderToFirebase(order);
   } catch (fbErr) {
     console.warn('[Firebase] Warning saving order:', fbErr.message);
+  }
+
+  // Persist customized artwork under the customer profile for lifetime access & 1-click reordering
+  if (cleanEmail) {
+    for (const itm of items) {
+      saveCustomerDesign(cleanEmail, itm).catch(e => console.warn(e.message));
+    }
   }
 
   if (!req.session.orders) req.session.orders = [];
@@ -724,6 +895,239 @@ app.post('/suggest/upvote', async (req, res) => {
   }
   await fb.upvoteSuggestionInFirebase(id);
   res.redirect('/suggest');
+});
+
+// ============================================================================
+// CUSTOMER AUTHENTICATION & ACCOUNT PORTAL
+// ============================================================================
+
+// 1. Customer Sign In Page
+app.get('/login', (req, res) => {
+  if (req.session.customer) {
+    return res.redirect('/account');
+  }
+  const notice = req.session.authNotice || null;
+  delete req.session.authNotice;
+
+  res.render('customer-auth', {
+    title: 'Customer Sign In | GOODYGUYS Studio',
+    mode: 'login',
+    redirect: req.query.redirect || 'account',
+    reason: req.query.reason || null,
+    error: req.query.error || null,
+    success: req.query.success || null,
+    notice,
+    pendingCartItem: req.session.pendingCartItem || null
+  });
+});
+
+// 2. Customer Sign Up Page
+app.get('/signup', (req, res) => {
+  if (req.session.customer) {
+    return res.redirect('/account');
+  }
+  const notice = req.session.authNotice || null;
+  delete req.session.authNotice;
+
+  res.render('customer-auth', {
+    title: 'Create Creator Account | GOODYGUYS Studio',
+    mode: 'signup',
+    redirect: req.query.redirect || 'account',
+    reason: req.query.reason || null,
+    error: req.query.error || null,
+    success: req.query.success || null,
+    notice,
+    pendingCartItem: req.session.pendingCartItem || null
+  });
+});
+
+// 3. Process Customer Sign In
+app.post('/login', async (req, res) => {
+  const { email, password, redirect } = req.body || {};
+  const cleanEmail = (email || '').toLowerCase().trim();
+  const cleanPassword = password || '';
+  const targetRedirect = redirect || 'account';
+
+  if (!cleanEmail || !cleanPassword) {
+    return res.redirect(`/login?error=${encodeURIComponent('Please enter your email and password.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+  }
+
+  try {
+    const customer = await findCustomerByEmail(cleanEmail);
+    if (!customer || !verifyPassword(cleanPassword, customer.salt, customer.passwordHash)) {
+      return res.redirect(`/login?error=${encodeURIComponent('Incorrect email or password. Please try again.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+    }
+
+    // Set authenticated customer session
+    req.session.customer = {
+      id: customer.id,
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone
+    };
+
+    // Zero-Loss Restoration: If they customized a product before logging in, restore it to their cart now!
+    if (req.session.pendingCartItem) {
+      if (!req.session.cart) req.session.cart = [];
+      req.session.cart.push(req.session.pendingCartItem);
+      await saveCustomerDesign(customer.email, req.session.pendingCartItem);
+      delete req.session.pendingCartItem;
+      return res.redirect('/cart');
+    }
+
+    if (targetRedirect === 'cart') return res.redirect('/cart');
+    res.redirect('/account');
+  } catch (err) {
+    console.warn('[Login Error]:', err.message);
+    res.redirect(`/login?error=${encodeURIComponent('An unexpected error occurred during sign-in. Please try again.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+  }
+});
+
+// 4. Process Customer Sign Up
+app.post('/signup', async (req, res) => {
+  const { name, email, phone, password, redirect } = req.body || {};
+  const cleanName = (name || '').trim();
+  const cleanEmail = (email || '').toLowerCase().trim();
+  const cleanPhone = (phone || '').trim();
+  const cleanPassword = password || '';
+  const targetRedirect = redirect || 'account';
+
+  if (!cleanName || cleanName.length < 2) {
+    return res.redirect(`/signup?error=${encodeURIComponent('Please enter your full name (at least 2 characters).')}&redirect=${encodeURIComponent(targetRedirect)}`);
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+    return res.redirect(`/signup?error=${encodeURIComponent('Please provide a valid email address.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+  }
+
+  if (!cleanPhone || cleanPhone.replace(/\D/g, '').length < 10) {
+    return res.redirect(`/signup?error=${encodeURIComponent('Please enter a valid 10-digit WhatsApp/phone number.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+  }
+
+  if (!cleanPassword || cleanPassword.length < 6) {
+    return res.redirect(`/signup?error=${encodeURIComponent('Password must be at least 6 characters long.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+  }
+
+  try {
+    const existing = await findCustomerByEmail(cleanEmail);
+    if (existing) {
+      return res.redirect(`/login?error=${encodeURIComponent('An account with this email already exists. Please sign in.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+    }
+
+    const { salt, hash } = hashPassword(cleanPassword);
+    const newCustomer = {
+      id: 'CUST_' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase(),
+      name: cleanName,
+      email: cleanEmail,
+      phone: cleanPhone,
+      salt,
+      passwordHash: hash,
+      createdAt: new Date().toISOString(),
+      savedDesigns: []
+    };
+
+    await saveCustomer(newCustomer);
+
+    // Set authenticated customer session
+    req.session.customer = {
+      id: newCustomer.id,
+      name: newCustomer.name,
+      email: newCustomer.email,
+      phone: newCustomer.phone
+    };
+
+    // Zero-Loss Restoration: Transfer pending custom piece to bag & bind to new account
+    if (req.session.pendingCartItem) {
+      if (!req.session.cart) req.session.cart = [];
+      req.session.cart.push(req.session.pendingCartItem);
+      await saveCustomerDesign(newCustomer.email, req.session.pendingCartItem);
+      delete req.session.pendingCartItem;
+      return res.redirect('/cart');
+    }
+
+    if (targetRedirect === 'cart') return res.redirect('/cart');
+    res.redirect('/account');
+  } catch (err) {
+    console.warn('[Signup Error]:', err.message);
+    res.redirect(`/signup?error=${encodeURIComponent('An error occurred while creating your account. Please try again.')}&redirect=${encodeURIComponent(targetRedirect)}`);
+  }
+});
+
+// 5. Customer Sign Out
+app.get('/logout', (req, res) => {
+  delete req.session.customer;
+  res.redirect('/');
+});
+
+// 6. Customer Account Portal (Order Tracking, Purchase History, Saved Artwork)
+app.get('/account', async (req, res) => {
+  if (!req.session.customer) {
+    return res.redirect('/login?redirect=account');
+  }
+
+  try {
+    const customer = await findCustomerByEmail(req.session.customer.email);
+    const orders = await getCustomerOrders(req.session.customer.email);
+    const savedDesigns = (customer && Array.isArray(customer.savedDesigns)) ? customer.savedDesigns : [];
+
+    res.render('account', {
+      title: 'My Account & Saved Drops | GOODYGUYS',
+      customer: customer || req.session.customer,
+      orders: orders || [],
+      savedDesigns
+    });
+  } catch (err) {
+    console.warn('[Account Route Error]:', err.message);
+    res.render('account', {
+      title: 'My Account | GOODYGUYS',
+      customer: req.session.customer,
+      orders: [],
+      savedDesigns: []
+    });
+  }
+});
+
+// 7. Instant Reorder Saved Design into Bag
+app.post('/account/reorder', async (req, res) => {
+  if (!req.session.customer) {
+    return res.redirect('/login');
+  }
+
+  const { designIndex } = req.body || {};
+  const idx = parseInt(designIndex, 10);
+
+  try {
+    const customer = await findCustomerByEmail(req.session.customer.email);
+    if (customer && Array.isArray(customer.savedDesigns) && customer.savedDesigns[idx]) {
+      const design = customer.savedDesigns[idx];
+      const reorderItem = {
+        id: 'item_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+        productId: design.productId,
+        unitPrice: design.unitPrice || 100,
+        quantity: 1,
+        customText: design.customText || '',
+        placement: design.placement || '',
+        mugSides: design.mugSides || '',
+        lampBase: design.lampBase || '',
+        material: design.material || '',
+        fontStyle: design.fontStyle || '',
+        color: design.color || '',
+        size: design.size || '',
+        shape: design.shape || '',
+        customImageName: design.customImageName || '',
+        customImagePath: design.customImagePath || '',
+        addedAt: new Date().toISOString()
+      };
+
+      if (!req.session.cart) req.session.cart = [];
+      req.session.cart.push(reorderItem);
+    }
+  } catch (err) {
+    console.warn('[Reorder Error]:', err.message);
+  }
+
+  res.redirect('/cart');
 });
 
 // ============================================================================

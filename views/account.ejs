@@ -1,0 +1,360 @@
+<%- include('partials/header') %>
+
+<section class="customer-account-page" style="padding: 40px 0 90px; min-height: 85vh;">
+  <div class="container" style="max-width: 1040px; margin: 0 auto;">
+
+    <!-- Top Account Banner -->
+    <div class="account-header-card" style="background: linear-gradient(135deg, #141414 0%, #0d0d0d 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 32px 36px; margin-bottom: 30px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; box-shadow: 0 16px 36px rgba(0,0,0,0.5);">
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <div class="account-avatar" style="width: 68px; height: 68px; border-radius: 50%; background: linear-gradient(135deg, #ff1744 0%, #b30026 100%); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; color: #ffffff; box-shadow: 0 4px 18px rgba(255, 23, 68, 0.4); text-transform: uppercase;">
+          <%= customer.name ? customer.name.charAt(0) : 'G' %>
+        </div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+            <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 800; color: #ffffff; margin: 0;">
+              <%= customer.name %>
+            </h1>
+            <span style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;">
+              CREATOR MEMBER
+            </span>
+          </div>
+          <p style="color: #aaaaaa; font-size: 0.9rem; margin: 0;">
+            📧 <%= customer.email %> &bull; 📱 <%= customer.phone || 'Phone not linked' %>
+          </p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <a href="/products" class="btn" style="background: #1f1f1f; color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.15); padding: 10px 18px; border-radius: 10px; font-size: 0.88rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <span>🛍️ Browse The Drop</span>
+        </a>
+        <a href="/logout" class="btn" style="background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 18px; border-radius: 10px; font-size: 0.88rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <span>Sign Out</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Stats Bar -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
+      <div style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px 22px;">
+        <span style="color: #888888; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Total Orders</span>
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 800; color: #ffffff;"><%= orders.length %></div>
+      </div>
+      <div style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px 22px;">
+        <span style="color: #888888; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Saved Custom Artwork</span>
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 800; color: #ff1744;"><%= savedDesigns.length %></div>
+      </div>
+      <div style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 20px 22px;">
+        <span style="color: #888888; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">Campus Delivery Zone</span>
+        <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: #60a5fa;">Sathyabama Campus</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="account-tabs" style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 28px; overflow-x: auto; padding-bottom: 2px;">
+      <button type="button" id="tabOrdersBtn" onclick="switchAccountTab('orders')" style="background: transparent; border: none; border-bottom: 3px solid #ff1744; color: #ffffff; padding: 12px 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap;">
+        📦 Order History &amp; Tracking (<%= orders.length %>)
+      </button>
+      <button type="button" id="tabDesignsBtn" onclick="switchAccountTab('designs')" style="background: transparent; border: none; border-bottom: 3px solid transparent; color: #888888; padding: 12px 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap;">
+        🎨 My Saved Designs &amp; Artwork (<%= savedDesigns.length %>)
+      </button>
+      <button type="button" id="tabProfileBtn" onclick="switchAccountTab('profile')" style="background: transparent; border: none; border-bottom: 3px solid transparent; color: #888888; padding: 12px 20px; font-family: 'Space Grotesk', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap;">
+        👤 Profile &amp; Campus Address
+      </button>
+    </div>
+
+    <!-- 1. ORDERS TAB CONTENT -->
+    <div id="accountOrdersTab">
+      <% if (orders.length === 0) { %>
+        <div style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 50px 30px; text-align: center;">
+          <span style="font-size: 3rem; display: block; margin-bottom: 12px;">🛍️</span>
+          <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; color: #ffffff; margin-bottom: 8px;">No orders found</h3>
+          <p style="color: #888888; font-size: 0.9rem; max-width: 440px; margin: 0 auto 24px;">
+            You haven't placed an order with this account yet. Customize your first laser keychain, plaque, or t-shirt drop today!
+          </p>
+          <a href="/products" class="btn" style="background: #ff1744; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; text-decoration: none; display: inline-block;">
+            Explore The Drop Collection →
+          </a>
+        </div>
+      <% } else { %>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <% orders.forEach(order => { %>
+            <div class="order-card" style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 24px 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+              
+              <!-- Order Header -->
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 16px; margin-bottom: 18px;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffffff;">
+                      Order #<%= order.id %>
+                    </span>
+                    <span style="font-size: 0.8rem; color: #777777;">
+                      &bull; <%= order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN') : 'Recent') %>
+                    </span>
+                  </div>
+                  <div style="color: #999999; font-size: 0.82rem; margin-top: 4px;">
+                    Delivery to: <strong><%= order.customer?.address || 'Sathyabama Campus' %></strong> (Pincode: <%= order.customer?.pincode || '600119' %>)
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <!-- Status Pill -->
+                  <% 
+                    let statusColor = '#94a3b8';
+                    let statusBg = 'rgba(148, 163, 184, 0.12)';
+                    const st = (order.status || '').toLowerCase();
+                    if (st.includes('confirm') || st.includes('verified')) {
+                      statusColor = '#4ade80';
+                      statusBg = 'rgba(74, 222, 128, 0.15)';
+                    } else if (st.includes('verif') || st.includes('pending')) {
+                      statusColor = '#fbbf24';
+                      statusBg = 'rgba(251, 191, 36, 0.15)';
+                    } else if (st.includes('print') || st.includes('production') || st.includes('laser')) {
+                      statusColor = '#38bdf8';
+                      statusBg = 'rgba(56, 189, 248, 0.15)';
+                    } else if (st.includes('deliver') || st.includes('dispatch')) {
+                      statusColor = '#22c55e';
+                      statusBg = 'rgba(34, 197, 94, 0.2)';
+                    }
+                  %>
+                  <span style="background: <%= statusBg %>; color: <%= statusColor %>; border: 1px solid <%= statusColor %>44; font-size: 0.78rem; font-weight: 800; padding: 4px 12px; border-radius: 999px; text-transform: uppercase;">
+                    <%= order.status || 'Received' %>
+                  </span>
+                  
+                  <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffffff;">
+                    ₹<%= (order.total || 0).toLocaleString() %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Order Items List -->
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <% (order.items || []).forEach(item => { %>
+                  <div style="display: flex; align-items: flex-start; gap: 16px; background: #161616; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.04);">
+                    <% if (item.customImagePath) { %>
+                      <a href="<%= item.customImagePath %>" target="_blank" title="View full uploaded design" style="flex-shrink: 0;">
+                        <img src="<%= item.customImagePath %>" alt="Custom Design" style="width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                      </a>
+                    <% } else { %>
+                      <div style="width: 56px; height: 56px; border-radius: 8px; background: #222222; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                        ✨
+                      </div>
+                    <% } %>
+
+                    <div style="flex: 1;">
+                      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 0.98rem; font-weight: 700; color: #ffffff; margin: 0 0 4px;">
+                          <%= item.productName || 'Custom Drop Item' %>
+                        </h4>
+                        <span style="color: #aaaaaa; font-size: 0.85rem; font-weight: 600;">
+                          ₹<%= (item.unitPrice || 0).toLocaleString() %> &times; <%= item.quantity || 1 %>
+                        </span>
+                      </div>
+
+                      <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+                        <% if (item.customText) { %>
+                          <span style="background: rgba(255, 23, 68, 0.15); color: #ff4d6d; font-size: 0.76rem; font-weight: 700; padding: 2px 8px; border-radius: 6px;">
+                            ✍️ "<%= item.customText %>"
+                          </span>
+                        <% } %>
+                        <% if (item.size) { %>
+                          <span style="background: #252525; color: #cccccc; font-size: 0.74rem; padding: 2px 8px; border-radius: 6px;">
+                            Size: <%= item.size %>
+                          </span>
+                        <% } %>
+                        <% if (item.shape) { %>
+                          <span style="background: #252525; color: #cccccc; font-size: 0.74rem; padding: 2px 8px; border-radius: 6px;">
+                            Shape: <%= item.shape %>
+                          </span>
+                        <% } %>
+                        <% if (item.material) { %>
+                          <span style="background: #252525; color: #cccccc; font-size: 0.74rem; padding: 2px 8px; border-radius: 6px;">
+                            Finish: <%= item.material %>
+                          </span>
+                        <% } %>
+                        <% if (item.customImageName) { %>
+                          <span style="background: rgba(37, 99, 235, 0.18); color: #93c5fd; font-size: 0.74rem; padding: 2px 8px; border-radius: 6px;">
+                            📸 <%= item.customImageName %>
+                          </span>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+
+              <!-- Order Footer Tracking / Notes -->
+              <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.8rem; color: #777777;">
+                <div>
+                  Payment: <strong style="color: #cccccc;"><%= order.paymentMethod %></strong>
+                  <% if (order.upiTransactionId) { %>
+                    &bull; UTR: <span style="font-family: monospace; color: #aaaaaa;"><%= order.upiTransactionId %></span>
+                  <% } %>
+                  <% if (order.couponCode) { %>
+                    &bull; Coupon: <span style="color: #4ade80;"><%= order.couponCode %> (Free Campus Delivery)</span>
+                  <% } %>
+                </div>
+                <div>
+                  Questions about this order? WhatsApp: <strong style="color: #ffffff;">9036969700</strong>
+                </div>
+              </div>
+
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- 2. SAVED DESIGNS TAB CONTENT -->
+    <div id="accountDesignsTab" style="display: none;">
+      <% if (savedDesigns.length === 0) { %>
+        <div style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 50px 30px; text-align: center;">
+          <span style="font-size: 3rem; display: block; margin-bottom: 12px;">🎨</span>
+          <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; color: #ffffff; margin-bottom: 8px;">No saved custom artwork yet</h3>
+          <p style="color: #888888; font-size: 0.9rem; max-width: 440px; margin: 0 auto 24px;">
+            Every time you customize a product with your text, name, or photo, we preserve it in your gallery for instant 1-click reordering.
+          </p>
+          <a href="/products" class="btn" style="background: #ff1744; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 700; text-decoration: none; display: inline-block;">
+            Customize a Piece Now →
+          </a>
+        </div>
+      <% } else { %>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+          <% savedDesigns.forEach((design, dIdx) => { %>
+            <div class="saved-design-card" style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
+              
+              <!-- Design Image Preview -->
+              <div style="height: 180px; background: #181818; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                <% if (design.customImagePath) { %>
+                  <img src="<%= design.customImagePath %>" alt="Custom Design" style="width: 100%; height: 100%; object-fit: cover;">
+                <% } else { %>
+                  <div style="font-size: 3rem;">✨</div>
+                <% } %>
+                <span style="position: absolute; top: 12px; left: 12px; background: rgba(0, 0, 0, 0.75); color: #ffffff; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; backdrop-filter: blur(4px);">
+                  Saved Artwork
+                </span>
+              </div>
+
+              <!-- Design Details -->
+              <div style="padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                  <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700; color: #ffffff; margin: 0 0 8px;">
+                    <%= design.productName || 'Custom Studio Piece' %>
+                  </h4>
+
+                  <% if (design.customText) { %>
+                    <div style="margin-bottom: 8px;">
+                      <span style="font-size: 0.76rem; color: #888888; text-transform: uppercase;">Custom Text:</span>
+                      <div style="color: #ff3366; font-size: 0.95rem; font-weight: 700;">"<%= design.customText %>"</div>
+                    </div>
+                  <% } %>
+
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;">
+                    <% if (design.shape) { %>
+                      <span style="background: #222222; color: #cccccc; font-size: 0.72rem; padding: 2px 7px; border-radius: 5px;">Shape: <%= design.shape %></span>
+                    <% } %>
+                    <% if (design.size) { %>
+                      <span style="background: #222222; color: #cccccc; font-size: 0.72rem; padding: 2px 7px; border-radius: 5px;">Size: <%= design.size %></span>
+                    <% } %>
+                    <% if (design.color) { %>
+                      <span style="background: #222222; color: #cccccc; font-size: 0.72rem; padding: 2px 7px; border-radius: 5px;">Color: <%= design.color %></span>
+                    <% } %>
+                  </div>
+                </div>
+
+                <!-- Reorder Form -->
+                <form method="POST" action="/account/reorder" style="margin-top: 12px;">
+                  <input type="hidden" name="designIndex" value="<%= dIdx %>">
+                  <button type="submit" class="btn btn-primary" style="width: 100%; background: #ff1744; color: #ffffff; border: none; border-radius: 9px; padding: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.2s;">
+                    🛒 Add to Bag / Reorder →
+                  </button>
+                </form>
+
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- 3. PROFILE & CAMPUS ADDRESS TAB CONTENT -->
+    <div id="accountProfileTab" style="display: none;">
+      <div style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 32px; max-width: 600px;">
+        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 20px;">
+          Account &amp; Campus Delivery Details
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <label style="display: block; font-size: 0.78rem; text-transform: uppercase; color: #777777; font-weight: 700; margin-bottom: 4px;">Full Name</label>
+            <div style="color: #ffffff; font-size: 1rem; font-weight: 600;"><%= customer.name %></div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.78rem; text-transform: uppercase; color: #777777; font-weight: 700; margin-bottom: 4px;">Email Address</label>
+            <div style="color: #ffffff; font-size: 1rem; font-weight: 600;"><%= customer.email %></div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.78rem; text-transform: uppercase; color: #777777; font-weight: 700; margin-bottom: 4px;">Contact Phone / WhatsApp</label>
+            <div style="color: #ffffff; font-size: 1rem; font-weight: 600;"><%= customer.phone || 'Not added yet' %></div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.78rem; text-transform: uppercase; color: #777777; font-weight: 700; margin-bottom: 4px;">Primary Service Zone</label>
+            <div style="color: #4ade80; font-size: 0.95rem; font-weight: 600;">
+              Sathyabama Institute of Science and Technology Campus (Pincode: 600119)
+            </div>
+            <p style="font-size: 0.8rem; color: #777777; margin-top: 4px;">
+              All orders are eligible for free on-campus hand delivery with coupon code <strong style="color: #ffffff;">SATHYABAMA</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+          <a href="/logout" style="color: #ef4444; font-weight: 700; text-decoration: none; font-size: 0.9rem;">
+            ← Sign Out of Account
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function switchAccountTab(tabName) {
+    const ordersTab = document.getElementById('accountOrdersTab');
+    const designsTab = document.getElementById('accountDesignsTab');
+    const profileTab = document.getElementById('accountProfileTab');
+
+    const ordersBtn = document.getElementById('tabOrdersBtn');
+    const designsBtn = document.getElementById('tabDesignsBtn');
+    const profileBtn = document.getElementById('tabProfileBtn');
+
+    // Hide all
+    ordersTab.style.display = 'none';
+    designsTab.style.display = 'none';
+    profileTab.style.display = 'none';
+
+    ordersBtn.style.borderBottomColor = 'transparent';
+    ordersBtn.style.color = '#888888';
+    designsBtn.style.borderBottomColor = 'transparent';
+    designsBtn.style.color = '#888888';
+    profileBtn.style.borderBottomColor = 'transparent';
+    profileBtn.style.color = '#888888';
+
+    if (tabName === 'designs') {
+      designsTab.style.display = 'block';
+      designsBtn.style.borderBottomColor = '#ff1744';
+      designsBtn.style.color = '#ffffff';
+    } else if (tabName === 'profile') {
+      profileTab.style.display = 'block';
+      profileBtn.style.borderBottomColor = '#ff1744';
+      profileBtn.style.color = '#ffffff';
+    } else {
+      ordersTab.style.display = 'block';
+      ordersBtn.style.borderBottomColor = '#ff1744';
+      ordersBtn.style.color = '#ffffff';
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>

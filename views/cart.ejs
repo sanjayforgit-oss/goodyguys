@@ -87,10 +87,17 @@
                       <span><%= item.shape %></span>
                     </div>
                   <% } %>
-                  <% if (item.customImageName) { %>
-                    <div class="spec-tag image-attached">
-                      <span class="spec-key">📸 Uploaded Graphic:</span>
-                      <span><%= item.customImageName %></span>
+                  <% if (item.customImageName || item.customImagePath) { %>
+                    <div class="spec-tag image-attached" style="display: flex; align-items: center; gap: 8px;">
+                      <% if (item.customImagePath) { %>
+                        <a href="<%= item.customImagePath %>" target="_blank" title="View full uploaded artwork">
+                          <img src="<%= item.customImagePath %>" alt="Custom Upload" style="width: 28px; height: 28px; object-fit: cover; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);">
+                        </a>
+                      <% } %>
+                      <div>
+                        <span class="spec-key">📸 Uploaded Graphic:</span>
+                        <span><%= item.customImageName || 'Custom Artwork' %></span>
+                      </div>
                     </div>
                   <% } %>
                 </div>

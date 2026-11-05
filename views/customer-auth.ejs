@@ -1,0 +1,177 @@
+<%- include('partials/header') %>
+
+<section class="customer-auth-section" style="padding: 60px 0 100px; min-height: 80vh; display: flex; align-items: center;">
+  <div class="container" style="max-width: 520px; margin: 0 auto;">
+    
+    <!-- Preserved Customizer Notice Banner -->
+    <% if (typeof pendingCartItem !== 'undefined' && pendingCartItem) { %>
+      <div class="auth-pending-alert" style="background: rgba(255, 23, 68, 0.12); border: 1px solid rgba(255, 23, 68, 0.4); border-radius: 14px; padding: 18px 20px; margin-bottom: 24px; display: flex; gap: 14px; align-items: flex-start;">
+        <span style="font-size: 1.8rem; line-height: 1;">✨</span>
+        <div style="flex: 1;">
+          <h4 style="color: #ff3366; font-size: 1rem; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Custom Artwork Preserved!</h4>
+          <p style="color: #e0e0e0; font-size: 0.88rem; line-height: 1.45; margin: 0;">
+            We've saved your custom design specifications
+            <% if (pendingCartItem.customText) { %>
+              with text: <strong style="color: #ffffff;">"<%= pendingCartItem.customText %>"</strong>
+            <% } %>
+            <% if (pendingCartItem.customImageName) { %>
+              and attached image (<strong style="color: #ffffff;"><%= pendingCartItem.customImageName %></strong>)
+            <% } %>.
+            Please sign in or create an account below so we can link it to your email and add it to your bag!
+          </p>
+        </div>
+      </div>
+    <% } else if (typeof notice !== 'undefined' && notice) { %>
+      <div class="auth-pending-alert" style="background: rgba(37, 99, 235, 0.12); border: 1px solid rgba(37, 99, 235, 0.4); border-radius: 14px; padding: 16px 20px; margin-bottom: 24px; color: #93c5fd; font-size: 0.88rem;">
+        ℹ️ <%= notice %>
+      </div>
+    <% } %>
+
+    <!-- Error Alert -->
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert-box error" style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 14px 18px; border-radius: 12px; margin-bottom: 22px; font-size: 0.9rem; font-weight: 600;">
+        ⚠️ <%= error %>
+      </div>
+    <% } %>
+
+    <!-- Success Alert -->
+    <% if (typeof success !== 'undefined' && success) { %>
+      <div class="alert-box success" style="background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #86efac; padding: 14px 18px; border-radius: 12px; margin-bottom: 22px; font-size: 0.9rem; font-weight: 600;">
+        ✓ <%= success %>
+      </div>
+    <% } %>
+
+    <div class="auth-card" style="background: #111111; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 36px 32px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);">
+      
+      <!-- Brand & Mode Header -->
+      <div style="text-align: center; margin-bottom: 28px;">
+        <span class="pill-badge" style="background: rgba(255, 23, 68, 0.15); color: #ff1744; border: 1px solid rgba(255, 23, 68, 0.3); font-size: 0.72rem; font-weight: 800; letter-spacing: 1px; padding: 4px 12px; border-radius: 999px; text-transform: uppercase;">
+          GOODYGUYS Customer Portal
+        </span>
+        <h1 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 800; margin: 12px 0 6px; color: #ffffff;">
+          <%= typeof mode !== 'undefined' && mode === 'signup' ? 'Create Creator Account' : 'Welcome Back' %>
+        </h1>
+        <p style="color: #888888; font-size: 0.88rem; margin: 0;">
+          Access your personalized drops, order history, and saved designs.
+        </p>
+      </div>
+
+      <!-- Mode Toggle Switcher Tabs -->
+      <div class="auth-tabs" style="display: flex; background: #1a1a1a; border-radius: 12px; padding: 4px; margin-bottom: 28px; border: 1px solid rgba(255, 255, 255, 0.08);">
+        <button type="button" id="tabLoginBtn" class="auth-tab-btn" onclick="switchAuthTab('login')" style="flex: 1; padding: 10px 16px; border: none; border-radius: 9px; font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; <%= typeof mode === 'undefined' || mode !== 'signup' ? 'background: #ff1744; color: #ffffff; box-shadow: 0 4px 12px rgba(255, 23, 68, 0.35);' : 'background: transparent; color: #888888;' %>">
+          Sign In
+        </button>
+        <button type="button" id="tabSignupBtn" class="auth-tab-btn" onclick="switchAuthTab('signup')" style="flex: 1; padding: 10px 16px; border: none; border-radius: 9px; font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; <%= typeof mode !== 'undefined' && mode === 'signup' ? 'background: #ff1744; color: #ffffff; box-shadow: 0 4px 12px rgba(255, 23, 68, 0.35);' : 'background: transparent; color: #888888;' %>">
+          Create Account
+        </button>
+      </div>
+
+      <!-- 1. SIGN IN FORM -->
+      <div id="loginFormContainer" style="<%= typeof mode !== 'undefined' && mode === 'signup' ? 'display: none;' : 'display: block;' %>">
+        <form method="POST" action="/login" class="customer-auth-form">
+          <input type="hidden" name="redirect" value="<%= typeof redirect !== 'undefined' && redirect ? redirect : 'account' %>">
+
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label for="loginEmail" style="display: block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #cccccc; margin-bottom: 8px;">
+              Email Address
+            </label>
+            <input type="email" id="loginEmail" name="email" required placeholder="e.g. rahul@example.com" class="form-input" style="width: 100%; padding: 12px 14px; background: #0c0c0c; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-size: 0.95rem;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 22px;">
+            <label for="loginPassword" style="display: block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #cccccc; margin-bottom: 8px;">
+              Password
+            </label>
+            <input type="password" id="loginPassword" name="password" required placeholder="Enter your password" class="form-input" style="width: 100%; padding: 12px 14px; background: #0c0c0c; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-size: 0.95rem;" autocomplete="current-password">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="width: 100%; padding: 14px; background: #ff1744; color: #ffffff; border: none; border-radius: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 18px rgba(255, 23, 68, 0.35);">
+            Sign In &amp; Continue →
+          </button>
+        </form>
+      </div>
+
+      <!-- 2. CREATE ACCOUNT FORM -->
+      <div id="signupFormContainer" style="<%= typeof mode !== 'undefined' && mode === 'signup' ? 'display: block;' : 'display: none;' %>">
+        <form method="POST" action="/signup" class="customer-auth-form">
+          <input type="hidden" name="redirect" value="<%= typeof redirect !== 'undefined' && redirect ? redirect : 'account' %>">
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="signupName" style="display: block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #cccccc; margin-bottom: 8px;">
+              Full Name <span style="color: #ff1744;">*</span>
+            </label>
+            <input type="text" id="signupName" name="name" required placeholder="e.g. Rahul Sharma" class="form-input" style="width: 100%; padding: 12px 14px; background: #0c0c0c; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-size: 0.95rem;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="signupEmail" style="display: block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #cccccc; margin-bottom: 8px;">
+              Email Address <span style="color: #ff1744;">*</span>
+            </label>
+            <input type="email" id="signupEmail" name="email" required placeholder="e.g. rahul@example.com" class="form-input" style="width: 100%; padding: 12px 14px; background: #0c0c0c; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-size: 0.95rem;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 16px;">
+            <label for="signupPhone" style="display: block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #cccccc; margin-bottom: 8px;">
+              WhatsApp / Phone Number <span style="color: #ff1744;">*</span>
+            </label>
+            <input type="tel" id="signupPhone" name="phone" required placeholder="e.g. 9036969700" class="form-input" style="width: 100%; padding: 12px 14px; background: #0c0c0c; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-size: 0.95rem;">
+            <span style="font-size: 0.75rem; color: #777777; margin-top: 4px; display: block;">Used for order dispatch status and laser preview proofs.</span>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 22px;">
+            <label for="signupPassword" style="display: block; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #cccccc; margin-bottom: 8px;">
+              Create Password <span style="color: #ff1744;">*</span>
+            </label>
+            <input type="password" id="signupPassword" name="password" required minlength="6" placeholder="At least 6 characters" class="form-input" style="width: 100%; padding: 12px 14px; background: #0c0c0c; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; color: #ffffff; font-size: 0.95rem;" autocomplete="new-password">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="width: 100%; padding: 14px; background: #ff1744; color: #ffffff; border: none; border-radius: 10px; font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 18px rgba(255, 23, 68, 0.35);">
+            Create Account &amp; Save Designs →
+          </button>
+        </form>
+      </div>
+
+      <!-- Footer Info -->
+      <div style="margin-top: 24px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 18px;">
+        <p style="color: #666666; font-size: 0.78rem; margin-bottom: 8px;">
+          🔒 Your custom uploads, names, and purchase histories are securely saved under your private account.
+        </p>
+        <a href="/admin/login" style="color: #555555; font-size: 0.74rem; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#888888'" onmouseout="this.style.color='#555555'">
+          Studio Workshop Admin Portal →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  function switchAuthTab(targetTab) {
+    const loginBtn = document.getElementById('tabLoginBtn');
+    const signupBtn = document.getElementById('tabSignupBtn');
+    const loginContainer = document.getElementById('loginFormContainer');
+    const signupContainer = document.getElementById('signupFormContainer');
+
+    if (targetTab === 'signup') {
+      loginContainer.style.display = 'none';
+      signupContainer.style.display = 'block';
+      signupBtn.style.background = '#ff1744';
+      signupBtn.style.color = '#ffffff';
+      signupBtn.style.boxShadow = '0 4px 12px rgba(255, 23, 68, 0.35)';
+      loginBtn.style.background = 'transparent';
+      loginBtn.style.color = '#888888';
+      loginBtn.style.boxShadow = 'none';
+    } else {
+      signupContainer.style.display = 'none';
+      loginContainer.style.display = 'block';
+      loginBtn.style.background = '#ff1744';
+      loginBtn.style.color = '#ffffff';
+      loginBtn.style.boxShadow = '0 4px 12px rgba(255, 23, 68, 0.35)';
+      signupBtn.style.background = 'transparent';
+      signupBtn.style.color = '#888888';
+      signupBtn.style.boxShadow = 'none';
+    }
+  }
+</script>
+
+<%- include('partials/footer') %>

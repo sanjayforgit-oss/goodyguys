@@ -106,14 +106,37 @@
             <span>💡 SUGGEST IDEA</span>
             <span class="nav-tag-badge">NEW</span>
           </a>
+          <% if (typeof customer !== 'undefined' && customer) { %>
+            <a href="/account" class="nav-link nav-account-link" style="color: #4ade80; display: inline-flex; align-items: center; gap: 5px;">
+              <span>👤</span>
+              <span><%= customer.name.split(' ')[0].toUpperCase() %></span>
+            </a>
+            <a href="/logout" class="nav-link nav-logout-link" style="color: #ef4444; font-size: 0.8rem;" title="Sign Out">LOGOUT</a>
+          <% } else { %>
+            <a href="/login" class="nav-link nav-signin-link" style="color: #ffffff; display: inline-flex; align-items: center; gap: 5px;">
+              <span>🔑</span>
+              <span>SIGN IN</span>
+            </a>
+          <% } %>
         </nav>
 
-        <!-- Header Actions: Search, Cart -->
+        <!-- Header Actions: Search, User Account, Cart -->
         <div class="header-actions">
           <form class="header-search-form" method="GET" action="/products" role="search">
             <button type="submit" class="search-submit-icon" aria-label="Search products">🔍</button>
             <input type="text" name="search" placeholder="Search apparel, mugs, acrylics..." value="<%= typeof search !== 'undefined' ? search : '' %>" aria-label="Search catalog">
           </form>
+
+          <% if (typeof customer !== 'undefined' && customer) { %>
+            <a href="/account" class="header-user-btn" title="My Account (<%= customer.name %>)" aria-label="My Account" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #ffffff; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.88rem; font-weight: 800; text-decoration: none; text-transform: uppercase;">
+              <%= customer.name ? customer.name.charAt(0) : 'U' %>
+            </a>
+          <% } else { %>
+            <a href="/login" class="header-signin-btn" title="Sign In" aria-label="Sign In" style="background: rgba(255,23,68,0.15); border: 1px solid rgba(255,23,68,0.3); color: #ff3366; padding: 6px 14px; border-radius: 999px; font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; font-weight: 800; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 4px;">
+              <span>🔑</span>
+              <span>Sign In</span>
+            </a>
+          <% } %>
 
           <a href="/cart" class="cart-link streetwear-cart" title="Shopping Cart" aria-label="Shopping Cart">
             <svg class="cart-bag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
