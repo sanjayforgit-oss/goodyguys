@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : `Retail Receipt #${order.id} | GOODYGUYS` %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      padding: 40px 20px;
+      line-height: 1.5;
+    }
+    .receipt-container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+    .no-print-bar {
+      max-width: 760px;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-print {
+      background: #0f172a;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-back {
+      color: #64748b;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .receipt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+    }
+    .brand-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+    }
+    .brand-title span { color: #dc2626; }
+    .brand-sub { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+    .brand-meta { font-size: 0.8rem; color: #475569; margin-top: 6px; line-height: 1.4; }
+    .receipt-type-badge {
+      text-align: right;
+    }
+    .receipt-type-badge h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #0f172a;
+    }
+    .receipt-type-badge p {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .receipt-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      background: #f8fafc;
+      padding: 18px 20px;
+      border-radius: 8px;
+      border: 1px solid #edf2f7;
+      margin-bottom: 28px;
+      font-size: 0.85rem;
+    }
+    .meta-col strong { display: block; font-size: 0.75rem; text-transform: uppercase; color: #64748b; margin-bottom: 3px; }
+    .meta-col span { color: #0f172a; font-weight: 600; }
+    
+    .receipt-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 28px;
+      font-size: 0.88rem;
+    }
+    .receipt-table th {
+      text-align: left;
+      background: #f1f5f9;
+      padding: 12px 14px;
+      font-weight: 700;
+      color: #334155;
+      border-bottom: 1px solid #cbd5e1;
+    }
+    .receipt-table td {
+      padding: 14px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    .item-specs-sub {
+      font-size: 0.78rem;
+      color: #64748b;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .receipt-summary-box {
+      margin-left: auto;
+      max-width: 320px;
+      font-size: 0.88rem;
+      margin-bottom: 32px;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      color: #475569;
+    }
+    .summary-line.total-line {
+      border-top: 2px solid #0f172a;
+      border-bottom: 2px solid #0f172a;
+      padding: 12px 0;
+      margin-top: 6px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .receipt-footer-notes {
+      border-top: 1px dashed #cbd5e1;
+      padding-top: 20px;
+      font-size: 0.76rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+    .stamp-box {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .signature-area {
+      text-align: right;
+      font-size: 0.8rem;
+      color: #334155;
+    }
+    .signature-line {
+      width: 180px;
+      border-bottom: 1px solid #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    @media print {
+      body { background: #ffffff; padding: 0; }
+      .receipt-container { border: none; box-shadow: none; padding: 0; }
+      .no-print-bar { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print-bar">
+    <a href="/account" class="btn-back">← Back to My Account</a>
+    <button class="btn-print" onclick="window.print()">
+      🖨️ Print / Save as PDF
+    </button>
+  </div>
+
+  <div class="receipt-container">
+    
+    <!-- Header -->
+    <div class="receipt-header">
+      <div>
+        <div class="brand-title">GOODY<span>GUYS</span></div>
+        <div class="brand-sub">CUSTOM APPAREL &bull; LASER ETCHING &bull; SUBLIMATION</div>
+        <div class="brand-meta">
+          Campus Workshop: Sathyabama Institute of Science and Technology<br>
+          Jeppiaar Nagar, Rajiv Gandhi Salai OMR, Chennai - 600119<br>
+          Helpline / WhatsApp: +91 9036969700 &bull; Email: goodyguys.support@gmail.com
+        </div>
+      </div>
+
+      <div class="receipt-type-badge">
+        <h2>Retail Sales Receipt</h2>
+        <p>Commercial Cash Memo / Order Bill</p>
+        <div style="margin-top: 10px; font-family: monospace; font-size: 0.95rem; font-weight: 700; color: #dc2626;">
+          #<%= order.id %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order & Customer Meta Grid -->
+    <div class="receipt-meta-grid">
+      <div class="meta-col">
+        <strong>Customer / Student Details</strong>
+        <span><%= order.customer.name %></span>
+        <div style="color: #475569; font-size: 0.8rem; margin-top: 2px;">
+          Phone: <%= order.customer.phone %><br>
+          Email: <%= order.customer.email %>
+        </div>
+      </div>
+
+      <div class="meta-col">
+        <strong>Date &amp; Payment Mode</strong>
+        <span><%= order.date %></span>
+        <div style="color: #475569; font-size: 0.8rem; margin-top: 2px;">
+          Mode: <%= order.paymentMethod %>
+          <% if (order.upiTransactionId) { %>
+            <br>UPI UTR: <code style="background: #edf2f7; padding: 2px 4px; border-radius: 4px;"><%= order.upiTransactionId %></code>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="meta-col" style="grid-column: span 2;">
+        <strong>Campus Delivery Location</strong>
+        <span><%= order.customer.address %>, <%= order.customer.city %> - <%= order.customer.pincode %></span>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <table class="receipt-table">
+      <thead>
+        <tr>
+          <th style="width: 5%;">#</th>
+          <th style="width: 55%;">Product &amp; Custom Specifications</th>
+          <th style="width: 12%; text-align: center;">Qty</th>
+          <th style="width: 14%; text-align: right;">Unit Price</th>
+          <th style="width: 14%; text-align: right;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% (order.items || []).forEach((item, idx) => { %>
+          <tr>
+            <td><%= idx + 1 %></td>
+            <td>
+              <strong style="color: #0f172a;"><%= item.productName || 'Custom Drop Item' %></strong>
+              <div class="item-specs-sub">
+                <% if (item.customText) { %><div>✍️ Custom Text: <strong>"<%= item.customText %>"</strong></div><% } %>
+                <% if (item.size) { %><div>• Size / Dimensions: <%= item.size %></div><% } %>
+                <% if (item.shape) { %><div>• Shape: <%= item.shape %></div><% } %>
+                <% if (item.placement) { %><div>• Print Placement: <%= item.placement %></div><% } %>
+                <% if (item.mugSides) { %><div>• Print Sides: <%= item.mugSides %></div><% } %>
+                <% if (item.material) { %><div>• Finish: <%= item.material %></div><% } %>
+                <% if (item.customImageName) { %><div>• Graphic File: <%= item.customImageName %></div><% } %>
+              </div>
+            </td>
+            <td style="text-align: center; font-weight: 600;"><%= item.quantity %></td>
+            <td style="text-align: right; color: #475569;">₹<%= (item.unitPrice || 0).toLocaleString() %></td>
+            <td style="text-align: right; font-weight: 700; color: #0f172a;">₹<%= ((item.unitPrice || 0) * (item.quantity || 1)).toLocaleString() %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <!-- Totals Summary -->
+    <div class="receipt-summary-box">
+      <div class="summary-line">
+        <span>Items Subtotal:</span>
+        <span>₹<%= (order.subtotal || 0).toLocaleString() %></span>
+      </div>
+      <div class="summary-line">
+        <span>Campus Delivery Fee:</span>
+        <span><%= (order.shipping === 0) ? '₹0.00 (Free Hand Delivery)' : '₹' + order.shipping %></span>
+      </div>
+      <% if (order.couponCode) { %>
+        <div class="summary-line" style="color: #16a34a; font-weight: 600;">
+          <span>Campus Coupon (<%= order.couponCode %>):</span>
+          <span>-₹<%= order.discount || 49 %></span>
+        </div>
+      <% } %>
+      <div class="summary-line total-line">
+        <span>Net Total Paid / Due:</span>
+        <span style="color: #dc2626;">₹<%= (order.total || 0).toLocaleString() %></span>
+      </div>
+    </div>
+
+    <!-- Statutory Notice & Legal Exemption -->
+    <div class="receipt-footer-notes">
+      <p>
+        <strong>Statutory Notice:</strong> This document serves as an official Retail Sales Memo and Commercial Order Receipt. GOODYGUYS Custom Apparel &amp; Laser Studio operates as an unregistered small micro-enterprise eligible for statutory threshold exemptions under Section 22 of the Central Goods and Services Tax (CGST) Act, 2017. As an unregistered supplier within the turnover exemption limit, no Goods and Services Tax (GST) is charged, collected, or claimed on this supply.
+      </p>
+      <p style="margin-top: 6px;">
+        For questions or warranty assistance regarding damaged/defective custom merchandise, message our campus workshop helpline on WhatsApp at <strong>+91 9036969700</strong> or email <strong>goodyguys.support@gmail.com</strong>.
+      </p>
+    </div>
+
+    <div class="stamp-box">
+      <div style="font-size: 0.75rem; color: #94a3b8;">
+        Generated via GOODYGUYS Core Platform &bull; Valid without physical seal
+      </div>
+      <div class="signature-area">
+        <div class="signature-line"></div>
+        <strong>Authorized Signatory</strong><br>
+        GOODYGUYS Studio Desk
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

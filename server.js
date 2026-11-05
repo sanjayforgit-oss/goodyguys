@@ -889,6 +889,44 @@ app.get('/order-success', (req, res) => {
   });
 });
 
+// 10b. Printable Retail Order Bill & Sales Receipt (Non-GST Supply)
+app.get('/orders/:id/receipt', async (req, res) => {
+  const orderId = req.params.id;
+  let order = null;
+
+  // 1. Session lastOrder check
+  if (req.session.lastOrder && req.session.lastOrder.id === orderId) {
+    order = req.session.lastOrder;
+  }
+
+  // 2. Local memory / file check
+  if (!order) {
+    const orders = getOrders();
+    order = orders.find(o => o.id === orderId);
+  }
+
+  // 3. Cloud Firestore lookup if available
+  if (!order && fb.isFirebaseEnabled()) {
+    try {
+      const cloudOrders = await fb.getOrdersFromFirebase();
+      if (cloudOrders) {
+        order = cloudOrders.find(o => o.id === orderId);
+      }
+    } catch (e) {
+      console.warn('[Receipt Cloud Lookup Error]:', e.message);
+    }
+  }
+
+  if (!order) {
+    return res.redirect('/account');
+  }
+
+  res.render('receipt', {
+    title: `Retail Order Receipt #${order.id} | GOODYGUYS`,
+    order
+  });
+});
+
 // 11. Suggestions Board Page
 app.get('/suggest', async (req, res) => {
   let suggestions = getSuggestions();

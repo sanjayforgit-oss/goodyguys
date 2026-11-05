@@ -124,6 +124,10 @@
                   <span style="font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffffff;">
                     ₹<%= (order.total || 0).toLocaleString() %>
                   </span>
+
+                  <a href="/orders/<%= order.id %>/receipt" target="_blank" style="color: #60a5fa; font-size: 0.78rem; font-weight: 700; text-decoration: none; padding: 4px 10px; background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;">
+                    🖨️ Bill / Receipt
+                  </a>
                 </div>
               </div>
 

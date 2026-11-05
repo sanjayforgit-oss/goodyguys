@@ -110,6 +110,9 @@
           <p style="color: #94a3b8; font-size: 0.82rem; margin: 0;">Get your order proof and delivery updates directly on WhatsApp or track inside your account.</p>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="/orders/<%= order.id %>/receipt" target="_blank" class="btn" style="background: rgba(255, 23, 68, 0.15); color: #ff3366; border: 1px solid rgba(255, 23, 68, 0.3); font-size: 0.82rem; font-weight: 700; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            <span>🖨️ View / Print Bill</span>
+          </a>
           <a href="https://wa.me/919036969700?text=Hi%20GOODYGUYS,%20here%20is%20my%20Order%20ID%20<%= order.id %>%20for%20verification%20and%20receipt" target="_blank" rel="noopener" class="btn" style="background: #22c55e; color: #ffffff; font-size: 0.82rem; font-weight: 700; padding: 8px 16px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
             <span>📲 WhatsApp Receipt</span>
           </a>
