@@ -6,6 +6,7 @@ const os = require('os');
 const crypto = require('crypto');
 const multer = require('multer');
 const fb = require('./firebase');
+const mailer = require('./mailer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -870,6 +871,11 @@ app.post('/checkout', upload.single('paymentProof'), async (req, res) => {
       saveCustomerDesign(cleanEmail, itm).catch(e => console.warn(e.message));
     }
   }
+
+  // Trigger automated order confirmation & workshop alert emails
+  mailer.sendOrderConfirmationEmails(order).catch(mailErr => {
+    console.warn('[Mailer Notice]:', mailErr.message);
+  });
 
   if (!req.session.orders) req.session.orders = [];
   req.session.orders.push(order);
