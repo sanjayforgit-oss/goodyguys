@@ -2,17 +2,36 @@ const nodemailer = require('nodemailer');
 
 const GMAIL_USER = process.env.GMAIL_USER || 'goodyguys.support@gmail.com';
 const GMAIL_PASS = process.env.GMAIL_APP_PASSWORD ? process.env.GMAIL_APP_PASSWORD.replace(/\s+/g, '') : null;
+const BREVO_KEY = process.env.BREVO_SMTP_KEY ? process.env.BREVO_SMTP_KEY.trim() : null;
+const BREVO_USER = process.env.BREVO_USER || 'goodyguys.support@gmail.com';
 
-// Configure Gmail SMTP Transporter
+// Configure Transporter supporting Brevo SMTP or Gmail SMTP
 const createTransporter = () => {
-  if (!GMAIL_PASS) return null;
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: GMAIL_USER,
-      pass: GMAIL_PASS
-    }
-  });
+  // 1. Brevo SMTP Relay
+  if (BREVO_KEY) {
+    return nodemailer.createTransport({
+      host: 'smtp-relay.brevo.com',
+      port: 587,
+      secure: false, // TLS via STARTTLS on port 587
+      auth: {
+        user: BREVO_USER,
+        pass: BREVO_KEY
+      }
+    });
+  }
+
+  // 2. Gmail SMTP
+  if (GMAIL_PASS) {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: GMAIL_USER,
+        pass: GMAIL_PASS
+      }
+    });
+  }
+
+  return null;
 };
 
 /**
@@ -246,14 +265,16 @@ const buildWorkshopAlertHtml = (order) => {
 const sendOrderConfirmationEmails = async (order) => {
   const transporter = createTransporter();
   if (!transporter) {
-    console.log('[Mailer] GMAIL_APP_PASSWORD not set in environment. Skipping live email dispatch.');
-    return { success: false, reason: 'GMAIL_APP_PASSWORD missing' };
+    console.log('[Mailer] Email credentials not set in environment (BREVO_SMTP_KEY or GMAIL_APP_PASSWORD missing). Skipping live email dispatch.');
+    return { success: false, reason: 'Credentials missing' };
   }
+
+  const senderEmail = BREVO_KEY ? (process.env.BREVO_SENDER_EMAIL || BREVO_USER) : GMAIL_USER;
 
   try {
     // 1. Email to Customer
     const customerMailPromise = transporter.sendMail({
-      from: `"GOODYGUYS Studio" <${GMAIL_USER}>`,
+      from: `"GOODYGUYS Studio" <${senderEmail}>`,
       to: order.customer.email,
       subject: `Order Confirmed #${order.id} | GOODYGUYS Custom Studio`,
       html: buildCustomerEmailHtml(order)
@@ -261,7 +282,7 @@ const sendOrderConfirmationEmails = async (order) => {
 
     // 2. Alert to Studio Admin
     const adminMailPromise = transporter.sendMail({
-      from: `"GOODYGUYS Store" <${GMAIL_USER}>`,
+      from: `"GOODYGUYS Store" <${senderEmail}>`,
       to: GMAIL_USER,
       subject: `⚡ [NEW ORDER] #${order.id} - ${order.customer.name} (₹${order.total})`,
       html: buildWorkshopAlertHtml(order)
