@@ -82,7 +82,7 @@
         <% } else { %>
           <div class="products-grid">
             <% products.forEach(product => { %>
-              <div class="product-card tilt-card">
+              <div class="product-card tilt-card" onclick="window.location.href='/products/<%= product.id %>'" style="cursor: pointer;" title="Customize <%= product.name %>">
                 <div class="product-image">
                   <img src="<%= product.image %>" alt="<%= product.name %>" loading="lazy">
                   <% if (product.badge) { %>
@@ -107,13 +107,13 @@
                       <span class="price-note">(1-3 sides ₹150–₹200)</span>
                     <% } else if (product.customizerType === 'desk-plaque') { %>
                       <span class="price-note">(Stand Included • ₹250 / ₹400 / ₹700)</span>
-                    <% } else if (product.customizerType === 'engraved-lamp') { %>
+                    <% } else if (product.customizerType === 'engraved-lamp' || product.customizerType === 'name-lamp') { %>
                       <span class="price-note">(Warm Wood / RGB ₹300–₹350)</span>
                     <% } else if (product.category === 'keychains') { %>
                       <span class="price-note">(Keyring Included • ₹100)</span>
                     <% } %>
                   </div>
-                  <a href="/products/<%= product.id %>" class="btn-catalog-action">
+                  <a href="/products/<%= product.id %>" class="btn-catalog-action" onclick="event.stopPropagation()">
                     <span><%- product.customizerType === 'tshirt' ? '🎨 Customize T-Shirt' : '🎨 Customize & Buy' %></span>
                     <span class="arrow-icon">&rarr;</span>
                   </a>

@@ -1,9 +1,11 @@
-const CACHE_NAME = 'goodyguys-cache-v1';
+const CACHE_NAME = 'goodyguys-cache-v2';
 
 // Static Shell Assets to pre-cache on client device for JAMstack local execution
 const PRECACHE_ASSETS = [
   '/',
   '/css/style.css',
+  '/fonts/bebas-neue.woff2',
+  '/fonts/permanent-marker.woff2',
   '/js/app.js',
   '/images/real-tshirt.jpg',
   '/images/real-mug.jpg',

@@ -299,14 +299,50 @@
   },
   {
     "id": 9,
-    "name": "Personalised 3D Illusion LED Lamp",
+    "name": "Personalised Photo 3D Illusion LED Lamp",
     "category": "desk-plaques-lamps",
     "customizerType": "engraved-lamp",
-    "description": "Illuminated 3D illusion acrylic night lamp. Laser engraved with your names, special date, or couple portrait, placed on a natural wooden LED base creating a warm romantic glow.",
+    "description": "Custom laser-engraved acrylic photo night lamp. Send us your couple portrait, family photo, or pet picture — we convert it into permanent laser line art on 4mm optical acrylic. Solid wooden LED base creates a warm romantic glow. Optional custom text/names can be added below the photo.",
     "price": 300,
     "originalPrice": 599,
     "image": "/images/real-lamp.jpg",
-    "badge": "LED Glow",
+    "badge": "Photo Glow",
+    "active": true,
+    "requiresImage": true,
+    "requiresText": false,
+    "lampBases": [
+      {
+        "id": "wooden-warm",
+        "name": "Warm Yellow Wooden LED Base",
+        "price": 300,
+        "enabled": true
+      },
+      {
+        "id": "rgb-touch",
+        "name": "RGB 7-Color Touch Base",
+        "price": 350,
+        "enabled": true
+      }
+    ],
+    "customizable": true,
+    "features": [
+      "Photo Upload Mandatory: We convert your photo to laser line art",
+      "Precision Laser-Etched 4mm Clear Cast Acrylic",
+      "Solid Beechwood Base with Warm LED Lights (or RGB 7-Color Touch Base)",
+      "Optional Custom Names / Date Engraved Below Photo",
+      "USB Powered with On/Off Inline Switch"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Personalised Name Engraved LED Lamp",
+    "category": "desk-plaques-lamps",
+    "customizerType": "name-lamp",
+    "description": "Custom illuminated acrylic name night lamp. Laser engraved with your custom name, couple names, or special date in beautiful designer typography across crystal-clear optical acrylic. Includes solid wood LED base with warm ambient glow. No photo required.",
+    "price": 300,
+    "originalPrice": 599,
+    "image": "/images/real-lamp.jpg",
+    "badge": "Name Glow",
     "active": true,
     "requiresImage": false,
     "requiresText": true,
@@ -324,13 +360,22 @@
         "enabled": true
       }
     ],
+    "fonts": [
+      "Dancing Script",
+      "Bebas Neue",
+      "Space Grotesk",
+      "Playfair Display",
+      "Permanent Marker",
+      "Courier Prime",
+      "Pacifico"
+    ],
     "customizable": true,
     "features": [
-      "Precision Laser-Etched 4mm Acrylic Plate",
-      "Solid Beechwood Base with Warm LED Lights",
-      "USB Powered with On/Off Inline Switch",
-      "Long-Life 50,000 Hour Energy Efficient LEDs",
-      "Optional Photo-to-Line-Art Laser Engraving"
+      "Mandatory Custom Name / Date Engraving (No photo upload needed)",
+      "Choice of 7 Designer Typography Styles",
+      "Precision Laser-Etched 4mm Crystal Clear Acrylic Plate",
+      "Solid Beechwood Base with Warm Ambient LED Lights",
+      "USB Powered with Inline On/Off Switch"
     ]
   }
 ]

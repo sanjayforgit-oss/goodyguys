@@ -401,10 +401,17 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public'), {
-  maxAge: '1d',
+  maxAge: process.env.NODE_ENV === 'production' ? '1d' : 0,
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.css') || filePath.endsWith('.js') || filePath.endsWith('.jpg') || filePath.endsWith('.png') || filePath.endsWith('.svg')) {
-      res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    if (process.env.NODE_ENV === 'production') {
+      if (filePath.endsWith('.css') || filePath.endsWith('.js') || filePath.endsWith('.jpg') || filePath.endsWith('.png') || filePath.endsWith('.svg')) {
+        res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+      }
+    } else {
+      // Local development: completely disable cache so all changes appear instantly
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
     }
   }
 }));
@@ -554,7 +561,10 @@ app.get('/products/:id', (req, res) => {
 app.post('/cart/add', upload.fields([
   { name: 'customImage', maxCount: 1 },
   { name: 'customImageFront', maxCount: 1 },
-  { name: 'customImageBack', maxCount: 1 }
+  { name: 'customImageBack', maxCount: 1 },
+  { name: 'customImageSide1', maxCount: 1 },
+  { name: 'customImageSide2', maxCount: 1 },
+  { name: 'customImageSide3', maxCount: 1 }
 ]), (req, res) => {
   const {
     productId,
@@ -562,6 +572,7 @@ app.post('/cart/add', upload.fields([
     customText,
     placement,
     mugSides,
+    mugUploadType,
     lampBase,
     material,
     fontStyle,
@@ -590,7 +601,7 @@ app.post('/cart/add', upload.fields([
     if (mugSides && mugSides.includes('3 Sides')) unitPrice = 200;
     else if (mugSides && mugSides.includes('2 Sides')) unitPrice = 175;
     else unitPrice = 150;
-  } else if (product.customizerType === 'engraved-lamp') {
+  } else if (product.customizerType === 'engraved-lamp' || product.customizerType === 'name-lamp') {
     if (lampBase && lampBase.includes('RGB')) unitPrice = 350;
     else unitPrice = 300;
   } else if (product.customizerType === 'desk-plaque') {
@@ -618,13 +629,37 @@ app.post('/cart/add', upload.fields([
   // Handle uploaded images safely
   let customImageName = '';
   let customImagePath = '';
+  let customImagesList = [];
+
   if (req.files) {
     if (req.files.customImage && req.files.customImage[0]) {
       customImageName = req.files.customImage[0].originalname;
       customImagePath = '/uploads/' + req.files.customImage[0].filename;
-    } else if (req.files.customImageFront && req.files.customImageFront[0]) {
+      customImagesList.push({ label: 'Main Artwork', name: customImageName, path: customImagePath });
+    }
+    if (req.files.customImageFront && req.files.customImageFront[0]) {
+      const fn = req.files.customImageFront[0].filename;
       customImageName = req.files.customImageFront[0].originalname;
-      customImagePath = '/uploads/' + req.files.customImageFront[0].filename;
+      customImagePath = '/uploads/' + fn;
+      customImagesList.push({ label: 'Front Print', name: req.files.customImageFront[0].originalname, path: '/uploads/' + fn });
+    }
+    if (req.files.customImageBack && req.files.customImageBack[0]) {
+      const fn = req.files.customImageBack[0].filename;
+      if (!customImagePath) customImagePath = '/uploads/' + fn;
+      customImagesList.push({ label: 'Back Print', name: req.files.customImageBack[0].originalname, path: '/uploads/' + fn });
+    }
+    if (req.files.customImageSide1 && req.files.customImageSide1[0]) {
+      const fn = req.files.customImageSide1[0].filename;
+      if (!customImagePath) customImagePath = '/uploads/' + fn;
+      customImagesList.push({ label: 'Side 1 (Left)', name: req.files.customImageSide1[0].originalname, path: '/uploads/' + fn });
+    }
+    if (req.files.customImageSide2 && req.files.customImageSide2[0]) {
+      const fn = req.files.customImageSide2[0].filename;
+      customImagesList.push({ label: 'Side 2 (Center)', name: req.files.customImageSide2[0].originalname, path: '/uploads/' + fn });
+    }
+    if (req.files.customImageSide3 && req.files.customImageSide3[0]) {
+      const fn = req.files.customImageSide3[0].filename;
+      customImagesList.push({ label: 'Side 3 (Right)', name: req.files.customImageSide3[0].originalname, path: '/uploads/' + fn });
     }
   }
 
@@ -642,6 +677,7 @@ app.post('/cart/add', upload.fields([
     customText: (customText || '').trim(),
     placement: placement || '',
     mugSides: mugSides || '',
+    mugUploadType: mugUploadType || '',
     lampBase: lampBase || '',
     material: material || '',
     fontStyle: fontStyle || '',
@@ -650,6 +686,7 @@ app.post('/cart/add', upload.fields([
     shape: shape || '',
     customImageName,
     customImagePath,
+    customImagesList,
     addedAt: new Date().toISOString()
   };
 
@@ -733,7 +770,7 @@ app.get('/checkout', (req, res) => {
     cartItems,
     subtotal,
     error: req.query.error || null,
-    upiId: process.env.STORE_UPI_ID || '9036969700@upi'
+    upiId: process.env.STORE_UPI_ID || 'bbsanjay6@okaxis'
   });
 });
 

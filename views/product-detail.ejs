@@ -14,23 +14,41 @@
       <div class="product-customizer-preview-box">
         <div class="preview-stage-container" id="previewStage">
           <!-- Main Product Illustration/Mockup -->
-          <img src="<%= product.image %>" alt="<%= product.name %>" class="preview-base-img" id="baseMockupImg">
-          
-          <!-- Clean Product Image Display (No awkward yellow overlay covering the photo) -->
-
-          <!-- Live Overlay: For T-Shirt Slogan Preview -->
-          <% if (product.customizerType === 'tshirt') { %>
-            <div class="live-tshirt-slogan-overlay" id="tshirtSloganOverlay" style="display: none;">
-              <span class="tshirt-live-text" id="liveTshirtSlogan">YOUR SLOGAN</span>
+          <% if (product.customizerType === 'mug') { %>
+            <!-- Interactive 3D Ceramic Mug Studio Canvas -->
+            <div class="interactive-mug-stage" id="mugStage3D">
+              <div class="mug-3d-scene">
+                <div class="mug-3d-cup" id="mug3dCup">
+                  <div class="mug-rim-top"></div>
+                  <div class="mug-handle"></div>
+                  <div class="mug-body-cylinder" id="mugCylinderBody">
+                    <div class="mug-artwork-slot mug-slot-left" id="mugSlotLeft" style="display: none;">
+                      <img id="mugLiveImgLeft" src="" alt="Left Artwork" style="display:none;">
+                      <span class="slot-placeholder" id="placeholderLeft">Side 1 (Left)</span>
+                    </div>
+                    <div class="mug-artwork-slot mug-slot-center" id="mugSlotCenter">
+                      <img id="mugLiveImgCenter" src="" alt="Center Artwork" style="display:none;">
+                      <span class="slot-placeholder" id="placeholderCenter">Your Design Here</span>
+                    </div>
+                    <div class="mug-artwork-slot mug-slot-right" id="mugSlotRight" style="display: none;">
+                      <img id="mugLiveImgRight" src="" alt="Right Artwork" style="display:none;">
+                      <span class="slot-placeholder" id="placeholderRight">Side 3 (Right)</span>
+                    </div>
+                    <div class="mug-sheen-overlay"></div>
+                  </div>
+                  <div class="mug-base-shadow"></div>
+                </div>
+              </div>
             </div>
+          <% } else { %>
+            <img src="<%= product.image %>" alt="<%= product.name %>" class="preview-base-img" id="baseMockupImg">
           <% } %>
+          
+          <!-- Clean Product Image Display (No floating text overlays on top of the product photo) -->
 
           <!-- Live Overlay: For Lamp with Toggleable Glow -->
-          <% if (product.customizerType === 'engraved-lamp') { %>
+          <% if (product.customizerType === 'engraved-lamp' || product.customizerType === 'name-lamp') { %>
             <div class="live-lamp-glow" id="lampGlowEffect"></div>
-            <div class="live-lamp-overlay" id="lampTextOverlay">
-              <span class="lamp-name" id="liveLampText">Custom Name</span>
-            </div>
           <% } %>
 
           <!-- Live Overlay: Uploaded Image Preview Thumbnail -->
@@ -46,7 +64,18 @@
 
         <!-- Interactive Preview Controls -->
         <div class="preview-controls-bar">
-          <% if (product.customizerType === 'engraved-lamp') { %>
+          <% if (product.customizerType === 'mug') { %>
+            <div class="mug-view-toolbar">
+              <span class="toolbar-label">🔄 Rotate 3D Mug View:</span>
+              <div class="btn-group-sm">
+                <button type="button" class="btn-view-pill active" id="btnMugFront" onclick="rotateMugView('front')">● Front</button>
+                <button type="button" class="btn-view-pill" id="btnMugLeft" onclick="rotateMugView('left')">⟲ Left Side</button>
+                <button type="button" class="btn-view-pill" id="btnMugRight" onclick="rotateMugView('right')">⟳ Right Side</button>
+                <button type="button" class="btn-view-pill" id="btnMugSpin" onclick="toggleMugAutoSpin()">💫 Auto Spin</button>
+              </div>
+            </div>
+          <% } %>
+          <% if (product.customizerType === 'engraved-lamp' || product.customizerType === 'name-lamp') { %>
             <button type="button" class="btn btn-sm btn-outline" id="toggleLampLightBtn">💡 Toggle Lamp Light (On/Off)</button>
           <% } %>
           <% if (product.customizerType === 'tshirt') { %>
@@ -239,28 +268,106 @@
               </div>
             </div>
 
-            <!-- Image Upload for Mug -->
+            <!-- Mug Artwork Upload Mode (1 Image vs Multi-Images) -->
             <div class="customizer-card-section">
-              <label class="section-label-bold">2. Upload Photo or Design <span class="req-star">*</span></label>
-              <div class="file-dropzone">
-                <input type="file" id="mugFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Mug')">
-                <label for="mugFile" class="dropzone-label">
-                  <span class="upload-icon">📸</span>
-                  <span class="upload-title" id="mugFileLabel">Upload Photo / Artwork for Mug</span>
-                  <span class="upload-hint">PNG, JPG, or SVG with high clarity</span>
+              <div id="mugUploadModeSection" style="margin-bottom: 14px; display: none;">
+                <label class="section-label-bold">2. How would you like to provide your design?</label>
+                <div class="radio-card-grid" id="mugModeRadioGrid">
+                  <label class="radio-card active" id="modeCardSingle">
+                    <input type="radio" name="mugUploadType" value="single" checked onchange="toggleMugUploadMode('single')">
+                    <div class="card-radio-content">
+                      <strong id="modeTitleSingle">1 Image</strong>
+                      <span class="card-price" id="modeDescSingle" style="color: #94a3b8; font-size: 0.76rem;">Fit across sides</span>
+                    </div>
+                  </label>
+                  <label class="radio-card" id="modeCardMulti">
+                    <input type="radio" name="mugUploadType" value="multi" onchange="toggleMugUploadMode('multi')">
+                    <div class="card-radio-content">
+                      <strong id="modeTitleMulti">Separate Images</strong>
+                      <span class="card-price" id="modeDescMulti" style="color: #94a3b8; font-size: 0.76rem;">Different photo per side</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- SINGLE / PANORAMIC DROPZONE -->
+              <div id="mugSingleDropzoneWrap">
+                <label class="section-label-bold" id="mugSingleLabel">Upload Photo / Artwork for Mug <span class="req-star">*</span></label>
+                <div class="file-dropzone">
+                  <input type="file" id="mugFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleMugSingleUpload(event)">
+                  <label for="mugFile" class="dropzone-label">
+                    <span class="upload-icon">📸</span>
+                    <span class="upload-title" id="mugFileLabel">Click or Drag &amp; Drop Mug Graphic</span>
+                    <span class="upload-hint" id="mugFileHint">High clarity PNG, JPG, or SVG</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- MULTI-IMAGE DROPZONES (For 2 or 3 Separate Sides) -->
+              <div id="mugMultiDropzonesWrap" style="display: none;">
+                <label class="section-label-bold" id="mugMultiLabel">Upload Separate Photos for Each Side <span class="req-star">*</span></label>
+                <div class="mug-multi-upload-grid" id="mugDropzonesGrid">
+                  <!-- Side 1 (Left) -->
+                  <div class="mug-slot-dropzone" id="dzSlot1" onclick="document.getElementById('mugFileSide1').click()">
+                    <input type="file" id="mugFileSide1" name="customImageSide1" accept="image/*" class="file-input-hidden" onchange="handleMugSlotUpload(event, 'left', 'dzSlot1')">
+                    <span class="upload-icon" style="font-size: 1.5rem;">📸</span>
+                    <span class="mug-slot-title">Side 1 (Left)</span>
+                    <span class="mug-slot-desc" id="lblSlot1">Click to Upload</span>
+                  </div>
+
+                  <!-- Side 2 (Center / Front) -->
+                  <div class="mug-slot-dropzone" id="dzSlot2" onclick="document.getElementById('mugFileSide2').click()">
+                    <input type="file" id="mugFileSide2" name="customImageSide2" accept="image/*" class="file-input-hidden" onchange="handleMugSlotUpload(event, 'center', 'dzSlot2')">
+                    <span class="upload-icon" style="font-size: 1.5rem;">📸</span>
+                    <span class="mug-slot-title">Side 2 (Front)</span>
+                    <span class="mug-slot-desc" id="lblSlot2">Click to Upload</span>
+                  </div>
+
+                  <!-- Side 3 (Right - visible on 3 sides) -->
+                  <div class="mug-slot-dropzone" id="dzSlot3" onclick="document.getElementById('mugFileSide3').click()">
+                    <input type="file" id="mugFileSide3" name="customImageSide3" accept="image/*" class="file-input-hidden" onchange="handleMugSlotUpload(event, 'right', 'dzSlot3')">
+                    <span class="upload-icon" style="font-size: 1.5rem;">📸</span>
+                    <span class="mug-slot-title">Side 3 (Right)</span>
+                    <span class="mug-slot-desc" id="lblSlot3">Click to Upload</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Artwork Alignment on Cup (Paragraph 23: give options to change location of each image) -->
+            <div class="customizer-card-section">
+              <label class="section-label-bold">3. Align Artwork Location on Cup</label>
+              <div class="radio-card-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <label class="radio-card active" onclick="setMugArtworkAlign('center')">
+                  <input type="radio" name="placement" value="Center Aligned" checked>
+                  <div class="card-radio-content">
+                    <strong>Front Center</strong>
+                  </div>
+                </label>
+                <label class="radio-card" onclick="setMugArtworkAlign('left')">
+                  <input type="radio" name="placement" value="Near Left Handle">
+                  <div class="card-radio-content">
+                    <strong>Near Handle</strong>
+                  </div>
+                </label>
+                <label class="radio-card" onclick="setMugArtworkAlign('right')">
+                  <input type="radio" name="placement" value="Right Profile">
+                  <div class="card-radio-content">
+                    <strong>Right Profile</strong>
+                  </div>
                 </label>
               </div>
             </div>
 
             <!-- Optional Custom Text on Mug -->
             <div class="customizer-card-section">
-              <label class="section-label-bold" for="mugCustomText">3. Optional Text / Quote on Mug</label>
+              <label class="section-label-bold" for="mugCustomText">4. Optional Text / Quote on Mug</label>
               <input type="text" id="mugCustomText" name="customText" placeholder="e.g. Happy Birthday Dad! / World's Best Friend" class="form-input">
             </div>
 
             <!-- Ceramic Color -->
             <div class="customizer-card-section">
-              <label class="section-label-bold">4. Mug Style</label>
+              <label class="section-label-bold">5. Mug Style</label>
               <div class="color-options">
                 <% product.colors.forEach((col, idx) => { %>
                   <label class="color-option">
@@ -545,7 +652,7 @@
             </div>
           <% } %>
 
-          <!-- 9. PERSONALISED ENGRAVED LAMP -->
+          <!-- 9. PERSONALISED PHOTO ENGRAVED LAMP -->
           <% if (product.customizerType === 'engraved-lamp') { %>
             <div class="customizer-card-section">
               <label class="section-label-bold">1. Select LED Base Type <span class="req-star">*</span></label>
@@ -568,20 +675,64 @@
             </div>
 
             <div class="customizer-card-section">
-              <label class="section-label-bold" for="lampTextInput">2. Custom Names / Special Date to Engrave <span class="req-star">*</span></label>
-              <input type="text" id="lampTextInput" name="customText" required placeholder="e.g. Arun &amp; Kavya • 24.10.2026" class="form-input" oninput="updateLampText(this.value)">
+              <label class="section-label-bold">2. Upload Photo for Laser Line-Art Engraving <span class="req-star">*</span></label>
+              <div class="file-dropzone">
+                <input type="file" id="lampPhotoFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Lamp')" required>
+                <label for="lampPhotoFile" class="dropzone-label">
+                  <span class="upload-icon">💡</span>
+                  <span class="upload-title" id="lampPhotoLabel">Click to Upload Couple / Portrait Photo</span>
+                  <span class="upload-hint">Our studio transforms your photo into permanent laser line art</span>
+                </label>
+              </div>
             </div>
 
             <div class="customizer-card-section">
-              <label class="section-label-bold">3. Optional Photo for Line-Art Engraving</label>
-              <div class="file-dropzone">
-                <input type="file" id="lampPhotoFile" name="customImage" accept="image/*" class="file-input-hidden" onchange="handleImageUpload(event, 'Lamp')">
-                <label for="lampPhotoFile" class="dropzone-label">
-                  <span class="upload-icon">💡</span>
-                  <span class="upload-title" id="lampPhotoLabel">Upload Couple / Portrait Photo</span>
-                  <span class="upload-hint">We convert your photo to laser line art for engraving</span>
+              <label class="section-label-bold" for="lampTextInput">3. Optional Custom Names / Special Date (Engraved Below Photo)</label>
+              <input type="text" id="lampTextInput" name="customText" placeholder="e.g. Arun &amp; Kavya • 24.10.2026 (Optional)" class="form-input">
+            </div>
+          <% } %>
+
+          <!-- 10. PERSONALISED NAME ENGRAVED LAMP (Name Only - No Image Required) -->
+          <% if (product.customizerType === 'name-lamp') { %>
+            <div class="customizer-card-section">
+              <label class="section-label-bold">1. Select LED Base Type <span class="req-star">*</span></label>
+              <div class="radio-card-grid">
+                <label class="radio-card active">
+                  <input type="radio" name="lampBase" value="Warm Yellow Wooden LED Base" data-price="300" checked onchange="updateLampBase(this)">
+                  <div class="card-radio-content">
+                    <strong>Warm Yellow Wooden Base</strong>
+                    <span class="card-price">₹300</span>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="lampBase" value="RGB 7-Color Touch Base" data-price="350" onchange="updateLampBase(this)">
+                  <div class="card-radio-content">
+                    <strong>Multicolor RGB Touch Base</strong>
+                    <span class="card-price">₹350 (+₹50)</span>
+                  </div>
                 </label>
               </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="nameLampFontSelect">2. Choose Typography / Font Style</label>
+              <div class="font-dropdown-wrapper">
+                <select id="nameLampFontSelect" name="fontStyle" class="form-input form-input-select font-toolbar-select" onchange="applyNameLampFont(this.value)">
+                  <option value="Dancing Script" style="font-family: 'Dancing Script', cursive;" selected>✍️ Dancing Script (Calligraphy Cursive)</option>
+                  <option value="Bebas Neue" style="font-family: 'Bebas Neue', sans-serif;">💥 Bebas Neue (Bold Streetwear Block)</option>
+                  <option value="Space Grotesk" style="font-family: 'Space Grotesk', sans-serif;">⚡ Space Grotesk (Modern Tech Sans)</option>
+                  <option value="Playfair Display" style="font-family: 'Playfair Display', serif;">✨ Playfair Display (Luxury Serif)</option>
+                  <option value="Permanent Marker" style="font-family: 'Permanent Marker', cursive;">🎨 Permanent Marker (Urban Brush)</option>
+                  <option value="Courier Prime" style="font-family: 'Courier Prime', monospace;">📟 Courier Prime (Typewriter Monospace)</option>
+                  <option value="Pacifico" style="font-family: 'Pacifico', cursive;">🌊 Pacifico (Smooth Flow)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="customizer-card-section">
+              <label class="section-label-bold" for="nameLampTextInput">3. Custom Name or Special Date to Engrave <span class="req-star">*</span></label>
+              <input type="text" id="nameLampTextInput" name="customText" required placeholder="e.g. SANJAY &bull; 07 &bull; ARUN &amp; KAVYA" class="form-input font-preview-input" oninput="updateNameLampText(this.value)" style="font-family: 'Dancing Script', cursive; font-size: 1.25rem;">
+              <span class="field-hint">💡 Type your name above — it will be laser engraved with optical precision into the 4mm acrylic plaque!</span>
             </div>
           <% } %>
 
@@ -630,7 +781,7 @@
     </div>
     <div class="products-grid">
       <% related.forEach(rel => { %>
-        <div class="product-card tilt-card">
+        <div class="product-card tilt-card" onclick="window.location.href='/products/<%= rel.id %>'" style="cursor: pointer;" title="Customize <%= rel.name %>">
           <div class="product-image">
             <img src="<%= rel.image %>" alt="<%= rel.name %>" loading="lazy">
             <% if (rel.badge) { %><span class="badge"><%= rel.badge %></span><% } %>
@@ -641,7 +792,7 @@
             <div class="product-price">
               <span class="current">₹<%= rel.price.toLocaleString() %></span>
             </div>
-            <a href="/products/<%= rel.id %>" class="btn btn-outline btn-block" style="margin-top: 10px;">Customize →</a>
+            <a href="/products/<%= rel.id %>" class="btn btn-outline btn-block" style="margin-top: 10px;" onclick="event.stopPropagation()">Customize →</a>
           </div>
         </div>
       <% }) %>
@@ -722,13 +873,184 @@
     }
   }
 
-  // Mug Sides Logic
+  // 3D Mug Customizer State & Controller
+  let mugCurrentSides = '1 Side Print';
+
+  function rotateMugView(direction) {
+    const cup = document.getElementById('mug3dCup');
+    if (!cup) return;
+    cup.classList.remove('auto-spinning');
+    cup.classList.remove('view-left', 'view-right');
+
+    document.querySelectorAll('.mug-view-toolbar .btn-view-pill').forEach(b => b.classList.remove('active'));
+
+    if (direction === 'left') {
+      cup.classList.add('view-left');
+      document.getElementById('btnMugLeft')?.classList.add('active');
+    } else if (direction === 'right') {
+      cup.classList.add('view-right');
+      document.getElementById('btnMugRight')?.classList.add('active');
+    } else {
+      document.getElementById('btnMugFront')?.classList.add('active');
+    }
+  }
+
+  function toggleMugAutoSpin() {
+    const cup = document.getElementById('mug3dCup');
+    if (!cup) return;
+    const btn = document.getElementById('btnMugSpin');
+    if (cup.classList.contains('auto-spinning')) {
+      cup.classList.remove('auto-spinning');
+      btn?.classList.remove('active');
+    } else {
+      cup.classList.remove('view-left', 'view-right');
+      cup.classList.add('auto-spinning');
+      document.querySelectorAll('.mug-view-toolbar .btn-view-pill').forEach(b => b.classList.remove('active'));
+      btn?.classList.add('active');
+    }
+  }
+
+  function setMugArtworkAlign(align) {
+    const slotCenter = document.getElementById('mugSlotCenter');
+    if (!slotCenter) return;
+    if (align === 'left') {
+      slotCenter.style.justifyContent = 'flex-start';
+      rotateMugView('left');
+    } else if (align === 'right') {
+      slotCenter.style.justifyContent = 'flex-end';
+      rotateMugView('right');
+    } else {
+      slotCenter.style.justifyContent = 'center';
+      rotateMugView('front');
+    }
+  }
+
   function updateMugSides(radio) {
-    document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
-    radio.closest('.radio-card').classList.add('active');
+    document.querySelectorAll('input[name="mugSides"]').forEach(r => r.closest('.radio-card')?.classList.remove('active'));
+    radio.closest('.radio-card')?.classList.add('active');
     const price = parseInt(radio.getAttribute('data-price')) || 150;
     currentUnitPrice = price;
     recalculateFinalPrice();
+
+    mugCurrentSides = radio.value;
+    const modeSection = document.getElementById('mugUploadModeSection');
+    const modeTitleSingle = document.getElementById('modeTitleSingle');
+    const modeDescSingle = document.getElementById('modeDescSingle');
+    const modeTitleMulti = document.getElementById('modeTitleMulti');
+    const modeDescMulti = document.getElementById('modeDescMulti');
+    const slot3 = document.getElementById('dzSlot3');
+
+    // 3D Visual Slots
+    const visualSlotLeft = document.getElementById('mugSlotLeft');
+    const visualSlotRight = document.getElementById('mugSlotRight');
+
+    if (mugCurrentSides.includes('1 Side')) {
+      if (modeSection) modeSection.style.display = 'none';
+      toggleMugUploadMode('single');
+      if (visualSlotLeft) visualSlotLeft.style.display = 'none';
+      if (visualSlotRight) visualSlotRight.style.display = 'none';
+      const singleLbl = document.getElementById('mugSingleLabel');
+      if (singleLbl) singleLbl.innerHTML = 'Upload Photo / Artwork for Mug (1 Side) <span class="req-star">*</span>';
+    } else if (mugCurrentSides.includes('2 Sides')) {
+      if (modeSection) modeSection.style.display = 'block';
+      if (modeTitleSingle) modeTitleSingle.textContent = '1 Image';
+      if (modeDescSingle) modeDescSingle.textContent = 'Print same photo on both sides';
+      if (modeTitleMulti) modeTitleMulti.textContent = '2 Separate Images';
+      if (modeDescMulti) modeDescMulti.textContent = 'Side A (Front) & Side B (Back)';
+      if (slot3) slot3.style.display = 'none';
+      if (visualSlotLeft) visualSlotLeft.style.display = 'none';
+      if (visualSlotRight) visualSlotRight.style.display = 'flex';
+    } else if (mugCurrentSides.includes('3 Sides')) {
+      if (modeSection) modeSection.style.display = 'block';
+      if (modeTitleSingle) modeTitleSingle.textContent = '1 Panoramic Wrap Image';
+      if (modeDescSingle) modeDescSingle.textContent = 'Wide image (20x9cm) wrapped around';
+      if (modeTitleMulti) modeTitleMulti.textContent = '3 Separate Images';
+      if (modeDescMulti) modeDescMulti.textContent = 'Left, Center, and Right panels';
+      if (slot3) slot3.style.display = 'block';
+      if (visualSlotLeft) visualSlotLeft.style.display = 'flex';
+      if (visualSlotRight) visualSlotRight.style.display = 'flex';
+    }
+  }
+
+  function toggleMugUploadMode(mode) {
+    const singleWrap = document.getElementById('mugSingleDropzoneWrap');
+    const multiWrap = document.getElementById('mugMultiDropzonesWrap');
+    const cardSingle = document.getElementById('modeCardSingle');
+    const cardMulti = document.getElementById('modeCardMulti');
+
+    if (mode === 'multi') {
+      if (singleWrap) singleWrap.style.display = 'none';
+      if (multiWrap) multiWrap.style.display = 'block';
+      cardMulti?.classList.add('active');
+      cardSingle?.classList.remove('active');
+      const radio = document.querySelector('input[name="mugUploadType"][value="multi"]');
+      if (radio) radio.checked = true;
+    } else {
+      if (singleWrap) singleWrap.style.display = 'block';
+      if (multiWrap) multiWrap.style.display = 'none';
+      cardSingle?.classList.add('active');
+      cardMulti?.classList.remove('active');
+      const radio = document.querySelector('input[name="mugUploadType"][value="single"]');
+      if (radio) radio.checked = true;
+    }
+  }
+
+  function handleMugSingleUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const src = evt.target.result;
+      const centerImg = document.getElementById('mugLiveImgCenter');
+      const placeholder = document.getElementById('placeholderCenter');
+      if (centerImg) {
+        centerImg.src = src;
+        centerImg.style.display = 'block';
+      }
+      if (placeholder) placeholder.style.display = 'none';
+
+      const lbl = document.getElementById('mugFileLabel');
+      if (lbl) lbl.textContent = '✓ ' + file.name;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleMugSlotUpload(e, slot, dzId) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      const src = evt.target.result;
+      if (slot === 'left') {
+        const img = document.getElementById('mugLiveImgLeft');
+        const ph = document.getElementById('placeholderLeft');
+        if (img) { img.src = src; img.style.display = 'block'; }
+        if (ph) ph.style.display = 'none';
+        const lbl = document.getElementById('lblSlot1');
+        if (lbl) lbl.textContent = '✓ ' + file.name;
+        document.getElementById('dzSlot1')?.classList.add('has-file');
+        rotateMugView('left');
+      } else if (slot === 'center') {
+        const img = document.getElementById('mugLiveImgCenter');
+        const ph = document.getElementById('placeholderCenter');
+        if (img) { img.src = src; img.style.display = 'block'; }
+        if (ph) ph.style.display = 'none';
+        const lbl = document.getElementById('lblSlot2');
+        if (lbl) lbl.textContent = '✓ ' + file.name;
+        document.getElementById('dzSlot2')?.classList.add('has-file');
+        rotateMugView('front');
+      } else if (slot === 'right') {
+        const img = document.getElementById('mugLiveImgRight');
+        const ph = document.getElementById('placeholderRight');
+        if (img) { img.src = src; img.style.display = 'block'; }
+        if (ph) ph.style.display = 'none';
+        const lbl = document.getElementById('lblSlot3');
+        if (lbl) lbl.textContent = '✓ ' + file.name;
+        document.getElementById('dzSlot3')?.classList.add('has-file');
+        rotateMugView('right');
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
   // Lamp Base Logic
@@ -857,6 +1179,21 @@
     }
     if (input) {
       input.style.fontFamily = `'${font}', cursive, sans-serif`;
+    }
+  }
+
+  function applyNameLampFont(font) {
+    const input = document.getElementById('nameLampTextInput');
+    if (input) {
+      input.style.fontFamily = `'${font}', cursive, sans-serif`;
+    }
+  }
+
+  function updateNameLampText(val) {
+    const input = document.getElementById('nameLampTextInput');
+    const fontSelect = document.getElementById('nameLampFontSelect');
+    if (input && fontSelect) {
+      input.style.fontFamily = `'${fontSelect.value}', cursive, sans-serif`;
     }
   }
 

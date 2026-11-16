@@ -19,206 +19,252 @@
           </div>
         <% } %>
 
-        <!-- 1. Customer Information -->
-        <div class="checkout-section">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <h2 style="margin: 0;">1. Contact Information</h2>
-            <% if (typeof customer !== 'undefined' && customer) { %>
-              <span style="font-size: 0.8rem; color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.25); padding: 3px 10px; border-radius: 999px;">
-                ✓ Signed in as <%= customer.name %>
+        <!-- Multi-Step Checkout Progress Indicator -->
+        <div class="checkout-progress-bar">
+          <div class="progress-step-item active" id="progStep1">
+            <span class="step-bubble">1</span>
+            <span>1. Delivery &amp; Contact</span>
+          </div>
+          <span class="progress-arrow">&rarr;</span>
+          <div class="progress-step-item" id="progStep2">
+            <span class="step-bubble">2</span>
+            <span>2. UPI Payment &amp; Verify</span>
+          </div>
+        </div>
+
+        <!-- ==============================================
+             STEP 1: CUSTOMER & DELIVERY INFORMATION
+             ============================================== -->
+        <div class="checkout-step-panel active" id="checkoutStep1">
+          <!-- 1. Customer Information -->
+          <div class="checkout-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <h2 style="margin: 0;">1. Contact Information</h2>
+              <% if (typeof customer !== 'undefined' && customer) { %>
+                <span style="font-size: 0.8rem; color: #4ade80; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.25); padding: 3px 10px; border-radius: 999px;">
+                  ✓ Signed in as <%= customer.name %>
+                </span>
+              <% } %>
+            </div>
+            <div class="form-group">
+              <label for="name">Full Name <span class="req-star">*</span></label>
+              <input type="text" id="name" name="name" class="form-input" required placeholder="e.g. Rahul Sharma" value="<%= typeof customer !== 'undefined' && customer && customer.name ? customer.name : '' %>">
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="email">Email Address <span class="req-star">*</span></label>
+                <input type="email" id="email" name="email" class="form-input" required placeholder="rahul@example.com" value="<%= typeof customer !== 'undefined' && customer && customer.email ? customer.email : '' %>">
+              </div>
+              <div class="form-group">
+                <label for="phone">WhatsApp / Phone Number <span class="req-star">*</span></label>
+                <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 90369 69700" value="<%= typeof customer !== 'undefined' && customer && customer.phone ? customer.phone : '' %>">
+                <span class="field-hint">We will send design preview &amp; tracking updates on WhatsApp</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Shipping Address -->
+          <div class="checkout-section">
+            <h2>2. Delivery Address</h2>
+
+            <!-- Campus Exclusive Service Notice -->
+            <div class="campus-delivery-banner">
+              <span class="campus-banner-icon">📍</span>
+              <div class="campus-banner-text">
+                <strong>Exclusive Campus Service Zone: Sathyabama College, Chennai</strong>
+                <p>We currently operate and deliver <strong>exclusively inside Sathyabama Institute of Science and Technology Campus (Jeppiaar Nagar, Rajiv Gandhi Salai OMR, Chennai - 600119)</strong>. Please provide your hostel, department, lab, or staff quarters address.</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Campus Block, Hostel Name &amp; Room No. / Dept <span class="req-star">*</span></label>
+              <textarea id="address" name="address" class="form-input" rows="2" required placeholder="e.g. Room 214, Mother Teresa Hostel (or Mech Dept / Block 5 / Staff Quarters), Sathyabama Campus, OMR, Chennai" oninput="validateDeliveryLocation()"></textarea>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="city">City / Location <span class="req-star">*</span></label>
+                <input type="text" id="city" name="city" class="form-input" required value="Chennai" placeholder="Chennai" oninput="validateDeliveryLocation()">
+              </div>
+              <div class="form-group">
+                <label for="pincode">Pincode <span class="req-star">*</span></label>
+                <input type="text" id="pincode" name="pincode" class="form-input" required value="600119" placeholder="600119" pattern="[0-9]{6}" maxlength="6" oninput="validateDeliveryLocation()">
+                <span class="field-hint">Campus Postal Pincode: <strong>600119</strong> (Jeppiaar Nagar, OMR)</span>
+              </div>
+            </div>
+
+            <!-- Dynamic Delivery Availability Banner -->
+            <div id="deliveryStatusBanner" class="delivery-status-banner eligible">
+              ✓ <strong>Delivery Available</strong>: Sathyabama College Campus, Chennai (Pincode: 600119).
+            </div>
+
+            <div class="form-group" style="margin-top: 14px;">
+              <label for="specialNotes">Special Workshop / Delivery Instructions (Optional)</label>
+              <input type="text" id="specialNotes" name="specialNotes" class="form-input" placeholder="e.g. Call before delivery, or leave at hostel reception">
+            </div>
+          </div>
+
+          <!-- 3. Campus Coupon & Offers -->
+          <div class="checkout-section">
+            <h2>3. Campus Offer &amp; Coupon</h2>
+
+            <div class="campus-coupon-card">
+              <!-- Message area for customer -->
+              <div class="coupon-message-box">
+                <div class="coupon-message-title">
+                  <span class="coupon-badge-pill">CAMPUS SPECIAL</span>
+                  <span>Free Delivery Inside Sathyabama College</span>
+                </div>
+                <div class="coupon-message-body">
+                  Delivery inside <strong>Sathyabama Institute of Science and Technology campus, Chennai</strong> is completely <strong>FREE</strong>! Use coupon code <span class="coupon-code-click" onclick="fillCoupon('SATHYABAMA')">SATHYABAMA</span> below to remove your delivery charges.
+                </div>
+              </div>
+
+              <!-- Coupon Input Box -->
+              <label for="couponInput" style="display:block; font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-bottom: 8px;">Have a Promo / Campus Coupon Code?</label>
+              <div class="coupon-input-wrapper">
+                <input type="text" id="couponInput" placeholder="ENTER COUPON CODE" maxlength="20" autocomplete="off">
+                <button type="button" class="btn-apply-coupon" id="btnApplyCoupon" onclick="applyCouponCode()">Apply Coupon</button>
+              </div>
+              <div id="couponFeedback"></div>
+              <input type="hidden" name="couponCode" id="hiddenCouponCode" value="">
+            </div>
+          </div>
+
+          <!-- Proceed to Payment CTA Button -->
+          <button type="button" class="btn-proceed-payment" id="btnGoToStep2" onclick="goToStep2()">
+            <span>Proceed to Payment &rarr;</span>
+          </button>
+        </div>
+
+        <!-- ==============================================
+             STEP 2: PAYMENT & VERIFICATION
+             ============================================== -->
+        <div class="checkout-step-panel" id="checkoutStep2">
+          <button type="button" class="btn-back-step" onclick="goToStep1()">
+            &larr; Back to Edit Delivery Details
+          </button>
+
+          <!-- Delivery Summary Banner in Step 2 -->
+          <div class="checkout-section" style="padding: 14px 18px; margin-bottom: 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; letter-spacing: 1px;">Delivering To:</span>
+                <div style="font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-top: 2px;">
+                  <span id="step2SummaryName">Customer</span> &bull; <span id="step2SummaryPhone" style="color: #4ade80;">Phone</span>
+                </div>
+                <div style="font-size: 0.82rem; color: #cbd5e1; margin-top: 2px;" id="step2SummaryAddress">Sathyabama Campus, Chennai</div>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline" onclick="goToStep1()" style="padding: 4px 10px; font-size: 0.78rem;">Edit ✏️</button>
+            </div>
+          </div>
+
+          <!-- 4. Payment Method -->
+          <div class="checkout-section">
+            <h2>4. Select Payment Method</h2>
+            <div class="payment-options">
+              <label class="payment-option active" id="payOptionUpi">
+                <input type="radio" name="paymentMethod" value="UPI (GPay / PhonePe)" checked onchange="togglePaymentMode('UPI')">
+                <div class="payment-option-content">
+                  <strong>📱 Google Pay / PhonePe / Paytm / UPI QR (0% Fee)</strong>
+                  <p>Scan QR code or pay to UPI ID, then enter your 12-digit Transaction ID</p>
+                </div>
+              </label>
+              <label class="payment-option" id="payOptionCod">
+                <input type="radio" name="paymentMethod" value="COD" onchange="togglePaymentMode('COD')">
+                <div class="payment-option-content">
+                  <strong>💵 Cash on Delivery (COD)</strong>
+                  <p>Pay cash upon doorstep delivery</p>
+                </div>
+              </label>
+            </div>
+
+            <!-- Dynamic UPI & GPay Payment Box with Sanjay's Verified UPI ID -->
+            <% 
+              let calcSub = 0;
+              cartItems.forEach(item => { calcSub += item.unitPrice * item.quantity; });
+              let shipFee = calcSub >= 499 ? 0 : 49;
+              let finalPayAmount = calcSub + shipFee;
+              let storeUpiId = typeof upiId !== 'undefined' && upiId ? upiId : "bbsanjay6@okaxis";
+            %>
+            <div class="upi-payment-container" id="upiPaymentBox">
+              <div class="upi-header">
+                <span class="upi-step-tag">Instant Direct Payment</span>
+                <h3>Scan &amp; Pay via GPay / PhonePe / Paytm</h3>
+                <p>Pay <strong id="upiPayAmountTxt">₹<%= finalPayAmount.toLocaleString() %></strong> directly to our studio account with 0% gateway charges.</p>
+              </div>
+
+              <div class="upi-grid-details">
+                <!-- QR Code Card -->
+                <div class="upi-qr-card">
+                  <img id="dynamicUpiQr" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=<%= encodeURIComponent('upi://pay?pa=' + storeUpiId + '&pn=GOODYGUYS&am=' + finalPayAmount + '&cu=INR&tn=GOODYGUYS_Order') %>" alt="UPI Payment QR Code" class="upi-qr-img">
+                  <span class="qr-label">Scan with any UPI App</span>
+                  <div class="upi-apps-icons">
+                    <span>GPay</span> • <span>PhonePe</span> • <span>Paytm</span> • <span>BHIM</span>
+                  </div>
+                </div>
+
+                <!-- UPI Info & Steps -->
+                <div class="upi-instructions-card">
+                  <div class="upi-id-row">
+                    <span class="id-label">Official Store UPI ID:</span>
+                    <div class="upi-id-copy-box">
+                      <code id="merchantUpiId"><%= storeUpiId %></code>
+                      <button type="button" class="btn btn-sm btn-outline" onclick="copyUpiId()">📋 Copy</button>
+                    </div>
+                    <span id="copySuccessMsg" style="display:none; color: #22c55e; font-size: 0.75rem;">✓ Copied!</span>
+                  </div>
+                  <div style="font-size: 0.8rem; color: #94a3b8; margin-top: -6px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    Google Pay Axis VPA: <strong style="color: #ffffff;"><%= storeUpiId %></strong>
+                    <span class="upi-verified-badge">✓ Active &amp; Verified</span>
+                  </div>
+
+                  <div class="upi-steps-list">
+                    <div class="upi-step-item">
+                      <span class="num">1</span>
+                      <p>Open <strong>Google Pay</strong>, <strong>PhonePe</strong>, or <strong>Paytm</strong> on your phone.</p>
+                    </div>
+                    <div class="upi-step-item">
+                      <span class="num">2</span>
+                      <p>Scan the QR code or send payment to UPI ID <code><%= storeUpiId %></code> for <strong id="upiStepAmountTxt">₹<%= finalPayAmount.toLocaleString() %></strong>.</p>
+                    </div>
+                    <div class="upi-step-item">
+                      <span class="num">3</span>
+                      <p>After paying, copy the <strong>12-digit UPI Reference / UTR Number</strong> from your payment receipt and paste below.</p>
+                    </div>
+                  </div>
+
+                  <!-- 12-digit UTR Input Field -->
+                  <div class="form-group utr-group">
+                    <label for="upiTransactionId">Enter 12-Digit UPI Transaction / UTR ID <span class="req-star">*</span></label>
+                    <input type="text" id="upiTransactionId" name="upiTransactionId" class="form-input form-input-lg" placeholder="e.g. 4289xxxxxxxx (12 digits)" maxlength="16">
+                    <span class="field-hint">💡 Found in your payment details as "UPI Ref No" or "UTR"</span>
+                  </div>
+
+                  <!-- Optional Payment Screenshot -->
+                  <div class="form-group" style="margin-top: 10px;">
+                    <label for="paymentScreenshot" style="font-size: 0.82rem; color: var(--text-muted);">Optional: Attach Payment Screenshot</label>
+                    <input type="file" id="paymentScreenshot" name="paymentProof" accept="image/*" class="form-input form-input-sm">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legal & Compliance Order Acknowledgment (Checklist Items #1, #16, #35) -->
+          <div class="checkout-legal-notice" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px 16px; margin: 20px 0 16px; font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+            <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="legalAgreeCheck" required checked style="margin-top: 3px; accent-color: #ff1744;">
+              <span>
+                I confirm that I hold permission for my custom text/artwork, and I agree to the GOODYGUYS 
+                <a href="/terms" target="_blank" style="color: #60a5fa; text-decoration: underline;">Terms of Service</a>, 
+                <a href="/privacy" target="_blank" style="color: #60a5fa; text-decoration: underline;">Privacy Policy</a>, and 
+                <a href="/refund-policy" target="_blank" style="color: #60a5fa; text-decoration: underline;">Refund Policy</a>.
               </span>
-            <% } %>
-          </div>
-          <div class="form-group">
-            <label for="name">Full Name <span class="req-star">*</span></label>
-            <input type="text" id="name" name="name" class="form-input" required placeholder="e.g. Rahul Sharma" value="<%= typeof customer !== 'undefined' && customer && customer.name ? customer.name : '' %>">
-          </div>
-          <div class="form-row-2">
-            <div class="form-group">
-              <label for="email">Email Address <span class="req-star">*</span></label>
-              <input type="email" id="email" name="email" class="form-input" required placeholder="rahul@example.com" value="<%= typeof customer !== 'undefined' && customer && customer.email ? customer.email : '' %>">
-            </div>
-            <div class="form-group">
-              <label for="phone">WhatsApp / Phone Number <span class="req-star">*</span></label>
-              <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 90369 69700" value="<%= typeof customer !== 'undefined' && customer && customer.phone ? customer.phone : '' %>">
-              <span class="field-hint">We will send design preview &amp; tracking updates on WhatsApp</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Shipping Address -->
-        <div class="checkout-section">
-          <h2>2. Delivery Address</h2>
-
-          <!-- Campus Exclusive Service Notice -->
-          <div class="campus-delivery-banner">
-            <span class="campus-banner-icon">📍</span>
-            <div class="campus-banner-text">
-              <strong>Exclusive Campus Service Zone: Sathyabama College, Chennai</strong>
-              <p>We currently operate and deliver <strong>exclusively inside Sathyabama Institute of Science and Technology Campus (Jeppiaar Nagar, Rajiv Gandhi Salai OMR, Chennai - 600119)</strong>. Please provide your hostel, department, lab, or staff quarters address.</p>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="address">Campus Block, Hostel Name &amp; Room No. / Dept <span class="req-star">*</span></label>
-            <textarea id="address" name="address" class="form-input" rows="2" required placeholder="e.g. Room 214, Mother Teresa Hostel (or Mech Dept / Block 5 / Staff Quarters), Sathyabama Campus, OMR, Chennai" oninput="validateDeliveryLocation()"></textarea>
-          </div>
-          <div class="form-row-2">
-            <div class="form-group">
-              <label for="city">City / Location <span class="req-star">*</span></label>
-              <input type="text" id="city" name="city" class="form-input" required value="Chennai" placeholder="Chennai" oninput="validateDeliveryLocation()">
-            </div>
-            <div class="form-group">
-              <label for="pincode">Pincode <span class="req-star">*</span></label>
-              <input type="text" id="pincode" name="pincode" class="form-input" required value="600119" placeholder="600119" pattern="[0-9]{6}" maxlength="6" oninput="validateDeliveryLocation()">
-              <span class="field-hint">Campus Postal Pincode: <strong>600119</strong> (Jeppiaar Nagar, OMR)</span>
-            </div>
-          </div>
-
-          <!-- Dynamic Delivery Availability Banner -->
-          <div id="deliveryStatusBanner" class="delivery-status-banner eligible">
-            ✓ <strong>Delivery Available</strong>: Sathyabama College Campus, Chennai (Pincode: 600119).
-          </div>
-
-          <div class="form-group" style="margin-top: 14px;">
-            <label for="specialNotes">Special Workshop / Delivery Instructions (Optional)</label>
-            <input type="text" id="specialNotes" name="specialNotes" class="form-input" placeholder="e.g. Call before delivery, or leave at hostel reception">
-          </div>
-        </div>
-
-        <!-- 3. Campus Coupon & Offers -->
-        <div class="checkout-section">
-          <h2>3. Campus Offer &amp; Coupon</h2>
-
-          <div class="campus-coupon-card">
-            <!-- Message area for customer -->
-            <div class="coupon-message-box">
-              <div class="coupon-message-title">
-                <span class="coupon-badge-pill">CAMPUS SPECIAL</span>
-                <span>Free Delivery Inside Sathyabama College</span>
-              </div>
-              <div class="coupon-message-body">
-                Delivery inside <strong>Sathyabama Institute of Science and Technology campus, Chennai</strong> is completely <strong>FREE</strong>! Use coupon code <span class="coupon-code-click" onclick="fillCoupon('SATHYABAMA')">SATHYABAMA</span> below to remove your delivery charges.
-              </div>
-            </div>
-
-            <!-- Coupon Input Box -->
-            <label for="couponInput" style="display:block; font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-bottom: 8px;">Have a Promo / Campus Coupon Code?</label>
-            <div class="coupon-input-wrapper">
-              <input type="text" id="couponInput" placeholder="ENTER COUPON CODE" maxlength="20" autocomplete="off">
-              <button type="button" class="btn-apply-coupon" id="btnApplyCoupon" onclick="applyCouponCode()">Apply Coupon</button>
-            </div>
-            <div id="couponFeedback"></div>
-            <input type="hidden" name="couponCode" id="hiddenCouponCode" value="">
-          </div>
-        </div>
-
-        <!-- 4. Payment Method -->
-        <div class="checkout-section">
-          <h2>4. Select Payment Method</h2>
-          <div class="payment-options">
-            <label class="payment-option active" id="payOptionUpi">
-              <input type="radio" name="paymentMethod" value="UPI (GPay / PhonePe)" checked onchange="togglePaymentMode('UPI')">
-              <div class="payment-option-content">
-                <strong>📱 Google Pay / PhonePe / Paytm / UPI QR (0% Fee)</strong>
-                <p>Scan QR code or pay to UPI ID, then enter your 12-digit Transaction ID</p>
-              </div>
-            </label>
-            <label class="payment-option" id="payOptionCod">
-              <input type="radio" name="paymentMethod" value="COD" onchange="togglePaymentMode('COD')">
-              <div class="payment-option-content">
-                <strong>💵 Cash on Delivery (COD)</strong>
-                <p>Pay cash upon doorstep delivery</p>
-              </div>
             </label>
           </div>
 
-          <!-- Dynamic UPI & GPay Payment Box -->
-          <% 
-            let calcSub = 0;
-            cartItems.forEach(item => { calcSub += item.unitPrice * item.quantity; });
-            let shipFee = calcSub >= 499 ? 0 : 49;
-            let finalPayAmount = calcSub + shipFee;
-            let storeUpiId = typeof upiId !== 'undefined' && upiId ? upiId : "9036969700@upi";
-            let storeUpiNumber = "9036969700";
-          %>
-          <div class="upi-payment-container" id="upiPaymentBox">
-            <div class="upi-header">
-              <span class="upi-step-tag">Step-by-Step Payment</span>
-              <h3>Scan &amp; Pay via GPay / PhonePe / Paytm</h3>
-              <p>Pay <strong id="upiPayAmountTxt">₹<%= finalPayAmount.toLocaleString() %></strong> directly to our workshop account with 0% gateway charges.</p>
-            </div>
-
-            <div class="upi-grid-details">
-              <!-- QR Code Card -->
-              <div class="upi-qr-card">
-                <img id="dynamicUpiQr" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=<%= encodeURIComponent('upi://pay?pa=' + storeUpiId + '&pn=GOODYGUYS+Studio&am=' + finalPayAmount + '&cu=INR&tn=GOODYGUYSOrder') %>" alt="UPI Payment QR Code" class="upi-qr-img">
-                <span class="qr-label">Scan with any UPI App</span>
-                <div class="upi-apps-icons">
-                  <span>GPay</span> • <span>PhonePe</span> • <span>Paytm</span> • <span>BHIM</span>
-                </div>
-              </div>
-
-              <!-- UPI Info & Steps -->
-              <div class="upi-instructions-card">
-                <div class="upi-id-row">
-                  <span class="id-label">Store UPI Number:</span>
-                  <div class="upi-id-copy-box">
-                    <code id="merchantUpiId"><%= storeUpiNumber %></code>
-                    <button type="button" class="btn btn-sm btn-outline" onclick="copyUpiId()">📋 Copy</button>
-                  </div>
-                  <span id="copySuccessMsg" style="display:none; color: #22c55e; font-size: 0.75rem;">✓ Copied!</span>
-                </div>
-                <div style="font-size: 0.8rem; color: #94a3b8; margin-top: -6px; margin-bottom: 12px;">
-                  UPI ID: <strong style="color: #ffffff;"><%= storeUpiId %></strong>
-                </div>
-
-                <div class="upi-steps-list">
-                  <div class="upi-step-item">
-                    <span class="num">1</span>
-                    <p>Open <strong>Google Pay</strong>, <strong>PhonePe</strong>, or <strong>Paytm</strong> on your phone.</p>
-                  </div>
-                  <div class="upi-step-item">
-                    <span class="num">2</span>
-                    <p>Scan the QR code or transfer <strong id="upiStepAmountTxt">₹<%= finalPayAmount.toLocaleString() %></strong> to UPI Number <code><%= storeUpiNumber %></code> (or UPI ID <code><%= storeUpiId %></code>).</p>
-                  </div>
-                  <div class="upi-step-item">
-                    <span class="num">3</span>
-                    <p>After paying, copy the <strong>12-digit UPI Reference / UTR Number</strong> from your payment receipt and paste below.</p>
-                  </div>
-                </div>
-
-                <!-- 12-digit UTR Input Field -->
-                <div class="form-group utr-group">
-                  <label for="upiTransactionId">Enter 12-Digit UPI Transaction / UTR ID <span class="req-star">*</span></label>
-                  <input type="text" id="upiTransactionId" name="upiTransactionId" class="form-input form-input-lg" placeholder="e.g. 4289xxxxxxxx (12 digits)" maxlength="16">
-                  <span class="field-hint">💡 Found in your payment details as "UPI Ref No" or "UTR"</span>
-                </div>
-
-                <!-- Optional Payment Screenshot -->
-                <div class="form-group" style="margin-top: 10px;">
-                  <label for="paymentScreenshot" style="font-size: 0.82rem; color: var(--text-muted);">Optional: Attach Payment Screenshot</label>
-                  <input type="file" id="paymentScreenshot" name="paymentProof" accept="image/*" class="form-input form-input-sm">
-                </div>
-              </div>
-            </div>
-          </div>
+          <button type="submit" class="btn btn-primary btn-lg btn-block" id="btnPlaceOrder">🔒 Confirm &amp; Submit Order</button>
         </div>
-
-        <!-- Legal & Compliance Order Acknowledgment (Checklist Items #1, #16, #35) -->
-        <div class="checkout-legal-notice" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 12px 16px; margin: 20px 0 16px; font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
-          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
-            <input type="checkbox" id="legalAgreeCheck" required checked style="margin-top: 3px; accent-color: #ff1744;">
-            <span>
-              I confirm that I hold permission for my custom text/artwork, and I agree to the GOODYGUYS 
-              <a href="/terms" target="_blank" style="color: #60a5fa; text-decoration: underline;">Terms of Service</a>, 
-              <a href="/privacy" target="_blank" style="color: #60a5fa; text-decoration: underline;">Privacy Policy</a>, and 
-              <a href="/refund-policy" target="_blank" style="color: #60a5fa; text-decoration: underline;">Refund Policy</a>.
-            </span>
-          </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-lg btn-block" id="btnPlaceOrder">🔒 Confirm &amp; Submit Order</button>
       </form>
 
       <!-- Order Summary Card -->
@@ -273,6 +319,69 @@
 </section>
 
 <script>
+  // 2-Step Checkout Wizard Transition Controllers
+  function goToStep2() {
+    const nameEl = document.getElementById('name');
+    const emailEl = document.getElementById('email');
+    const phoneEl = document.getElementById('phone');
+    const addressEl = document.getElementById('address');
+    const pincodeEl = document.getElementById('pincode');
+
+    if (!nameEl.value.trim()) {
+      alert('⚠️ Please enter your Full Name.');
+      nameEl.focus();
+      return;
+    }
+    if (!emailEl.value.trim() || !emailEl.value.includes('@')) {
+      alert('⚠️ Please enter a valid Email Address.');
+      emailEl.focus();
+      return;
+    }
+    const cleanPhone = phoneEl.value.replace(/[^0-9]/g, '');
+    if (!cleanPhone || cleanPhone.length < 10) {
+      alert('⚠️ Please enter a valid 10-digit WhatsApp / Phone Number.');
+      phoneEl.focus();
+      return;
+    }
+    if (!addressEl.value.trim()) {
+      alert('⚠️ Please provide your Campus Hostel, Block, Room No. or Department address.');
+      addressEl.focus();
+      return;
+    }
+    if (!validateDeliveryLocation()) {
+      alert('🚫 We currently deliver exclusively inside Sathyabama Institute of Science and Technology campus, Chennai (Pincode: 600119).');
+      pincodeEl.focus();
+      return;
+    }
+
+    // Populate Step 2 Delivery Summary
+    const sumName = document.getElementById('step2SummaryName');
+    const sumPhone = document.getElementById('step2SummaryPhone');
+    const sumAddr = document.getElementById('step2SummaryAddress');
+    if (sumName) sumName.textContent = nameEl.value.trim();
+    if (sumPhone) sumPhone.textContent = phoneEl.value.trim();
+    if (sumAddr) sumAddr.textContent = addressEl.value.trim() + ' (Pincode: ' + pincodeEl.value.trim() + ')';
+
+    // Transition panels
+    document.getElementById('checkoutStep1').classList.remove('active');
+    document.getElementById('checkoutStep2').classList.add('active');
+    document.getElementById('progStep1').classList.remove('active');
+    document.getElementById('progStep1').classList.add('completed');
+    document.getElementById('progStep2').classList.add('active');
+
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+  }
+
+  function goToStep1() {
+    document.getElementById('checkoutStep2').classList.remove('active');
+    document.getElementById('checkoutStep1').classList.add('active');
+    document.getElementById('progStep2').classList.remove('active');
+    document.getElementById('progStep1').classList.remove('completed');
+    document.getElementById('progStep1').classList.add('active');
+
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+  }
+
   // Dynamic Pricing Variables for Client-Side Calculation
   const subtotalVal = <%= runningSubtotal %>;
   let baseShippingVal = <%= runningSubtotal >= 499 ? 0 : 49 %>;
@@ -293,11 +402,11 @@
     const upiStepTxt = document.getElementById('upiStepAmountTxt');
     if (upiStepTxt) upiStepTxt.textContent = '₹' + finalTotal.toLocaleString();
 
-    // Update Dynamic QR code image URL
+    // Update Dynamic QR code image URL with Sanjay's Axis Bank UPI ID
     const qrImg = document.getElementById('dynamicUpiQr');
     if (qrImg) {
-      const upiUrl = 'upi://pay?pa=' + encodeURIComponent(storeUpi) + '&pn=GOODYGUYS+Studio&am=' + finalTotal + '&cu=INR&tn=GOODYGUYSOrder';
-      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(upiUrl);
+      const upiUrl = 'upi://pay?pa=' + encodeURIComponent(storeUpi) + '&pn=GOODYGUYS&am=' + finalTotal + '&cu=INR&tn=GOODYGUYS_Order';
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(upiUrl);
     }
   }
 
