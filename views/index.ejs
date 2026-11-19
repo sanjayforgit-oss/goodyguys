@@ -63,7 +63,8 @@
       <!-- Right Column: Realistic Streetwear Model & Sticker Badges -->
       <div class="hero-visual-col">
         <div class="hero-model-poster-wrap">
-          <img src="/images/hero-streetwear-model.jpg" alt="GOODYGUYS Streetwear Model" class="hero-model-img">
+          <!-- Modern Web Guidance: LCP Image Prioritization with Explicit Dimensions to Prevent CLS -->
+          <img src="/images/hero-streetwear-model.jpg" alt="GOODYGUYS Streetwear Model" class="hero-model-img" fetchpriority="high" decoding="async" width="600" height="600">
           
           <!-- Streetwear Sticker Badges Stack -->
           <div class="streetwear-sticker-stack">
@@ -128,7 +129,7 @@
         <% products.forEach(prod => { %>
           <a href="/products/<%= prod.id %>" class="marquee-product-card" title="Customize <%= prod.name %>" <%- iterIdx > 0 ? 'aria-hidden="true" tabindex="-1"' : '' %>>
             <div class="marquee-card-img-wrap">
-              <img src="<%= prod.image %>" alt="<%= prod.name %>" loading="lazy">
+              <img src="<%= prod.image %>" alt="<%= prod.name %>" loading="lazy" decoding="async">
               <span class="marquee-card-badge <%= prod.id === 5 ? 'badge-cut' : '' %>">
                 <%= prod.id === 5 ? '✂️ LASER CUT' : prod.badge ? prod.badge.toUpperCase() : 'CUSTOM' %>
               </span>
@@ -212,7 +213,7 @@
           <!-- Product Realistic Image -->
           <div class="card-image-wrap">
             <a href="/products/<%= product.id %>">
-              <img src="<%= product.image %>" alt="<%= product.name %>" class="card-prod-img" loading="lazy">
+              <img src="<%= product.image %>" alt="<%= product.name %>" class="card-prod-img" loading="lazy" decoding="async">
             </a>
             <div class="card-custom-overlay-tag">
               <%= product.customizerType === 'acrylic-cut' ? '✂️ HOLLOW CUT-THROUGH LETTERS' : product.customizerType === 'tshirt' ? '👕 CUSTOM FRONT / BACK' : product.customizerType === 'desk-plaque' ? '🪵 WOODEN STAND • CUSTOM SIZES' : product.requiresText && product.requiresImage ? '📸 PHOTO + ✍️ TEXT' : product.requiresImage ? '📸 CUSTOM IMAGE' : '⚡ CUSTOM NAME' %>

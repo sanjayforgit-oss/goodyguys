@@ -32,6 +32,14 @@
 }
 
 :root {
+  /* Modern Web Guidance: Native Dark Canvas & Brand Accent */
+  color-scheme: dark;
+  accent-color: var(--primary);
+
+  /* Modern Web Guidance: Standard Baseline Scrollbar */
+  scrollbar-color: #2a2a32 var(--bg-deep);
+  scrollbar-width: thin;
+
   /* Streetwear Multi-Reference Color Palette */
   --primary: #ff1744;          /* Vivid Electric Bright Red */
   --volt: #ff1744;             /* Neon Bright Red Accent */
@@ -99,11 +107,13 @@ body {
   background: var(--primary); color: #ffffff;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: #222226; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+/* Scrollbar: Legacy WebKit fallback for older browsers */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: #222226; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+}
 
 .container {
   max-width: 1280px;

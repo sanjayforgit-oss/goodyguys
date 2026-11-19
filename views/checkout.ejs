@@ -48,16 +48,16 @@
             </div>
             <div class="form-group">
               <label for="name">Full Name <span class="req-star">*</span></label>
-              <input type="text" id="name" name="name" class="form-input" required placeholder="e.g. Rahul Sharma" value="<%= typeof customer !== 'undefined' && customer && customer.name ? customer.name : '' %>">
+              <input type="text" id="name" name="name" class="form-input" required autocomplete="name" placeholder="e.g. Rahul Sharma" value="<%= typeof customer !== 'undefined' && customer && customer.name ? customer.name : '' %>">
             </div>
             <div class="form-row-2">
               <div class="form-group">
                 <label for="email">Email Address <span class="req-star">*</span></label>
-                <input type="email" id="email" name="email" class="form-input" required placeholder="rahul@example.com" value="<%= typeof customer !== 'undefined' && customer && customer.email ? customer.email : '' %>">
+                <input type="email" id="email" name="email" class="form-input" required autocomplete="email" inputmode="email" placeholder="rahul@example.com" value="<%= typeof customer !== 'undefined' && customer && customer.email ? customer.email : '' %>">
               </div>
               <div class="form-group">
                 <label for="phone">WhatsApp / Phone Number <span class="req-star">*</span></label>
-                <input type="tel" id="phone" name="phone" class="form-input" required placeholder="+91 90369 69700" value="<%= typeof customer !== 'undefined' && customer && customer.phone ? customer.phone : '' %>">
+                <input type="tel" id="phone" name="phone" class="form-input" required autocomplete="tel" inputmode="tel" placeholder="+91 90369 69700" value="<%= typeof customer !== 'undefined' && customer && customer.phone ? customer.phone : '' %>">
                 <span class="field-hint">We will send design preview &amp; tracking updates on WhatsApp</span>
               </div>
             </div>
@@ -78,16 +78,16 @@
 
             <div class="form-group">
               <label for="address">Campus Block, Hostel Name &amp; Room No. / Dept <span class="req-star">*</span></label>
-              <textarea id="address" name="address" class="form-input" rows="2" required placeholder="e.g. Room 214, Mother Teresa Hostel (or Mech Dept / Block 5 / Staff Quarters), Sathyabama Campus, OMR, Chennai" oninput="validateDeliveryLocation()"></textarea>
+              <textarea id="address" name="address" class="form-input" rows="2" required autocomplete="street-address" placeholder="e.g. Room 214, Mother Teresa Hostel (or Mech Dept / Block 5 / Staff Quarters), Sathyabama Campus, OMR, Chennai" oninput="validateDeliveryLocation()"></textarea>
             </div>
             <div class="form-row-2">
               <div class="form-group">
                 <label for="city">City / Location <span class="req-star">*</span></label>
-                <input type="text" id="city" name="city" class="form-input" required value="Chennai" placeholder="Chennai" oninput="validateDeliveryLocation()">
+                <input type="text" id="city" name="city" class="form-input" required autocomplete="address-level2" value="Chennai" placeholder="Chennai" oninput="validateDeliveryLocation()">
               </div>
               <div class="form-group">
                 <label for="pincode">Pincode <span class="req-star">*</span></label>
-                <input type="text" id="pincode" name="pincode" class="form-input" required value="600119" placeholder="600119" pattern="[0-9]{6}" maxlength="6" oninput="validateDeliveryLocation()">
+                <input type="text" id="pincode" name="pincode" class="form-input" required autocomplete="postal-code" inputmode="numeric" value="600119" placeholder="600119" pattern="[0-9]{6}" maxlength="6" oninput="validateDeliveryLocation()">
                 <span class="field-hint">Campus Postal Pincode: <strong>600119</strong> (Jeppiaar Nagar, OMR)</span>
               </div>
             </div>
@@ -236,7 +236,7 @@
                   <!-- 12-digit UTR Input Field -->
                   <div class="form-group utr-group">
                     <label for="upiTransactionId">Enter 12-Digit UPI Transaction / UTR ID <span class="req-star">*</span></label>
-                    <input type="text" id="upiTransactionId" name="upiTransactionId" class="form-input form-input-lg" placeholder="e.g. 4289xxxxxxxx (12 digits)" maxlength="16">
+                    <input type="text" id="upiTransactionId" name="upiTransactionId" class="form-input form-input-lg" inputmode="numeric" pattern="[0-9]{12}" placeholder="e.g. 4289xxxxxxxx (12 digits)" maxlength="16">
                     <span class="field-hint">💡 Found in your payment details as "UPI Ref No" or "UTR"</span>
                   </div>
 
